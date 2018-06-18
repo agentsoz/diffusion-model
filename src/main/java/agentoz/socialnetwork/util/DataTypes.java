@@ -1,4 +1,4 @@
-package socialnetwork.util;
+package agentoz.socialnetwork.util;
 
 
 // DataServer data types used by the bushfire application

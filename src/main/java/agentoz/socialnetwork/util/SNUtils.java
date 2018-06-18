@@ -1,4 +1,4 @@
-package socialnetwork.util;
+package agentoz.socialnetwork.util;
 
 import java.io.*;
 import java.util.Random;
@@ -7,9 +7,9 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import socialnetwork.Network;
-import socialnetwork.SNConfig;
-import socialnetwork.SocialNetworkManager;
+import agentoz.socialnetwork.Network;
+import agentoz.socialnetwork.SNConfig;
+import agentoz.socialnetwork.SocialNetworkManager;
 
 public class SNUtils {
 

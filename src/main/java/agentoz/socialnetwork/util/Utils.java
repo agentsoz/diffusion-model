@@ -1,6 +1,6 @@
-package socialnetwork.util;
+package agentoz.socialnetwork.util;
 
-import socialnetwork.util.Global;
+//import socialnetwork.util.Global;
 
 
 public class Utils {

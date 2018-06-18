@@ -1,14 +1,13 @@
-package socialnetwork;
+package agentoz.socialnetwork;
 
-import socialnetwork.util.DataTypes;
+import agentoz.socialnetwork.util.DataTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import agentoz.socialnetwork.util.Global;
+import agentoz.socialnetwork.util.SNUtils;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import socialnetwork.util.Global;
-import socialnetwork.util.SNUtils;
-
 
 import java.util.HashMap;
 
@@ -28,7 +27,6 @@ import java.util.HashMap;
 
 public class SocialNetworkManager{
 
-//	private String execType = ""; // distinguish SN_BDI exec and TestSNModel exec (for printing configs) -  check designs for further details.
 	final Logger logger = LoggerFactory.getLogger("");
 
 	public HashMap<Integer, SocialAgent> agentList = new HashMap<Integer, SocialAgent>();

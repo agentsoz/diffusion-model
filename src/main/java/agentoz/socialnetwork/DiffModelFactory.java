@@ -1,6 +1,6 @@
-package socialnetwork;
+package agentoz.socialnetwork;
 
-import socialnetwork.util.DataTypes;
+import agentoz.socialnetwork.util.DataTypes;
 
 public class DiffModelFactory {
 

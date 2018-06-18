@@ -1,4 +1,4 @@
-package socialnetwork;
+package agentoz.socialnetwork;
 
 
 import java.io.File;
@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import socialnetwork.util.Global;
+import agentoz.socialnetwork.util.Global;
 
 public class SocialNetwork{
 

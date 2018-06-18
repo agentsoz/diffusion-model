@@ -1,7 +1,7 @@
-package socialnetwork;
+package agentoz.socialnetwork;
 
 import java.util.HashMap;
-import socialnetwork.util.DataTypes;
+import agentoz.socialnetwork.util.DataTypes;
 
 public class NetworkFactory {
 

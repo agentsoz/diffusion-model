@@ -1,7 +1,7 @@
-package socialnetwork;
+package agentoz.socialnetwork;
 
-import socialnetwork.util.DataTypes;
-import socialnetwork.util.Utils;
+import agentoz.socialnetwork.util.DataTypes;
+import agentoz.socialnetwork.util.Utils;
 
 import java.util.HashMap;
 import java.util.Map;

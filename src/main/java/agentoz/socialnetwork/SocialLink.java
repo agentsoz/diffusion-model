@@ -1,4 +1,4 @@
-package socialnetwork;
+package agentoz.socialnetwork;
 
 /*
  * How link(id1,id2) is distinguished from link(id2,id1) ? 

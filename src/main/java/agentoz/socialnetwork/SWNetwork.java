@@ -1,4 +1,4 @@
-package socialnetwork;
+package agentoz.socialnetwork;
 
 
 import java.io.FileNotFoundException;
