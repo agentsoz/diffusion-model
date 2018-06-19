@@ -12,14 +12,6 @@ import io.github.agentsoz.dataInterface.DataSource;
 import java.util.HashMap;
 
 /*
-
- * Configs:
- * SN model has the separate config
- * steps:
- * 	create the agentList : createSocialAgent -> setCord 
- *  initialise the social network
- *  for each diff turn -> process diffusion
- *
  *  Whenever there is a change in agent states, SN Manager should  publish to the dataserver, inorder for the changes to take effect
  *  in BDI and MATSim systems. Currently there are two such functions: Seeding and diff process.
  *  Updates of these two functions are published to the dataserver at the application side.

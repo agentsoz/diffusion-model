@@ -1,58 +1,59 @@
 package agentoz.socialnetwork;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-/* SW Network Model' - Watts-Strogatz model
- 
-
- * Input : agentList - with x,y coords of the agents.
- *  Typically, SW MOdel is generated in two steps: 
- *  1. randomly connect each node to K number of nearest neighbours (K=avg degree -  yes, but also depends on the distance range)
- *  2. With probability P, for each link - re-wire one side of the link with any random node (no duplicate neighbours or self links)
- *  	
- *  A SW Network model can be controlled by these three parameters: K, distance range and P
- *  
- * if K=high P=low -> higher inter connections within SWs (strong small worlds) | less interconnections between small worlds
- * if P=high -> higher  intra connections between small worlds
- * 		When p is really large, the network will be close to a ER random network
- * 
- * neighbourhood generation -> rewire  links -> update agent map
- * in rewire process, some agents get a higher degree by 1, and some decreases their degree by 1,
- * so if you have avgDeg =2, then there will be agents with no links.
- * 
- * The implementation should be able to generate different shapes of SW networks  controlled by K and P.
- *  distance:  should define what we call as a neighourhood. The problem would be that the  degree of a node will be controlled by both distance and avg degree (or probability)
- *  
- * expAvgDegree Vs genAvgDegree ??
- * variable used =  linkCount 
- * linkCount is increased when within distance links are created. 
- * When changing them based on a probability, the total #links do not change. 
- * so we do not count those links. But for them implementation,  
- * Also, probability is independent from the #links
- * 
- * distance and the expAvgDegree determine the #links or the degree of an agent
- * 
- * #links:
- * generated degree  remains same with the neighbourhood method and the re-wired method 
- * the number of links created depends on:  size of the 2d space agents are situated, distance range and avg degree
- * you can do a few test cases to understand which parameter affects the most. maybe avgdegree?
- * #links is independent from the re-wire probability.
- * 
- * probability: 
- * this balances the neighbourhood network and the number of interconnections between small worlds. 
- * 
- * setting configs:
- * use the method in this class to set the configs and do not set configs anywhere else out of the class
- */
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+/* SW Network Model' - Watts-Strogatz model
+
+
+ * Input : agentList - with x,y coords of the agents.
+ *  Typically, SW MOdel is generated in two steps:
+ *  1. randomly connect each node to K number of nearest neighbours (K=avg degree -  yes, but also depends on the distance range)
+ *  2. With probability P, for each link - re-wire one side of the link with any random node (no duplicate neighbours or self links)
+ *
+ *  A SW Network model can be controlled by these three parameters: K, distance range and P
+ *
+ * if K=high P=low -> higher inter connections within SWs (strong small worlds) | less interconnections between small worlds
+ * if P=high -> higher  intra connections between small worlds
+ * 		When p is really large, the network will be close to a ER random network
+ *
+ * neighbourhood generation -> rewire  links -> update agent map
+ * in rewire process, some agents get a higher degree by 1, and some decreases their degree by 1,
+ * so if you have avgDeg =2, then there will be agents with no links.
+ *
+ * The implementation should be able to generate different shapes of SW networks  controlled by K and P.
+ *  distance:  should define what we call as a neighourhood. The problem would be that the  degree of a node will be controlled by both distance and avg degree (or probability)
+ *
+ * expAvgDegree Vs genAvgDegree ??
+ * variable used =  linkCount
+ * linkCount is increased when within distance links are created.
+ * When changing them based on a probability, the total #links do not change.
+ * so we do not count those links. But for them implementation,
+ * Also, probability is independent from the #links
+ *
+ * distance and the expAvgDegree determine the #links or the degree of an agent
+ *
+ * #links:
+ * generated degree  remains same with the neighbourhood method and the re-wired method
+ * the number of links created depends on:  size of the 2d space agents are situated, distance range and avg degree
+ * you can do a few test cases to understand which parameter affects the most. maybe avgdegree?
+ * #links is independent from the re-wire probability.
+ *
+ * probability:
+ * this balances the neighbourhood network and the number of interconnections between small worlds.
+ *
+ * setting configs:
+ * use the method in this class to set the configs and do not set configs anywhere else out of the class
+ */
 
 
 public class SWNetwork extends Network {
