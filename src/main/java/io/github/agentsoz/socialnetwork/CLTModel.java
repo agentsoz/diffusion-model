@@ -233,6 +233,8 @@ public class CLTModel extends LTModel {
         HashMap<Integer,Double> neiPanicLevels = new HashMap<Integer,Double>();
 
         logger.debug("competitive diffusion process startted..");
+    try {
+
 
         for (SocialAgent agent : getAgentMap().values()) {
             double totNeiW = 0.0;
@@ -251,7 +253,7 @@ public class CLTModel extends LTModel {
                 }
             }
 
-            logger.trace(" agent {}  totweight -WAIT {}", agent.getID(), totNeiW );
+            logger.trace(" agent {}  totweight -WAIT {}", agent.getID(), totNeiW);
 
             neiWaitLevels.put(agent.getID(), totNeiW);
             neiPanicLevels.put(agent.getID(), totNeiP);
@@ -259,62 +261,67 @@ public class CLTModel extends LTModel {
 
         }
 
-            for(int id: getAgentMap().keySet()){ //calculate the total content values from seed and neighbour weights.
-                double  totWaitLevel = 0.0;
-                double  totPanicLevel = 0.0;
+        for (int id : getAgentMap().keySet()) { //calculate the total content values from seed and neighbour weights.
+            double totWaitLevel = 0.0;
+            double totPanicLevel = 0.0;
 
-                if(getSeedMap(DataTypes.WAIT).containsKey(id)) { // included in WAIT seed
-                    totWaitLevel = neiWaitLevels.get(id) + getSeedMap(DataTypes.WAIT).get(id); // nei + seed
-                    totPanicLevel = neiPanicLevels.get(id); // only nei
+            if (getSeedMap(DataTypes.WAIT).containsKey(id)) { // included in WAIT seed
+                totWaitLevel = neiWaitLevels.get(id) + getSeedMap(DataTypes.WAIT).get(id); // nei + seed
+                totPanicLevel = neiPanicLevels.get(id); // only nei
 //                    logger.trace("agent {} totweight-WAIT: {}", id, totWaitLevel);
-                }
-                else if(getSeedMap(DataTypes.PANIC).containsKey(id)) { // included in PANIC seed
-                    totPanicLevel = neiPanicLevels.get(id) + getSeedMap(DataTypes.PANIC).get(id); // nei+ seed
-                    totWaitLevel =  neiWaitLevels.get(id); // only nei
+            } else if (getSeedMap(DataTypes.PANIC).containsKey(id)) { // included in PANIC seed
+                totPanicLevel = neiPanicLevels.get(id) + getSeedMap(DataTypes.PANIC).get(id); // nei+ seed
+                totWaitLevel = neiWaitLevels.get(id); // only nei
 //                    logger.trace("agent {} totweight-PANIC: {}", id, totPanicLevel);
-                }
-                else{ // only nei
-                    totWaitLevel =  neiWaitLevels.get(id);
-                    totPanicLevel = neiPanicLevels.get(id);
-                }
-
-                if(totWaitLevel > 1.0) {totWaitLevel = 1.0;}
-                if(totPanicLevel > 1.0) {totPanicLevel = 1.0;}
-
-                logger.trace(" agent {} totWaitLevel: {} totPanicLevel: {}", id,totWaitLevel,totPanicLevel);
-
-                //1. equal content levels, randomyly select a content type and update
-                // activation conditions are checked in updateAgent function, therefore if values are less than act thresholds
-                // only the values get updated, sequentially.
-                if(totPanicLevel == totWaitLevel) {
-                    List<String> types = new ArrayList<String>(getAgentMap().get(id).getContentValuesMap().keySet());
-                 //   String randomType = types.get(rand.nextInt(types.size())) ; //0 or 1
-                    String randomType = types.get(1) ; // SELECT PANIC - PRIORITY FOR  PERCEPTS
-
-                    if(randomType.equals(DataTypes.PANIC)) { //panic activation
-                        updateAgentStateValueAndCounters(id,randomType,totPanicLevel);
-                        updateAgentStateValueAndCounters(id,DataTypes.WAIT,totWaitLevel);
-                    }
-                    else if(randomType.equals(DataTypes.WAIT)){ // wait activation
-                        updateAgentStateValueAndCounters(id,randomType,totWaitLevel);
-                        updateAgentStateValueAndCounters(id,DataTypes.PANIC,totPanicLevel);
-                    }
-
-                }
-
-                // 2. panic acitvation should happen if activation condition matches
-                else if(totPanicLevel > totWaitLevel) {
-                    updateAgentStateValueAndCounters(id,DataTypes.PANIC,totPanicLevel);
-                    updateAgentStateValueAndCounters(id,DataTypes.WAIT,totWaitLevel);
-                }
-
-                // 3. wait activation should happen if activation condition matches
-                else if(totWaitLevel > totPanicLevel) {
-                    updateAgentStateValueAndCounters(id,DataTypes.WAIT,totWaitLevel);
-                    updateAgentStateValueAndCounters(id,DataTypes.PANIC,totPanicLevel);
-
-                }
+            } else { // only nei
+                totWaitLevel = neiWaitLevels.get(id);
+                totPanicLevel = neiPanicLevels.get(id);
             }
+
+            if (totWaitLevel > 1.0) {
+                totWaitLevel = 1.0;
+            }
+            if (totPanicLevel > 1.0) {
+                totPanicLevel = 1.0;
+            }
+
+            logger.trace(" agent {} totWaitLevel: {} totPanicLevel: {}", id, totWaitLevel, totPanicLevel);
+
+            //1. equal content levels, randomyly select a content type and update
+            // activation conditions are checked in updateAgent function, therefore if values are less than act thresholds
+            // only the values get updated, sequentially.
+            if (totPanicLevel == totWaitLevel) {
+                List<String> types = new ArrayList<String>(getAgentMap().get(id).getContentValuesMap().keySet());
+                //   String randomType = types.get(rand.nextInt(types.size())) ; //0 or 1
+                String randomType = types.get(1); // SELECT PANIC - PRIORITY FOR  PERCEPTS
+
+                if (randomType.equals(DataTypes.PANIC)) { //panic activation
+                    updateAgentStateValueAndCounters(id, randomType, totPanicLevel);
+                    updateAgentStateValueAndCounters(id, DataTypes.WAIT, totWaitLevel);
+                } else if (randomType.equals(DataTypes.WAIT)) { // wait activation
+                    updateAgentStateValueAndCounters(id, randomType, totWaitLevel);
+                    updateAgentStateValueAndCounters(id, DataTypes.PANIC, totPanicLevel);
+                }
+
+            }
+
+            // 2. panic acitvation should happen if activation condition matches
+            else if (totPanicLevel > totWaitLevel) {
+                updateAgentStateValueAndCounters(id, DataTypes.PANIC, totPanicLevel);
+                updateAgentStateValueAndCounters(id, DataTypes.WAIT, totWaitLevel);
+            }
+
+            // 3. wait activation should happen if activation condition matches
+            else if (totWaitLevel > totPanicLevel) {
+                updateAgentStateValueAndCounters(id, DataTypes.WAIT, totWaitLevel);
+                updateAgentStateValueAndCounters(id, DataTypes.PANIC, totPanicLevel);
+
+            }
+        }
+    }
+    catch (IndexOutOfBoundsException e) {
+        logger.error(" error {}", e.getMessage());
+    }
 
 
     }
