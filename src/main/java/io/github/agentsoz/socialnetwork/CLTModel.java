@@ -1,7 +1,7 @@
-package io.github.agentoz.socialnetwork;
+package io.github.agentsoz.socialnetwork;
 
-import io.github.agentoz.socialnetwork.util.DataTypes;
-import io.github.agentoz.socialnetwork.util.Utils;
+import io.github.agentsoz.socialnetwork.util.DataTypes;
+import io.github.agentsoz.socialnetwork.util.Utils;
 
 import java.util.HashMap;
 import java.util.Map;

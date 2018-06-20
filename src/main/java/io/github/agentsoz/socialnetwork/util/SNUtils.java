@@ -1,11 +1,11 @@
-package io.github.agentoz.socialnetwork.util;
+package io.github.agentsoz.socialnetwork.util;
 
 //import bushfire.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.github.agentoz.socialnetwork.Network;
-import io.github.agentoz.socialnetwork.SNConfig;
-import io.github.agentoz.socialnetwork.SocialNetworkManager;
+import io.github.agentsoz.socialnetwork.Network;
+import io.github.agentsoz.socialnetwork.SNConfig;
+import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 
 import java.io.*;
 import java.util.Random;
@@ -62,9 +62,9 @@ public class SNUtils {
 		logger.trace("setting SN main configs complete");
 	}
 	
-//	public static void setMainConfigFile() {
-//		Config.setConfigFile(mainConfig);
-//	}
+	public static void setMainConfigFile() {
+		SNConfig.setConfigFile(mainConfig);
+	}
 
 	public static String getMainConfigFile() {
 		return mainConfig;

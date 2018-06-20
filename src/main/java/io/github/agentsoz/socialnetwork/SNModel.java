@@ -1,11 +1,11 @@
-package io.github.agentoz.socialnetwork;
+package io.github.agentsoz.socialnetwork;
 
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.github.agentoz.socialnetwork.util.DataTypes;
+import io.github.agentsoz.socialnetwork.util.DataTypes;
 
 import java.util.HashMap;
 import java.util.List;

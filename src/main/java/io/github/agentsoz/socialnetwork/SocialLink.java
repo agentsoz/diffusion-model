@@ -1,4 +1,4 @@
-package io.github.agentoz.socialnetwork;
+package io.github.agentsoz.socialnetwork;
 
 /*
  * How link(id1,id2) is distinguished from link(id2,id1) ? 

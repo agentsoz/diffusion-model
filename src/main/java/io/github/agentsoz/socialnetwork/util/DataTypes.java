@@ -1,4 +1,4 @@
-package io.github.agentoz.socialnetwork.util;
+package io.github.agentsoz.socialnetwork.util;
 
 
 // DataServer data types used by the bushfire application

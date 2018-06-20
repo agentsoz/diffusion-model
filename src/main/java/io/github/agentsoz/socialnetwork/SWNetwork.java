@@ -1,4 +1,4 @@
-package io.github.agentoz.socialnetwork;
+package io.github.agentsoz.socialnetwork;
 
 
 import java.io.FileNotFoundException;

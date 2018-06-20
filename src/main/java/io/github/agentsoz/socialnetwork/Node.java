@@ -1,4 +1,4 @@
-package io.github.agentoz.socialnetwork;
+package io.github.agentsoz.socialnetwork;
 
 public abstract class Node {
 

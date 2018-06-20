@@ -1,6 +1,6 @@
-package io.github.agentoz.socialnetwork;
+package io.github.agentsoz.socialnetwork;
 
-import io.github.agentoz.socialnetwork.util.DataTypes;
+import io.github.agentsoz.socialnetwork.util.DataTypes;
 
 public class DiffModelFactory {
 

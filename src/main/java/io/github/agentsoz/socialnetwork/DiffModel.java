@@ -1,4 +1,4 @@
-package io.github.agentoz.socialnetwork;
+package io.github.agentsoz.socialnetwork;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
