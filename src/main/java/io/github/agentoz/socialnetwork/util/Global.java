@@ -1,4 +1,4 @@
-package socialnetwork.util;
+package io.github.agentoz.socialnetwork.util;
 
 import java.util.Random;
 

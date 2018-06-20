@@ -1,4 +1,4 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
 
 /* ER network model
@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import socialnetwork.util.Global;
+import io.github.agentoz.socialnetwork.util.Global;
 
 
 public class RandomNetwork extends Network {

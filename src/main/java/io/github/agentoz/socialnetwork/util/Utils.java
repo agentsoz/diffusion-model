@@ -1,6 +1,6 @@
-package socialnetwork.util;
+package io.github.agentoz.socialnetwork.util;
 
-import socialnetwork.util.Global;
+import io.github.agentoz.socialnetwork.util.Global;
 
 
 public class Utils {

@@ -1,4 +1,4 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
 public class Link {
 

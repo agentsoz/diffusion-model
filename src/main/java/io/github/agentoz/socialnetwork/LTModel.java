@@ -1,4 +1,4 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import socialnetwork.util.DataTypes;
-import socialnetwork.util.Global;
-import socialnetwork.util.Utils;
+import io.github.agentoz.socialnetwork.util.DataTypes;
+import io.github.agentoz.socialnetwork.util.Global;
+import io.github.agentoz.socialnetwork.util.Utils;
 
 
 /*

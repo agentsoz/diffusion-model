@@ -1,4 +1,4 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
 
 import java.io.File;
@@ -13,7 +13,7 @@ import java.util.Random;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import socialnetwork.util.Global;
+import io.github.agentoz.socialnetwork.util.Global;
 
 public  class Network{
 

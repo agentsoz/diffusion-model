@@ -1,4 +1,4 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
 /* In the links map, always the to will the particular agent that have the linkmap, and from will
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import socialnetwork.util.DataTypes;
+import io.github.agentoz.socialnetwork.util.DataTypes;
 
 public class SocialAgent extends Node{
 	

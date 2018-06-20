@@ -1,26 +1,14 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
-import socialnetwork.util.DataTypes;
-import io.github.agentsoz.dataInterface.DataClient;
-import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.dataInterface.DataSource;
+import io.github.agentoz.socialnetwork.util.DataTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import socialnetwork.util.Global;
-import socialnetwork.util.SNUtils;
-
+import io.github.agentoz.socialnetwork.util.Global;
+import io.github.agentsoz.dataInterface.DataServer;
 
 import java.util.HashMap;
 
 /*
-
- * Configs:
- * SN model has the separate config
- * steps:
- * 	create the agentList : createSocialAgent -> setCord 
- *  initialise the social network
- *  for each diff turn -> process diffusion
- *
  *  Whenever there is a change in agent states, SN Manager should  publish to the dataserver, inorder for the changes to take effect
  *  in BDI and MATSim systems. Currently there are two such functions: Seeding and diff process.
  *  Updates of these two functions are published to the dataserver at the application side.
@@ -28,7 +16,6 @@ import java.util.HashMap;
 
 public class SocialNetworkManager{
 
-//	private String execType = ""; // distinguish SN_BDI exec and TestSNModel exec (for printing configs) -  check designs for further details.
 	final Logger logger = LoggerFactory.getLogger("");
 
 	public HashMap<Integer, SocialAgent> agentList = new HashMap<Integer, SocialAgent>();

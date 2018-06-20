@@ -1,7 +1,7 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
-import socialnetwork.util.DataTypes;
-import socialnetwork.util.Utils;
+import io.github.agentoz.socialnetwork.util.DataTypes;
+import io.github.agentoz.socialnetwork.util.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class CLTModel extends LTModel{
+public class CLTModel extends LTModel {
 
 
     private int seedW = 0; // #agents

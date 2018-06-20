@@ -1,4 +1,4 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import socialnetwork.util.Utils;
+import io.github.agentoz.socialnetwork.util.Utils;
 
 public class RandomRegularNetwork extends Network{
 

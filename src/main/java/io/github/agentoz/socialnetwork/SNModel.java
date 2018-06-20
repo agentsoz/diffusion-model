@@ -1,11 +1,11 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import socialnetwork.util.DataTypes;
+import io.github.agentoz.socialnetwork.util.DataTypes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,14 +22,17 @@ public class SNModel implements DataSource,DataClient {
         this.config = configFile;
     }
 
-    public void init(List<String> idList) {
+    public void initAgentMap(List<String> idList) {
 
         snManager = new SocialNetworkManager(this.config);
 
-        for(String id:idList) {  //populate agentmap
+        for (String id : idList) {  //populate agentmap
             snManager.createSocialAgent(id);
         }
+    }
 
+    public void generateSNModel(){
+        
         if(snManager.initSNModel()) { // init network and diffusion models
 
             snManager.printSNModelconfigs();
@@ -38,6 +41,9 @@ public class SNModel implements DataSource,DataClient {
             logger.error("SNModel initialisation failed, aborting");
             System.exit(-1);
         }
+
+        //subscribe to BDI data updates
+        this.dataServer.subscribe(this,DataTypes.BDI_STATE_UPDATES);
     }
 
     public void stepDiffusionProcess() {

@@ -1,4 +1,4 @@
-package socialnetwork;
+package io.github.agentoz.socialnetwork;
 
 /*
  * #%L
@@ -34,8 +34,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import socialnetwork.util.DataTypes;
-import socialnetwork.util.Global;
+import io.github.agentoz.socialnetwork.util.DataTypes;
+import io.github.agentoz.socialnetwork.util.Global;
 
 
 /**
