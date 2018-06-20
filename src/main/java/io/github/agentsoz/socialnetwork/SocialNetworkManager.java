@@ -35,11 +35,11 @@ public class SocialNetworkManager{
     	int agentID = Integer.parseInt(id);  //use this t initialise agents in SN side
 
 		if(SNConfig.getDiffusionType().equals(DataTypes.ltModel)) {
-			agentList.put(agentID, new SocialAgent(agentID)); // LT Model social agent constructor.
+			this.agentList.put(agentID, new SocialAgent(agentID)); // LT Model social agent constructor.
 			logger.trace(" social agent {} initialized ", id);
 		}
 		else if(SNConfig.getDiffusionType().equals(DataTypes.CLTModel)) {
-			agentList.put(agentID, new SocialAgent(agentID, DataTypes.MEDIUM)); // CLT Model social agent constructor.
+			this.agentList.put(agentID, new SocialAgent(agentID, DataTypes.MEDIUM)); // CLT Model social agent constructor.
 		}
     	 
     }
