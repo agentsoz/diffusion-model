@@ -22,7 +22,7 @@ package io.github.agentsoz.socialnetwork;
  * What does controlling the avgDegree mean?
  * It only controls the number of links in the generaeted network and not actual degree of nodes, though the avg degree is
  * maintained.
- * Best way to generate the random seed ?? 
+ *
  * 
  * setting configs:
  * use the method in this class to set the configs and do not set configs anywhere else out of the class
@@ -164,45 +164,6 @@ public class RandomNetwork extends Network {
 	     logger.debug("verification - expected  #links: {} | generated #links: {} ", expTotLinks, linkCount);    
 	     logger.debug("verification - expected avg degree: {} | generated avg degree: {} ", this.expAvgDgree, (double)(linkCount * 2)/ this.nodes );
 
-	     //	     logger.debug("verfication3 - degree distribution"); // WRONG - do not uses this
-	    
-	     //WRONG - only one arraylist is updated when creating links
-//    	for (int i = 0; i < this.nodes; i++) { 
-//    		ArrayList<Integer> neighbours = network.get(i);
-//
-//    		if(neighbours == null) {
-//    			logger.debug("error: node {} neighbour list is null", i);
-//    			
-//    		}
-//    		else {
-//        	
-////    			logger.debug("id: {} | neighbours :{}",i,neighbours.toString());
-//        	
-//       		 int size = neighbours.size() ;
-//       		 if (size == 0) { ct0++; }
-//       		 if (size == 1) { ct1++; }
-//       		 if (size == 2) { ct2++; }
-//       		 if (size == 3) { ct3++; }
-//       		 if (size == 4) { ct4++; }
-//       		 if (size == 5) { ct5++; }
-//       		 if (size == 6) { ct6++; }
-//       		 if (size >= 6) { ct7++; }
-//       		 
-//       		 
-//    		}
-//
-//    	}
-//    	logger.debug("degree  #nodes");
-//    	logger.debug("0 \t {}",ct0);
-//    	logger.debug("1 \t {}", ct1);
-//    	logger.debug("2 \t {}",ct2);
-//    	logger.debug("3 \t {}",ct3);
-//    	logger.debug("4 \t {}",ct4);
-//    	logger.debug("5 \t {}",ct5);
-//    	logger.debug("6 \t {}",ct6);
-//    	logger.debug("6> \t {}",ct7);
-    	
-    	
 	   }
 	   /* 
 	    * This function updates the agentMap from the 2D arraylist (network)
@@ -253,7 +214,8 @@ public class RandomNetwork extends Network {
 				normaliseLinkWeights(agentList);
 			}
 		}
-		
+
+		//normalise link weights for each weight <=1
 		public void setupConfigs() {
 			this.normalise = SNConfig.normaliseRandNetwork();
 		}

@@ -233,6 +233,10 @@ public class SocialNetworkManager{
 		return this.diffModel;
 	}
 
+	public Network getNetworkModel() {
+		return this.network;
+	}
+
     //hook a preconfigured diffusion model with SN Manager
 	public void setTestDiffModel( DiffModel dModel) {
 		this.diffModel = dModel;

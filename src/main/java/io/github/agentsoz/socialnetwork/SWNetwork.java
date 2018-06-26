@@ -555,19 +555,19 @@ public class SWNetwork extends Network {
 	   public void verifyNetwork()
 	   {
 		   int ct0=0;int ct1=0;int ct2=0;int ct3=0;int ct4=0;int ct5=0;int ct6=0;int ct7=0;
+		   int nullCount = 0;
 		   
 		 logger.info("SW network size: {} | link probability: {}", this.network.size(), this.prob);    
 //		 int expTotLinks= (int) (( this.nodes * (this.nodes -1) * this.prob ) /2) ;
 //	     logger.debug("verfication1 - expected  #links: {} | generated #links: {} ", expTotLinks, linkCount)
 		 logger.info("verfication1 - total #links: {} | rewired #links {}", this.linkCount, this.rewiredLinksCount);     
-	     logger.info("verfication2 - expected avg degree: {} | generated avg degree: {} ", this.expAvgDgree, (double)(linkCount * 2)/  this.network.size() );    
+	     logger.info("verfication2 - expected avg degree: {} | generated avg degree: {} ", this.expAvgDgree, getGenAvgDegree() /* (double)(linkCount * 2)/  this.network.size() */ );
 	     logger.info("verfication3 - degree distribution:"); 
 	    
     	for (int i = 0; i <  this.network.size(); i++) { 
     		ArrayList<Integer> neighbours = network.get(i);
     		if(neighbours == null) {
-    			logger.warn(" agent {} has a null neighbour list", i);
-    			
+				nullCount++;
     		}
     		else {
     			
@@ -583,8 +583,7 @@ public class SWNetwork extends Network {
        		 
        		 
     		}
-
-    	}
+		}
     	logger.info("degree  #nodes");
     	logger.info("0 \t {}",ct0);
     	logger.info("1 \t {}", ct1);
@@ -594,10 +593,20 @@ public class SWNetwork extends Network {
     	logger.info("5 \t {}",ct5);
     	logger.info("6 \t {}",ct6);
     	logger.info("6> \t {}",ct7);
-    	
-    	
+
+    	logger.warn(" {} agents has a null neighbour list", nullCount);
+
+
 	   }
-	   
+
+	   public double getGenAvgDegree() {
+		   return (double)(this.linkCount * 2)/  this.network.size();
+	   }
+
+	   public int getRewiredLinksCount() {
+
+  			return this.rewiredLinksCount;
+	   }
 	   /* 
 	    * This function updates the agentMap from the 2D arraylist (network)
 	    * TESTED - the re-wired adj matrix display and the updated agent map display is the same. 

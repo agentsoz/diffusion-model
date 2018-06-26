@@ -12,7 +12,7 @@ import java.util.Random;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
-
+import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 /*
  *  
@@ -70,7 +70,8 @@ public class LTModel extends DiffModel{
 	 */
 	@Override
 	public void initialise() {
-		
+
+		logger.debug("initialising LT model...");
 		//1. setupConfigs
 		setupDiffConfigs();
 	
@@ -295,9 +296,12 @@ public class LTModel extends DiffModel{
 			getAgentMap().get(randomId).setIsSeedTrue(); // agent is part of the seed
 			selected++;
 		}
-		
+
+		// counting social states
+		SNUtils.countLowMedHighAgents(this.snManager);
+
 		logger.info("initialise random seed complete-expected active agents: {}", selected);
-		logger.info("total medium and high panic agents: {} ", (getMedPanicCount() + getHighPanicCount()) );
+		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",SNUtils.getLowCt(), SNUtils.getMedCt());
 	}
 	
 	/* function: selects the agents near fire 
@@ -361,9 +365,11 @@ public class LTModel extends DiffModel{
 		}
 		
 		logger.info("initialise near fire seed complete- selected agents ({}): {}", this.diffSeed, selected);
-		logger.info("total medium and high panic agents: {} ", (getMedPanicCount() + getHighPanicCount()) );
 
-		
+		SNUtils.countLowMedHighAgents(this.snManager);
+		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",SNUtils.getLowCt(), SNUtils.getMedCt() );
+
+
 	}
 	/*
 	 * This function selects the seed based on a probability, where agents near the seed has a higher probability to get

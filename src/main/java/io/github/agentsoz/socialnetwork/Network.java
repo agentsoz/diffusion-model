@@ -29,6 +29,7 @@ final Logger logger = LoggerFactory.getLogger("");
 
 public  static ArrayList<SocialLink> linkList = new  ArrayList<SocialLink>(); // NOT USED PRACTICALLY
 public static int neighbourLinksCount = 0;
+private int linkCountInAgentMaps = 0 ; // counts the #links  in the agent map
 
 public static String type = "normalise"; // normalise (sum weights = 1),equal
 
@@ -218,14 +219,22 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 	public boolean isProperlyNormalised(HashMap<Integer,SocialAgent> agentList) {
 		boolean res = true;
 		 for (SocialAgent agent: agentList.values()) {
-			 if(agent.getSumWeights() > 1) { 
-				 logger.error("agent {} sum of weights exceeds 1", agent.getID());
+			 if(agent.getSumWeights() > 1.1) {
+				 logger.error("agent {} sum of weights exceeds 1: {}", agent.getID(), agent.getSumWeights());
 				 	res = false;
 			 }
 		 }
 		  return res;
 	}
-	
+
+	public int getNeihgbourLinkCount() {
+		return this.neighbourLinksCount;
+	}
+
+	public int getLinkCountInAgentMaps() {
+		return this.linkCountInAgentMaps;
+	}
+
 	
 	/* For the agent link map - neiId, weight
 	 * If agent1 contains id2 in the linkset? &&
@@ -377,7 +386,6 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 	    *  agentMap. Should be logged.
 	    */
 		public void verifyUpdatedAgentList(HashMap<Integer,SocialAgent> agentList)  {
-			int linkCountInAgentMaps = 0 ; // counts the #links  in the agent map 
 			int alreadyLinkedCount = 0 ; // given two agents are they both exist in each other's link maps
 			logger.info("verifying the updated agentmap.....");
 //			logger.debug("verification - #links in the  linkList: {} ", this.links.size());  neighbourLinksCount
@@ -386,7 +394,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 	           for (int id: agentList.keySet()) 
 	           {
 	        	   SocialAgent agent = agentList.get(id);
-	        	   linkCountInAgentMaps =  linkCountInAgentMaps + agent.getLinkMapSize();
+	        	   this.linkCountInAgentMaps =  this.linkCountInAgentMaps + agent.getLinkMapSize();
 	        	//   HashMap<Integer,SocialLink> links = agent.getLinkSet();
 	        	   
 	        	   
@@ -401,7 +409,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 	        	   
 	           }
 	           // these two counts should be equal, which are counted in two different ways
-				logger.info("verification - total link count in agentmaps : {} ", linkCountInAgentMaps);
+				logger.info("verification - total link count in agentmaps : {} ", this.linkCountInAgentMaps);
 				logger.info("verification - alreadylinkedCount (check social agent neighbours) : {} ", alreadyLinkedCount);
 				
 				logger.info("verification - degree distribution");
