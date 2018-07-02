@@ -1,0 +1,123 @@
+Test Simulation of the S3 model
+Test package = bushfire.test
+Test Class = Tests3Simulation
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Testing setup
+
+config files: 
+pop file = haw_pop_seven
+sn dataset = testsn.txt
+
+A specific SN with 6 agents and a seed is created, so that the diffusion process is deterministic. Fixed thresholds are used. Configs are set in the test class and other SN configs are not read through the SNManager. As we need to test the integrated system w.r.t output files,  we cannot generate specific maven based unit testcases. We should manually test some cases while we can ofcourse test the functions of the SN model (dff process and network generation) independantly.
+
+scripts: 
+there are scripts to get the trace of a given agent to get decision trace in BDI sytem (by grepping haw.log) and the behaviour trace by grepping the MATSim events file.
+
+Outputs:
+panic data.txt
+BDIplan selection data.txt
+haw.log
+events.log
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Tips to Remember
+-After running every test case, make sure to run the checkForErrors script to check for unexpected errors.
+-When using the scripts, if the Evac activity end time is set to +infinity, then you wont find a stuckAndAbort agent in the MATSim events file. But the agent has started Evac activity and has not ended it.
+-Some configs (e.g seed, turn) are set in the test class and NOT from the main config file.
+-If you need to check/verify a configuration (e.g. pop file deptimes vs NICTA deptimes) definitely use a JAVA program and AVOID using a script to do it. Because matching different values with ids is really hard in bash scripting. JAVA is so much easier for such processing tasks and less time consuming. Use a java program, process as needed and output a text file. Finally use diff to check against the NICTA version.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Possible Test Cases: 
+1. check that the SN model and the BDI model should execute in the same timestep.
+That is, time stepping should be the first step, (or the last step? ) of the take control method of the scenario (S3) model.
+Otherwise there maybe issues in conditions implemented in BDI system as the agent states in stept will be evaluated in BDI side at step t+1. step t missed in BDI side.
+Use the haw.log and chcek the diff process time step, and the consequent BDI exec timesteps.
+
+2. Negative  tlefts
+This can be checked in the haw.log as a warning. If there are negative time lefts, then there are holes in the condition for checkForDeparture method in S3 JACK model.
+
+3. Seed Testing
+- all agents delaying? 0.0 (no seed) -> all agent states low, non should evacuate. --tested.
+- all agents evacuating? 100 and panicked -> all high/panicked at step 4, all should evac immediately (BDI decision) and should reach safe (MATSim). But even if the evac activity end time is set from BDI, the actual evac act end time may depend on the time agent arrives at CEP. In this case, the agent should end the evac activity the timestep it starts it. -- tested.
+- all following the evac plan?  comment the TestSN gen method. 100%seed with with medium plevel (e.g. 0.4). all agents ends evac activity exactly same as the schedueled departure. --tested
+
+
+4. Agent behaviour Testing with paper example (the EXAMPLE testcase in the paper + extra agent 7)
+dstep = 20mins (=delaytime)
+seed = 1(0.3),2(0.5) 
+thresholds = Tlow=0.25, Thigh=0.75
+config population file:haw_pop_seven.xml.gz
+config haw.xml: testcase=true
+(*Note- state here is the state when making the final decision)
+Agent	sdep	state	decision	
+1	20 	M 	leave on time 1200.0 (pattern2)
+2	1h	H 	H at (2400)40mins, leaveimmediately at (3000)50mins (pattern4)
+3	10mins	M 	intially delay to 30mins(10+20?), then M at (1200)20mins, leave on pdep (1800)30mins (pattern3)
+4	39mins	H	initally delay to (39+20)mins(3540). At (2400)40mins H, then evac at (3000)50mins (pattern5)
+5	5.15h	L	stay (pattern1) -> start delaying at step 18000
+6	5.15h	M	leave on time 18900 (pattern2)
+7	14h(5400) L 	no network, so delay.
+Expected behaviour patterns = 5
+endstate-low:
+	1:keeping delaying and never evac 
+	
+endstate-medium:
+	2:medium panic on sdep.evac on scheduled time.
+	3:low panic on sdep, then after several dsteps, the agent become medium and evac on pdep.
+
+endstate-high:
+	4:High panic before sdep(e.g. high panicked in seed), leave early.
+	5:keep delaying first on sdep, and then become high panic and evac.
+Note:- in the SN model, the panic level can transition from l->m->h, but in the BDI side, when you are making the decision just before the s/pdep, the agent either leavesNow or leaveImm.	
+
+
+
+5. An agent selecting leaveNow/leaveImm plans multiple times? --tested for the 2 plans
+5.1 delayplan - agent can select this plan multiple times/ or until end of simulation. But the BDIAction is issued only once (TEST THIS with getAgentBDITrace script). plannedDep is modified in the BDI side.
+5.2 leaveNow/leaveImm plans- an agent should select a plan only one time. An error message is logged if the agent id is already there in the s3Data lists. This error messages are checked in the checkForErrors script. After either of these plans are selected, there will be no decision making from the BDI side for that agent in the BDI side (evac flag=true).
+
+6. If an agent does not have any neighbours in the network? - Testagent 7
+Ideally, that means the agent does not recieve any influence from its network, therefore, its panic level is low. So it should keep delaying the evac. In MATSim, the agent arrives at the CEP, at starts the evac activity and waits there as the endtime is inifinite.
+7	L	sDep=14h	pDep=
+
+7. dstep vs delaytime issue 
+7.1 paper Test model 
+dstep=40mins - this must be set from the test class and not from the main config file.
+Agent	sdep	state	decision	
+1	20 	M	leave on time (pattern2)
+2	1h	M	M at 40mins, so leave on time (pattern2)
+3	10mins	M	delay at dstep4, and then at M at dstep40, so leave on planned time (pattern3)
+4	39mins	H	delay twice (at 4 and 40), then H at 80, so leaveImmediately at 90mins (plannedDep is at 119mins)
+5	5.15h	L	stay (pattern1)
+6	5.15h	M	M at 4.40h, so leave on time (pattern2)
+
+7.2 Main simulation -  setting dstep in the main config (step=40mins)
+agent delay departure is 40mins.
+no errors found.
+
+
+8. Configurations
+SNConfig:
+	checked for correct network type.
+	checked for getters/setters tally with the var name.
+SNmodel:
+	swnetwork class attributes are set from the SNConfig.
+	rand-reg network class attributes are set from the SNConfig
+	rand-reg network class attributes are set from the SNConfig
+
+	ltmodel configs are set from SNConfig
+		thresholdtype, tlow,thigh,sd,strategy,
+
+SN -> BDI side configs?
+	diffturn: read from BDIConnector <- SNConfig.getDiffTurn : already checked as delaytime = dturn
+MATSim -> BDI configs?
+	deptimes? if dTime < 4 -> dTime =4secs.
+	homelocations ? for each agent, a single msg(initPlanData) is sent inclding id,deptime,safelocs and homelocs. 
+	
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

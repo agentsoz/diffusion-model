@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
+import io.github.agentsoz.socialnetwork.util.Log;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

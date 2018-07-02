@@ -17,7 +17,7 @@ import io.github.agentsoz.socialnetwork.SWNetwork;
 import io.github.agentsoz.socialnetwork.SocialAgent;
 import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
-
+import io.github.agentsoz.socialnetwork.util.Log;
 
 public class TestSWNetworkModel {
 

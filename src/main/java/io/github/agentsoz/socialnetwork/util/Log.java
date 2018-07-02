@@ -1,4 +1,4 @@
-package sn;
+package io.github.agentsoz.socialnetwork.util;
 
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ public class Log {
 /* 
  *  Logger class used for  test clases
  */
-	public static String logFile = "/home/chaminda/workspace/testSN.log";
+	public static String logFile = "./testSN.log";
 	private static Logger logger = null;
 	private static Level logLevel = Level.DEBUG;
 	
