@@ -93,6 +93,9 @@ public class SNModel implements DataSource,DataClient {
         // terminate the snModel
     }
 
+    public void registerDataServer(DataServer ds){
+        this.dataServer = ds;
+    }
     public void publishDiffusionDataUpdate() {
         this.dataServer.publish(DataTypes.DIFFUSION, "sn-data");
     }

@@ -4,7 +4,6 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.agentsoz.socialnetwork.util.Global;
-import io.github.agentsoz.dataInterface.DataServer;
 import java.util.HashMap;
 
 /*
@@ -19,7 +18,6 @@ public class SocialNetworkManager{
 
 	public HashMap<Integer, SocialAgent> agentList = new HashMap<Integer, SocialAgent>();
 
-	private DataServer dataServer;
     private Network network;
     private DiffModel diffModel;
 	private String mainConfigFile;
@@ -197,10 +195,6 @@ public class SocialNetworkManager{
 		return s;
 	}
 
-	public void setDataServer(DataServer ds) {
-		this.dataServer = ds;
-	}
-
 	public HashMap<Integer,Double> getCurrentStepDiffusionData() {
 
 		HashMap<Integer,Double> data =  new HashMap<Integer, Double>();
@@ -222,9 +216,6 @@ public class SocialNetworkManager{
 		this.diffModel = dModel;
 	}
 
-	public void publishSNDataUpdate() {
-		this.dataServer.publish(DataTypes.DIFFUSION, "sn-data");
-	}
 
 	// generate agentmap with starting from a specified id.
 	public void createAgentMapWithSpecifiedId(int startId, int numAgents) {
