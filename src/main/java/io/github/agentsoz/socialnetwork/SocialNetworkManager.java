@@ -5,13 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.dataInterface.DataServer;
-
 import java.util.HashMap;
 
 /*
- *  Whenever there is a change in agent states, SN Manager should  publish to the dataserver, inorder for the changes to take effect
+ *  Whenever there is a change in agent social states, SN Manager should  publish to the dataserver, inorder for the changes to take effect
  *  in BDI and MATSim systems. Currently there are two such functions: Seeding and diff process.
- *  Updates of these two functions are published to the dataserver at the application side.
+ *  Updates of these two functions are published to the dataserver to be received at the application side.
  */
 
 public class SocialNetworkManager{
@@ -20,9 +19,9 @@ public class SocialNetworkManager{
 
 	public HashMap<Integer, SocialAgent> agentList = new HashMap<Integer, SocialAgent>();
 
-	protected DataServer dataServer;
-    Network network;
-    DiffModel diffModel;
+	private DataServer dataServer;
+    private Network network;
+    private DiffModel diffModel;
 	private String mainConfigFile;
 
 
@@ -32,22 +31,19 @@ public class SocialNetworkManager{
         
     public void createSocialAgent(String id)
     {
-    	int agentID = Integer.parseInt(id);  //use this t initialise agents in SN side
+    	int agentID = Integer.parseInt(id);
 
 		if(SNConfig.getDiffusionType().equals(DataTypes.ltModel)) {
-			this.agentList.put(agentID, new SocialAgent(agentID)); // LT Model social agent constructor.
+			this.agentList.put(agentID, new SocialAgent(agentID)); // LT Model constructor.
 			logger.trace(" social agent {} initialized ", id);
 		}
 		else if(SNConfig.getDiffusionType().equals(DataTypes.CLTModel)) {
-			this.agentList.put(agentID, new SocialAgent(agentID, DataTypes.MEDIUM)); // CLT Model social agent constructor.
+			this.agentList.put(agentID, new SocialAgent(agentID, DataTypes.MEDIUM)); // CLT Model constructor.
 		}
     	 
     }
         
-//    public void setExecType(String type) {
-//    	this.execType = type;
-//    }
-    
+
     public void setCords(String id, double east, double north) {
 
 		int agentID = Integer.parseInt(id);
@@ -67,52 +63,30 @@ public class SocialNetworkManager{
     }
     
     
-	/*
-	 * method : main method that initialises a social network model 
-	 * first method that runs from the BDI side.
-	 * 
-	 * note : the diffusion process will execute only if this methods return true.
-	 * therefore check the conditions for initialising the social network and return false
-	 * 
-	 * note: when testing network generation, it cannot use the agentmap from haw_pop xml file?
-	 * class variables of SNmanager class are not tested
-	 * 
-	 * note: after updating the agent map, the social network object is not needed. 
-	 * 
-	 * SN model is successfully initialised if all three statuses return true.
-	 */
-    
+
+// initilises a network, diffusion model as specified in configurations
     public boolean initSNModel()
     {
 
-    boolean configStatus = 	setupSNConfigs();
-
-	//SNConfig.printNetworkConfigs();
-	//SNConfig.printDiffusionConfigs();
-	
-	    //2.gen network
-    boolean networkStatus =  generateSocialNetwork();
-	    
-	    //3. gen diff model
-    boolean diffStatus =   generateDiffModel();
-	    
-    if (configStatus && networkStatus && diffStatus) {
-    	
-    	logger.info("All SN model componants generated completely");
-    	return true;
-    }
-    else if(!configStatus) {
-    	logger.error("Error in setting configurations");
+    if(!setupSNConfigs()) {
+		logger.error("Error in setting configurations");
 		return false;
 	}
-	else if(!networkStatus) {
+	else if(!generateSocialNetwork()){
 		logger.error("Error in generating network model");
 		return false;
 	}
-	else if(!diffStatus) {
+	else if(!generateDiffModel()){
 		logger.error("Error in generating diffusion model");
 		return false;
 	}
+	else{
+		//SNConfig.printNetworkConfigs();
+		//SNConfig.printDiffusionConfigs();
+		logger.info("All SN model componants generated completely");
+		return true;
+	}
+
 
     }
     
@@ -124,12 +98,7 @@ public class SocialNetworkManager{
 			logger.error("Failed to load SN configuration from '"+SNConfig.getConfigFile()+"'. Aborting");
 			return false;
 		}
-		else { 
-			//1. print the configs
-//			if(execType.equals(DataTypes.SN_BDI)) {
-//				SNConfig.printNetworkConfigs();
-//				SNConfig.printDiffusionConfigs();
-//			}
+		else {
 			return true;
 		}
     }
@@ -138,6 +107,7 @@ public class SocialNetworkManager{
 		SNConfig.printNetworkConfigs();
 		SNConfig.printDiffusionConfigs();
 	}
+
     public boolean generateSocialNetwork()
     {
     	
@@ -149,7 +119,7 @@ public class SocialNetworkManager{
     	NetworkFactory netFactory =  new NetworkFactory();
     	network = netFactory.getNetwork(SNConfig.getNetworkType(), this.agentList);
     	if(network == null) {
-        	logger.error("network generation failed, null network found");
+        	logger.error("network generation failed, null network ");
         	return false;
     	}
     	else {
@@ -167,13 +137,13 @@ public class SocialNetworkManager{
     	DiffModelFactory diffFactory =  new DiffModelFactory();
     	diffModel = diffFactory.getDiffusionModel(SNConfig.getDiffusionType(), this);
     	if(diffModel == null) {
-        	logger.error("diffusion model generation failed, null model found");
+        	logger.error("diffusion model generation failed, null diffusion model found");
         	return false;
     	}
     	else {
-    		// other initialisation methods
+    		// now initialise the model
     		diffModel.initialise(); 
-            logger.info(" diffusion model initialisation complete"); // ready to start diffusion process
+            logger.info(" {} diffusion model generated", SNConfig.getDiffusionType());
             return true;
     	}
 
@@ -184,9 +154,9 @@ public class SocialNetworkManager{
     
     /*
      * The main method that controls the diffusion process.
-     * This process should include the standard diffusion functions, anything external to the standard
-     * functions (e.g. publish data to dataserver, write diffusion data)
-     * should be executed in the application side.
+     * Used by SN and SN-BDI and SN-BDI-ABM componants, so includes general functions,
+      * any specific functions (e.g. publish data to dataserver, write diffusion data)
+     * should be called in the application side.
      */
     public boolean processDiffusion(long time)
     {
@@ -247,7 +217,7 @@ public class SocialNetworkManager{
 		return this.network;
 	}
 
-    //hook a preconfigured diffusion model with SN Manager
+    //hook a specific diffusion model with SN Manager
 	public void setTestDiffModel( DiffModel dModel) {
 		this.diffModel = dModel;
 	}

@@ -34,13 +34,14 @@ public class SNModel implements DataSource,DataClient {
     public void genSNModel(){ // set SNManager based on main configs unless already set
 
         if(snManager == null) {
-                this.snManager.initSNModel()) { // setup configs, init network and diffusion models
+                this.snManager.initSNModel(); { // setup configs, init network and diffusion models
                 this.snManager.printSNModelconfigs();
 
         }
 
         //subscribe to BDI data updates
         this.dataServer.subscribe(this,DataTypes.BDI_STATE_UPDATES);
+    }
     }
 
     public SocialNetworkManager getSNManager() {
