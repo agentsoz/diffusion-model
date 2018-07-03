@@ -101,9 +101,19 @@ public class SocialNetworkManager{
     	logger.info("All SN model componants generated completely");
     	return true;
     }
-    else
-    	return false;
-	    
+    else if(!configStatus) {
+    	logger.error("Error in setting configurations");
+		return false;
+	}
+	else if(!networkStatus) {
+		logger.error("Error in generating network model");
+		return false;
+	}
+	else if(!diffStatus) {
+		logger.error("Error in generating diffusion model");
+		return false;
+	}
+
     }
     
     public boolean setupSNConfigs(){

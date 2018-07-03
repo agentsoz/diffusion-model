@@ -31,19 +31,24 @@ public class SNModel implements DataSource,DataClient {
         }
     }
 
-    public void generateSNModel(){
-        
-        if(snManager.initSNModel()) { // init network and diffusion models
+    public void genSNModel(){ // set SNManager based on main configs unless already set
 
-            snManager.printSNModelconfigs();
-        }
-        else {
-            logger.error("SNModel initialisation failed, aborting");
-            System.exit(-1);
+        if(snManager == null) {
+                this.snManager.initSNModel()) { // setup configs, init network and diffusion models
+                this.snManager.printSNModelconfigs();
+
         }
 
         //subscribe to BDI data updates
         this.dataServer.subscribe(this,DataTypes.BDI_STATE_UPDATES);
+    }
+
+    public SocialNetworkManager getSNManager() {
+        return this.snManager;
+    }
+
+    public void setSNManager(SocialNetworkManager sn) {
+        this.snManager = sn;
     }
 
     public void stepDiffusionProcess() {
