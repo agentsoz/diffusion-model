@@ -10,6 +10,7 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import java.util.HashMap;
 import java.util.List;
 
+//wrapper class of SNManager class, provides API functionalities through DataServer
 public class SNModel implements DataSource,DataClient {
 
     private DataServer dataServer;
@@ -24,24 +25,23 @@ public class SNModel implements DataSource,DataClient {
 
     public void initAgentMap(List<String> idList) {
 
-        snManager = new SocialNetworkManager(this.config);
-
+        initSNManagerBasedOnConfigs();
         for (String id : idList) {  //populate agentmap
             snManager.createSocialAgent(id);
         }
     }
 
+    public void initSNManagerBasedOnConfigs(){
+        snManager = new SocialNetworkManager(this.config);
+    }
     public void genSNModel(){ // set SNManager based on main configs unless already set
 
-        if(snManager == null) {
-                this.snManager.initSNModel(); { // setup configs, init network and diffusion models
-                this.snManager.printSNModelconfigs();
 
-        }
-
+        this.snManager.initSNModel(); // setup configs, init network and diffusion models
+        this.snManager.printSNModelconfigs();
         //subscribe to BDI data updates
         this.dataServer.subscribe(this,DataTypes.BDI_STATE_UPDATES);
-    }
+
     }
 
     public SocialNetworkManager getSNManager() {
@@ -54,10 +54,11 @@ public class SNModel implements DataSource,DataClient {
 
     public void stepDiffusionProcess() {
 
-        snManager.processDiffusion((long)dataServer.getTime());
-        getNewData(dataServer.getTime(),snManager.getCurrentStepDiffusionData());
+        if(snManager.processDiffusion((long)dataServer.getTime())) {
+            getNewData(dataServer.getTime(),snManager.getCurrentStepDiffusionData());
+            logger.debug("published diffusion latest data {}", dataServer.getTime());
 
-        logger.debug("published diffusion latest data {}", dataServer.getTime());
+        }
 
     }
 

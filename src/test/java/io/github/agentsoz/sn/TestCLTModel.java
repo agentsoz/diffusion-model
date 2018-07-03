@@ -8,6 +8,7 @@ import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,7 @@ public class TestCLTModel {
 
 
     }
-
+    @Ignore
     @Test
     public void testWaitPanicAgentThresholds() {
         //calculate expected boundary values for both thresholds
@@ -93,6 +94,7 @@ public class TestCLTModel {
 
     }
 
+    @Ignore
     @Test
     public void testDistanceBasedProbabilities() {
         //frirefront-------------------------farEnd
@@ -117,7 +119,7 @@ public class TestCLTModel {
 
         //logger.trace("val {}",fireFrontWaitProb);
     }
-
+    @Ignore
     @Test
     // random agent ids, random panic values (> respective thresholds)
     public void testInitialise() {
@@ -133,6 +135,7 @@ public class TestCLTModel {
         cltModel.printAgentContentValues();
     }
 
+    @Ignore
     @Test
     // the social network used for this test case is an extended network with more links and agents than the one used for Lt model case.
     //Check the designs for the manual execution hardcopy of this process.

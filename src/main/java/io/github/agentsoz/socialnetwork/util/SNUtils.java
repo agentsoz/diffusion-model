@@ -43,6 +43,10 @@ public class SNUtils {
 	public static long getEndSimTime() { 
 		return endSimTime;
 	}
+
+	public static void setEndSimTime(long newEndTime) {
+		endSimTime = newEndTime;
+	}
 	
 	public static void resetSimulationClock() { 
 		simTime = 0L;

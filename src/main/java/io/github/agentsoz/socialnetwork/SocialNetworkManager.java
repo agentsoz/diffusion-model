@@ -31,13 +31,13 @@ public class SocialNetworkManager{
     {
     	int agentID = Integer.parseInt(id);
 
-		if(SNConfig.getDiffusionType().equals(DataTypes.ltModel)) {
+//		if(SNConfig.getDiffusionType().equals(DataTypes.ltModel)) {
 			this.agentList.put(agentID, new SocialAgent(agentID)); // LT Model constructor.
 			logger.trace(" social agent {} initialized ", id);
-		}
-		else if(SNConfig.getDiffusionType().equals(DataTypes.CLTModel)) {
-			this.agentList.put(agentID, new SocialAgent(agentID, DataTypes.MEDIUM)); // CLT Model constructor.
-		}
+//		}
+//		else if(SNConfig.getDiffusionType().equals(DataTypes.CLTModel)) {
+//			this.agentList.put(agentID, new SocialAgent(agentID, DataTypes.MEDIUM)); // CLT Model constructor.
+//		}
     	 
     }
         
