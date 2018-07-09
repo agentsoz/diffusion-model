@@ -1,0 +1,8 @@
+sn/TestLTModel.class
+sn/TestSWNetworkModel.class
+sn/TestNormaliseWeights.class
+sn/TestUtils.class
+sn/TestRandomNetworkModel.class
+sn/TestRandomRegularNetwork.class
+io/github/agentsoz/sn/TestSNModel.class
+sn/TestCLTModel.class
