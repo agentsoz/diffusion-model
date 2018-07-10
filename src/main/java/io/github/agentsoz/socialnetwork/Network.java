@@ -228,7 +228,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 	}
 
 	public int getNeihgbourLinkCount() {
-		return this.neighbourLinksCount;
+		return neighbourLinksCount;
 	}
 
 	public int getLinkCountInAgentMaps() {

@@ -1,4 +1,4 @@
-package sn;
+package io.github.agentsoz.sn;
 
 import io.github.agentsoz.socialnetwork.SocialAgent;
 import io.github.agentsoz.socialnetwork.util.DataTypes;

@@ -1,14 +1,13 @@
 <diffusion>
 
 <!-- Social Network Model Configurations -->
-<!-- specify the network strucuture ( random(ER MODEL) /sw/rand-reg)and the diffusion model for the sn model-->
+<!-- specify the network strucuture ( options: random( random ER MODEL) / sw /rand-reg (random-regular model)) and the diffusion model -->
 <snModel
 	diffusionType="lt"
 	networkType="rand-reg"
 />
 
-<!-- network types-->
-<!--  check Network class for specific normalise conditions equal weights sum gt 1 -->
+<!-- network configurations-->
 <randomNetwork
 	normalise="true"
 	avg_links="2"
@@ -26,14 +25,16 @@
 	distance="0.8"
 	avg_links="3"
 	rewire_probability="0.0"
+	coord_file="homeLocations.txt"
 />
 
-<!-- diffusion models-->
-<!-- turn = mins, seed = % , thresholdType = guassian / random -->
-<!-- stratgey = random or nearfire or prob- STANDARD IS PROB-->
+<!-- diffusion model configuration-->
+<!-- diff_turn: step size of the diffusion process (mins), seed = percentage of initially active agents (%) , thresholdType = guassian / random -->
+<!-- stratgey = random or nearfire or prob-->
 <!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->
-<!-- separated as common lt clt-->
-<diffModel 
+<!-- 1st config set: common to all diffusion models, 2nd set: specific for LT diffusion model, 3rd set: specific for CLT diffusion model-->
+<diffModel
+
 
 	diff_turn="60"	
 	standard_deviation="0.025"

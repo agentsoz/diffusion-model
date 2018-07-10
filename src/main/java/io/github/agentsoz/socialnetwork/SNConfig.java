@@ -52,6 +52,7 @@ public class SNConfig {
 	private static double swRewireProb = 0.0 ;
 	private static double  swNeiDistance = 0 ;
 	private static boolean swNetNormalise = false ;
+	private static String agentCoordFile; // agent cooordinate file
 	
 	//ltmodel
 	private static double seed = 0 ;
@@ -147,8 +148,15 @@ public class SNConfig {
 	public static void setSWNetNeiDistance(double dist) {
 		 swNeiDistance=dist;
 	}
-	
-	
+
+	public static void setAgentCoordFile(String file) {
+		agentCoordFile =  file;
+	}
+
+	public static String getAgentCoordFile(){
+		return agentCoordFile;
+	}
+
 	
 	// RANDOM REGULAR NETWORK
 	public static int getRandRegNetAvgLinks() {
@@ -314,6 +322,9 @@ public class SNConfig {
 
 						String prob = node.getAttributes().getNamedItem("rewire_probability").getNodeValue();
 						swRewireProb  = Double.parseDouble(prob);
+
+						String cordFile =  node.getAttributes().getNamedItem("coord_file").getNodeValue();
+						setAgentCoordFile(cordFile);
 						
 						}
 						catch (Exception e) {
@@ -406,6 +417,7 @@ public class SNConfig {
 			logger.info("neighbour distance = {}", getSWNetNeiDistance());
 			logger.info("average links = {}", getSWNetAvgLinks());
 			logger.info("rewire probability = {}", getSWNetRewireProb());
+			logger.info("agent coordinates file = {}",getAgentCoordFile());
 		}
 		
 		if(networkType.equals(DataTypes.RANDOM_REGULAR)) {

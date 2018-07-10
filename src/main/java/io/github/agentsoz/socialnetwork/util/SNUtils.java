@@ -18,7 +18,7 @@ public class SNUtils {
 	static long  simTime = 0L;
 	static long stepsize = 60L;
 	static long  endSimTime = 61200L; // 8h=28800L, 61200 = 17 * 60min steps
-	static String homeLocations = "./case_studies/hawkesbury/homeLocations.txt";
+//	static String homeLocations = "./case_studies/hawkesbury/homeLocations.txt";
 	static String mainConfig = "./case_studies/hawkesbury/hawkesbury.xml";
 	static String networkLinksDir = "../sn_model_data/network_visuals/";
 	final static Logger logger = LoggerFactory.getLogger("");
@@ -92,13 +92,13 @@ public class SNUtils {
 		
 		try {
 
-			fr = new FileReader(homeLocations);
+			fr = new FileReader(SNConfig.getAgentCoordFile());
 			br = new BufferedReader(fr);
 
 			String sCurrentLine;
 			String[] coordsArray;
 			
-			br = new BufferedReader(new FileReader(homeLocations));
+			br = new BufferedReader(new FileReader(SNConfig.getAgentCoordFile()));
 
 			while ( (sCurrentLine = br.readLine()) != null && idCount < nodes) {
 				logger.trace(sCurrentLine);

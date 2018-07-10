@@ -1,4 +1,4 @@
-package sn;
+package io.github.agentsoz.sn;
 
 import static org.junit.Assert.*;
 
