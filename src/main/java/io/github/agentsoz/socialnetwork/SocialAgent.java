@@ -21,14 +21,11 @@ public class SocialAgent extends Node{
 //private int ID;
 private double Xcord;
 private double Ycord;
-private int schoolID;	
 private String diffState;
 private boolean isSeed=false; // identfy weather the agent is part of a seed or not. If so the agent panic level remains static
-	private boolean evacStatus = false;
+private boolean evacStatus = false;
 
-private String contentType;
-private double panicLevel=0.0;	
-private ArrayList<Integer> familyIDs ;
+private double panicLevel=0.0;
 private HashMap<Integer,Double> linkMap;
 private HashMap<String,Double> contentValuesMap =  new HashMap<String, Double>();
 
@@ -42,16 +39,13 @@ private static DecimalFormat df = new DecimalFormat(".##");
 		this.diffState=DataTypes.LOW;
 		this.Xcord=x_cord;
 		this.Ycord=y_cord;
-		this.familyIDs = new ArrayList<Integer>();
 		this.links= new HashMap<Integer,SocialLink>();
 	}
 
 	public SocialAgent(int id) // For LT model
 	{
 		super.id=id;
-		this.diffState=DataTypes.LOW;
-		this.familyIDs = new ArrayList<Integer>();
-
+		this.diffState=DataTypes.LOW; // inactive
 		this.linkMap= new HashMap<Integer,Double>();
 		
 		
@@ -181,17 +175,7 @@ private static DecimalFormat df = new DecimalFormat(".##");
 //		this.linkMap.put(neiID,roundedWeight);
 		this.linkMap.put(neiID,weight);
 	}
-	
-	public void setSchoolID(int id)
-	{
-		this.schoolID=id;
-		
-	}
-	public int getSchoolID()
-	{
-		return this.schoolID;
-		
-	}
+
 	
 	public void addLink(int partnerId, SocialLink ref_link)
 	{
@@ -267,53 +251,24 @@ private static DecimalFormat df = new DecimalFormat(".##");
 		return this.linkMap.get(id);
 	}
 	
-	public HashMap<Integer,SocialLink>  getLink()
-	{
-		return this.links;
-	}
-	
+
 	public SocialLink getLink(int agentId)
 	{
 		SocialLink link = this.links.get(agentId);
 		return link;
 	}
-	public void setFamilyID(int id)
-	{
-		this.familyIDs.add(id);
-		
-	}
-	
-	public ArrayList getFamilyIDs()
-	{
-		return this.familyIDs;
-		
-	}
 
-	public int getFamilySize()
-	{
-		return this.familyIDs.size();
-		
-	}
-		
-	public void printFamilyIDs()
-	{
-		logger.debug(" agent {} family IDs : {}", id, familyIDs.toString());
 
-//		for(Integer familyID : familyIDs)
+//	public void printLinks()
+//	{
+//		logger.debug("agentID : "+this.id);
+//		int i=1;
+//		for (Map.Entry entry :this.links.entrySet())
 //		{
+//			SocialLink  link = (SocialLink) entry.getValue();
+//			logger.debug("   linkNo:"+i+" connectedTo:"+entry.getKey()+" linkweight:"+link.getLinkWeight()+" neighbour:"+link.getNeighbourWeight()+" family:"+link.getFamilyWeight()+" friend:"+link.getFriendshipWeight());
+//			i++;
 //		}
-	}
-	
-	public void printLinks()
-	{
-		logger.debug("agentID : "+this.id);
-		int i=1;
-		for (Map.Entry entry :this.links.entrySet())
-		{
-			SocialLink  link = (SocialLink) entry.getValue();
-			logger.debug("   linkNo:"+i+" connectedTo:"+entry.getKey()+" linkweight:"+link.getLinkWeight()+" neighbour:"+link.getNeighbourWeight()+" family:"+link.getFamilyWeight()+" friend:"+link.getFriendshipWeight());
-			i++;
-		}
-	}
+//	}
 	
 }

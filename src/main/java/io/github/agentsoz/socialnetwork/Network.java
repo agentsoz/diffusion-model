@@ -27,7 +27,7 @@ public  class Network{
 
 final Logger logger = LoggerFactory.getLogger("");
 
-public  static ArrayList<SocialLink> linkList = new  ArrayList<SocialLink>(); // NOT USED PRACTICALLY
+//public  static ArrayList<SocialLink> linkList = new  ArrayList<SocialLink>(); // NOT USED PRACTICALLY
 public static int neighbourLinksCount = 0;
 private int linkCountInAgentMaps = 0 ; // counts the #links  in the agent map
 
@@ -152,38 +152,38 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
      * since this method is called by interating through a hashmap, where each link is included in two different places,
      * its not appropriate to claim alreadyLinked as an error or a warning?
      */
-	public void setLink(int agent1_Id, int agent2_Id, double weight,HashMap<Integer,SocialAgent> agentList)
-	{
-		//link already exists -  even if a
-//		if(alreadylinked(agent1_Id,agent2_Id,agentList)) 
-		if(alreadyLinked(agent1_Id,agent2_Id,agentList)) 
-		{
-			logger.trace("abort setLink - link already exists: {} {}", agent1_Id,agent2_Id);
-			return ;
-		}
-		
-		// link doesn't exist
-		else
-		{
-			//new link creation		
-			SocialLink newlink = new SocialLink(agent1_Id,agent2_Id);
-			
-			newlink.setLinkWeight(weight); // modify the link weight
-			
-			SocialLink refLink1 = newlink;
-			SocialLink refLink2 = newlink;
-			
-			
-			SocialAgent agent1 = agentList.get(agent1_Id);			
-			agent1.addLink(agent2_Id, refLink1);
-			
-			SocialAgent agent2 = agentList.get(agent2_Id);			
-			agent2.addLink(agent1_Id, refLink2);
-			
-			Network.linkList.add(newlink);
-		}
-		
-	}
+//	public void setLink(int agent1_Id, int agent2_Id, double weight,HashMap<Integer,SocialAgent> agentList)
+//	{
+//		//link already exists -  even if a
+////		if(alreadylinked(agent1_Id,agent2_Id,agentList))
+//		if(alreadyLinked(agent1_Id,agent2_Id,agentList))
+//		{
+//			logger.trace("abort setLink - link already exists: {} {}", agent1_Id,agent2_Id);
+//			return ;
+//		}
+//
+//		// link doesn't exist
+//		else
+//		{
+//			//new link creation
+//			SocialLink newlink = new SocialLink(agent1_Id,agent2_Id);
+//
+//			newlink.setLinkWeight(weight); // modify the link weight
+//
+//			SocialLink refLink1 = newlink;
+//			SocialLink refLink2 = newlink;
+//
+//
+//			SocialAgent agent1 = agentList.get(agent1_Id);
+//			agent1.addLink(agent2_Id, refLink1);
+//
+//			SocialAgent agent2 = agentList.get(agent2_Id);
+//			agent2.addLink(agent1_Id, refLink2);
+//
+//			Network.linkList.add(newlink);
+//		}
+//
+//	}
 	
 	/*
 	 * 

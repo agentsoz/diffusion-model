@@ -17,9 +17,6 @@ public class SocialLink extends Link{
 
 	int linkedTO;
 	int linkedFROM;
-	private	double neighbourWeight=0.0;
-	private	double friendshipWeight=0.0;
-	private	double familyWeight=0.0;
 	String id;
 	private	double linkWeight=0.0;
 	
@@ -31,68 +28,17 @@ public class SocialLink extends Link{
 		
 	}
 	
-	
-	public void setID(int id1, int id2)
-	{
-		this.id = id1 + "_" + id2;
-		
-	}
-	
+
 	public String getID()
 	{
 		return this.id;
 	}
-	
 
-	// whether two agents are connected
-	public boolean linkedWith(int toAgent, int FromAgent)
-	{
-        /*|| (linkedTO == agent2_ID && linkedFROM == agent1_ID)*/
-        return (linkedTO == toAgent && linkedFROM == FromAgent);
-	}
-	
-	/* setters*/
 	public void setLinkWeight(double newLinkWeight)
 	{
 		this.linkWeight=newLinkWeight;
 	}
-	
-	public void setLinkWeight()
-	{
-		this.linkWeight=this.familyWeight+this.friendshipWeight+this.neighbourWeight;
-	}
-	
-	public void setNeighbourWeight(double newNeighbourWeight)
-	{
-		this.neighbourWeight=newNeighbourWeight;
-	}
-	
-	public void setFriendshipWeight(double friendWeight)
-	{
-		this.friendshipWeight=friendWeight;
-	}
-	
-	public void setFamilyWeight(double familyWeight)
-	{
-		this.familyWeight=familyWeight;
-	}
-	
-	
-	/* getters*/	
-	public double getNeighbourWeight()
-	{
-		return this.neighbourWeight;
-	}
-	
-	public double getFriendshipWeight()
-	{
-		return this.friendshipWeight;
-	}
-	
-	public double getFamilyWeight()
-	{
-		return this.familyWeight;
-	}
+
 	
 	public double getLinkWeight()
 	{
