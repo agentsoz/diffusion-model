@@ -1,6 +1,0 @@
-/target/*
-
-
-# exclude intelliJ files:
-**/*.iml
-**/.idea

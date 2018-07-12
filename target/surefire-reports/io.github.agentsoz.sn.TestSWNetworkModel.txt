@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: io.github.agentsoz.sn.TestSWNetworkModel
--------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.143 sec - in io.github.agentsoz.sn.TestSWNetworkModel

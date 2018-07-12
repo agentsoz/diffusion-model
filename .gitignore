@@ -1,6 +1,6 @@
-./target/*
-
-
+/target/
+*.log
+/output/
 # exclude intelliJ files:
 **/*.iml
-**/.idea
+/.idea
