@@ -563,11 +563,11 @@ public class LTModel extends DiffModel{
 //		if ((pVal >= getHighPanicThreshold(id)) && !agent.getState().equals(DataTypes.HIGH)) {
 //			agent.setState(DataTypes.HIGH);
 //		}
-		if ((pVal > getActivationThreshold(id) /*&& pVal < getHighPanicThreshold(id)*/ )  && !agent.getState().equals(DataTypes.MEDIUM)) {
+		if ((pVal >= getActivationThreshold(id) /*&& pVal < getHighPanicThreshold(id)*/ )  && !agent.getState().equals(DataTypes.MEDIUM)) {
 			agent.setState(DataTypes.MEDIUM);
 
 		}
-		else if (pVal <= getActivationThreshold(id) && !agent.getState().equals(DataTypes.LOW)) {
+		else if (pVal < getActivationThreshold(id) && !agent.getState().equals(DataTypes.LOW)) {
 			agent.setState(DataTypes.LOW);
 		}
 

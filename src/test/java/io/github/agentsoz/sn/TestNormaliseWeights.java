@@ -22,7 +22,7 @@ public class TestNormaliseWeights {
 
 	final Logger logger = LoggerFactory.getLogger("");
 	
-	SocialNetworkManager snManager = new SocialNetworkManager(SNUtils.getMainConfigFile());
+	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	Network net = new Network();
 	Random random = new Random();
@@ -41,7 +41,7 @@ public class TestNormaliseWeights {
 
 		//agent x,y coords are in meters :  UTM uses meters from reference points
 		SNConfig.setDiffusionType(DataTypes.ltModel);
-		createAgentMap(nodes, 1000);
+		SNUtils.randomAgentMap(snManager,nodes, 1000);
 		
 
 		
@@ -100,15 +100,7 @@ public class TestNormaliseWeights {
 		net.printNetworkWegihts(agentmap);
 	}
 	
-	public void createAgentMap(int nodes, int cordRange) { 
-		
-		for(int id=0; id < nodes; id++) {
-			int x = random.nextInt(cordRange);
-			int y = random.nextInt(cordRange);
-			snManager.createSocialAgent(Integer.toString(id));snManager.setCords(Integer.toString(id),x,y);
 
-		}
-	}
 }
 
 

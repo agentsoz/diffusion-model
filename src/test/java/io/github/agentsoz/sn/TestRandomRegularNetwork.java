@@ -17,7 +17,7 @@ import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 public class TestRandomRegularNetwork {
 
-	SocialNetworkManager snManager = new SocialNetworkManager(SNUtils.getMainConfigFile());
+	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	int testNodes = 10;
 	int testDegree = 2;
@@ -34,8 +34,9 @@ public class TestRandomRegularNetwork {
 	
 
 		//agent x,y coords are in meters :  UTM uses meters from reference points
-		SNConfig.setConfigFile(SNUtils.getMainConfigFile());
-		SNConfig.readConfig();
+//		SNConfig.setConfigFile(SNUtils.getMainConfigFile());
+//		SNConfig.readConfig();
+		snManager.setupSNConfigs();
 		SNConfig.setNetworkType(DataTypes.RANDOM_REGULAR);
 		SNConfig.setDiffusionType(DataTypes.ltModel);
 		SNUtils.createAgentMapUsingActualCoords(snManager, testNodes);
@@ -77,7 +78,7 @@ public class TestRandomRegularNetwork {
 //		randRegNet.verifyUpdatedAgentList(agentmap);
 	}
 	
-//	@Ignore
+	@Ignore
 	@Test
 	public void printNetworkLinksToFile(){
 		RandomRegularNetwork randRegNet = new RandomRegularNetwork(testNodes,testDegree);

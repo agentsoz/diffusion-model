@@ -24,7 +24,7 @@ public class TestRandomNetworkModel {
 
 	final Logger logger = LoggerFactory.getLogger("");
 	
-	SocialNetworkManager snManager = new SocialNetworkManager(SNUtils.getMainConfigFile());
+	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	Random random = new Random();
 	
@@ -54,7 +54,7 @@ public class TestRandomNetworkModel {
 
 		//agent x,y coords are in meters :  UTM uses meters from reference points
 		
-		createAgentMap(5, 100000);
+		SNUtils.randomAgentMap(snManager,5, 100000);
 		
 	}
 	
@@ -91,7 +91,7 @@ public class TestRandomNetworkModel {
 	public void testSNManagerMethod()  
 	{
 		// method1
-		SNUtils.setMainConfigFile();
+		//SNUtils.setMainConfigFile();
 		snManager.setupSNConfigs();
 		
 		//method2
@@ -113,13 +113,5 @@ public class TestRandomNetworkModel {
 		assertEquals(true,randNet.isProperlyNormalised(agentmap));
 	}
 	
-	public void createAgentMap(int nodes, int cordRange) { 
-		
-		for(int id=0; id < nodes; id++) {
-			int x = random.nextInt(cordRange);
-			int y = random.nextInt(cordRange);
-			snManager.createSocialAgent(Integer.toString(id));snManager.setCords(Integer.toString(id),x,y);
 
-		}
-	}
 }

@@ -21,7 +21,7 @@ import io.github.agentsoz.socialnetwork.util.Log;
 
 public class TestSWNetworkModel {
 
-	/* FIXME generate sw network using actual geo locations
+	/*
 	 *  The x,y coords should be in meters (easting, northing)
 	 *  tested testcases : 
 	 *  higher distance with agents having no links
@@ -35,7 +35,7 @@ public class TestSWNetworkModel {
 	final Logger logger = Log.createLogger("", logFile);
 
 	
-	SocialNetworkManager snManager = new SocialNetworkManager(SNUtils.getMainConfigFile());
+	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	Random random = new Random();
 	
@@ -62,17 +62,16 @@ public class TestSWNetworkModel {
 		
 		//1. Random cords - agent x,y coords are in meters :  UTM uses meters from reference points
 //		createAgentMap(20000, 5000);
-		SNConfig.setConfigFile(SNUtils.getMainConfigFile());
-		SNConfig.readConfig();
-		SNConfig.setNetworkType(DataTypes.SMALL_WORLD);
 		snManager.setupSNConfigs();
+		SNConfig.setNetworkType(DataTypes.SMALL_WORLD);
+	//	snManager.setupSNConfigs();
 		SNUtils.createAgentMapUsingActualCoords(snManager, numAgents);
 
 
 	}
 	
 	
-	@Ignore
+	//@Ignore
 	@Test
 	// to test the matrix without the agent map
 	public void testSWNetwork()  
@@ -90,20 +89,7 @@ public class TestSWNetworkModel {
 		Assert.assertEquals(5, swNet.getGenAvgDegree(),0.1); // checking generated avg degree
 
 	}
-	
-	public void createAgentMap(int nodes, int cordRange) { 
-		
-		logger.trace("setting up random agent map.....");
-		
-		for(int id=0; id < nodes; id++) {
-			int x = random.nextInt(cordRange);
-			int y = random.nextInt(cordRange);
-			snManager.createSocialAgent(Integer.toString(id));snManager.setCords(Integer.toString(id),x,y);
 
-		}
-				
-		
-	}
 	
 	@Ignore
 	@Test
@@ -116,7 +102,7 @@ public class TestSWNetworkModel {
 	public void testUpdatedAgentMap()  
 	{
 
-		SocialNetworkManager sn = new SocialNetworkManager(SNUtils.getMainConfigFile());
+		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
 
@@ -140,7 +126,7 @@ public class TestSWNetworkModel {
 	@Ignore
 	@Test
 	public void testNormalisedNetwork() {
-		SocialNetworkManager sn = new SocialNetworkManager(SNUtils.getMainConfigFile());
+		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
 		SWNetwork swNet = new SWNetwork(4.0, 5, 1.0);
@@ -161,7 +147,7 @@ public class TestSWNetworkModel {
 	public void testSNManagerMethod()  
 	{
 		//method1 -  set configs from the config file
-		SNUtils.setMainConfigFile();
+//		SNUtils.setMainConfigFile();
 		
 //		snManager.setupSNConfigs(); 
 		
@@ -180,14 +166,14 @@ public class TestSWNetworkModel {
 
 	}
 	
-	public void printAgentCoords() {
-		logger.debug("retreiving assigned corrdinates from the agentmap..");
-
-		for(int i=0;i<agentmap.size(); i++) {
-			logger.debug("x: {} y: {}",snManager.getAgentMap().get(i).getX(),snManager.getAgentMap().get(i).getY()); 
-
-		}
-	}
+//	public void printAgentCoords() {
+//		logger.debug("retreiving assigned corrdinates from the agentmap..");
+//
+//		for(int i=0;i<agentmap.size(); i++) {
+//			logger.debug("x: {} y: {}",snManager.getAgentMap().get(i).getX(),snManager.getAgentMap().get(i).getY());
+//
+//		}
+//	}
 	
 	
 //	@Ignore

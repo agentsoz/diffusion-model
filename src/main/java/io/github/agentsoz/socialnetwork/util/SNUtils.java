@@ -18,7 +18,6 @@ public class SNUtils {
 	static long  simTime = 0L;
 	static long stepsize = 60L;
 	static long  endSimTime = 61200L; // 8h=28800L, 61200 = 17 * 60min steps
-	static String mainConfig = "./case_studies/hawkesbury/hawkesbury.xml";
 
 	final static Logger logger = LoggerFactory.getLogger("");
 
@@ -54,29 +53,35 @@ public class SNUtils {
 	
 	public static void readAndSetSNMainConfigs() { 
 		//Config.setConfigFile(mainConfig);
-		SNConfig.setConfigFile(mainConfig);
+		SNConfig.setConfigFile(SNConfig.getDefaultConfigFile());
 		SNConfig.readConfig();
 		logger.trace("setting SN main configs complete");
 	}
 	
-	public static void setMainConfigFile() {
-		SNConfig.setConfigFile(mainConfig);
-	}
+//	public static void setMainConfigFile() {
+//		SNConfig.setConfigFile(SNConfig.getDefaultConfigFile());
+//	}
 
-	public static String getMainConfigFile() {
-		return mainConfig;
-	}
+
 	
-	public static void randomAgentMap(SocialNetworkManager sn_manager, int nodes, int cordRange) { 
-		Random  random = new Random();
-		
+//	public static void randomAgentMap(SocialNetworkManager sn_manager, int nodes, int cordRange) {
+//		//Random  random = new Random();
+//
+//		for(int id=0; id < nodes; id++) {
+//			int x = random.nextInt(cordRange);
+//			int y = random.nextInt(cordRange);
+//			sn_manager.createSocialAgent(Integer.toString(id));sn_manager.setCords(Integer.toString(id),x,y);
+//		}
+//
+//
+//	}
+	public static void randomAgentMap(SocialNetworkManager sn_manager, int nodes, int cordRange) {
+
 		for(int id=0; id < nodes; id++) {
-			int x = random.nextInt(cordRange);
-			int y = random.nextInt(cordRange);
+			int x = Global.getRandom().nextInt(cordRange);
+			int y = Global.getRandom().nextInt(cordRange);
 			sn_manager.createSocialAgent(Integer.toString(id));sn_manager.setCords(Integer.toString(id),x,y);
 		}
-				
-		
 	}
 	public static void createAgentMapUsingActualCoords(SocialNetworkManager snManager, int nodes) { 
 		int idCount=0; // restricts the number of agent ids extracted from the .txt file

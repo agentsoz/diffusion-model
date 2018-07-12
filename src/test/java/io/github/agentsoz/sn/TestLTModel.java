@@ -24,7 +24,7 @@ public class TestLTModel {
 
 	
 
-	SocialNetworkManager sn_manager = new SocialNetworkManager(SNUtils.getMainConfigFile()); // init SNMan;
+	SocialNetworkManager sn_manager = new SocialNetworkManager(SNConfig.getDefaultConfigFile()); // init SNMan;
 	HashMap<Integer,SocialAgent> agentmap = sn_manager.agentList;
 	final Logger logger = LoggerFactory.getLogger("");
 	LTModel ltModel;
@@ -33,29 +33,21 @@ public class TestLTModel {
 	@Before
 	public void setUpRandomAgentMap()
 	{
-		SNConfig.setConfigFile(SNUtils.getMainConfigFile());
-		SNConfig.readConfig();
-		SNConfig.setDiffusionType(DataTypes.ltModel);
-		randomAgentMap(5,1000);
+
+		sn_manager.setupSNConfigs();
+		SNUtils.randomAgentMap(sn_manager,5,1000);
 		logger.info("random agent map initialised: size {}", sn_manager.agentList.size());
 		ltModel = new LTModel(2,3,sn_manager); // random values to create the model
 	}
 	
-	public void randomAgentMap(int nodes, int cordRange) { 
-		
-		for(int id=0; id < nodes; id++) {
-			int x = Global.getRandom().nextInt(cordRange);
-			int y = Global.getRandom().nextInt(cordRange);
-			sn_manager.createSocialAgent(Integer.toString(id));sn_manager.setCords(Integer.toString(id),x,y);
-		}
-	}
+
 	
 	// for both threshold types
 	@Ignore
 	@Test
 	public void testInitialise() { 
 		
-		SNUtils.setMainConfigFile();
+	//	SNUtils.setMainConfigFile();
 		sn_manager.setupSNConfigs();
 		sn_manager.generateDiffModel(); // initialise is already run here
 
@@ -86,12 +78,13 @@ public class TestLTModel {
 
 		
 		// set conifgs
-		SNUtils.setMainConfigFile();
+	//	SNUtils.setMainConfigFile();
 		SNConfig.setDiffusionThresholdType("random");
 		
 		ltModel.initialise(); // no diffusion seed, so initActiveAgents do not run
+        sn_manager.getAgentMap().get(0).setIsSeedTrue();
 		ltModel.updatePanicValue(0, 1.0); // call after initialise as threhoslds are not mapped earlier
-		sn_manager.getAgentMap().get(0).setIsSeedTrue();
+
 		ltModel.printthresholdMap();
 
 		int turn = 1; 
@@ -116,7 +109,7 @@ public class TestLTModel {
 	}
 
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void testIsActive() { 
 		SocialAgent testAgent = agentmap.get(0);
@@ -128,7 +121,7 @@ public class TestLTModel {
 	@Ignore
 	@Test
 	public void testConfigsFromFile() { 
-		SNUtils.setMainConfigFile();
+		//SNUtils.setMainConfigFile();
 		sn_manager.setupSNConfigs();
 		sn_manager.generateDiffModel();
 		sn_manager.getDiffModel().initialise();
