@@ -20,7 +20,7 @@ public abstract class Node {
 	
 	public double getWeight()
 	{
-		
+
 		return this.linkWeight;
 	}
 }

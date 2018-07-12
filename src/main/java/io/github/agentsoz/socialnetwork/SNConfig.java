@@ -282,7 +282,9 @@ public class SNConfig {
 						
 						String dtype = node.getAttributes().getNamedItem("diffusionType").getNodeValue();
 						diffusionType  = dtype;
-						
+
+						String cordFile =  node.getAttributes().getNamedItem("coord_file").getNodeValue();
+						setAgentCoordFile(cordFile);
 						
 						}
 						catch (Exception e) {
@@ -323,8 +325,8 @@ public class SNConfig {
 						String prob = node.getAttributes().getNamedItem("rewire_probability").getNodeValue();
 						swRewireProb  = Double.parseDouble(prob);
 
-						String cordFile =  node.getAttributes().getNamedItem("coord_file").getNodeValue();
-						setAgentCoordFile(cordFile);
+//						String cordFile =  node.getAttributes().getNamedItem("coord_file").getNodeValue();
+//						setAgentCoordFile(cordFile);
 						
 						}
 						catch (Exception e) {
@@ -341,6 +343,7 @@ public class SNConfig {
 						
 						String links = node.getAttributes().getNamedItem("avg_links").getNodeValue();
 						randRegNetAvgLinks  = Integer.parseInt(links);
+
 
 						}
 						catch (Exception e) {

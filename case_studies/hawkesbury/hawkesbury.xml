@@ -5,6 +5,7 @@
 <snModel
 	diffusionType="lt"
 	networkType="rand-reg"
+	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 />
 
 <!-- network configurations-->
@@ -17,6 +18,7 @@
 
         normalise="true"
         avg_links="3"
+	
 />
 
 <!--specify distance in km-->
@@ -25,7 +27,7 @@
 	distance="0.8"
 	avg_links="3"
 	rewire_probability="0.0"
-	coord_file="homeLocations.txt"
+	
 />
 
 <!-- diffusion model configuration-->

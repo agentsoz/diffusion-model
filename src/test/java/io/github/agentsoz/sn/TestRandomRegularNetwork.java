@@ -34,6 +34,9 @@ public class TestRandomRegularNetwork {
 	
 
 		//agent x,y coords are in meters :  UTM uses meters from reference points
+		SNConfig.setConfigFile(SNUtils.getMainConfigFile());
+		SNConfig.readConfig();
+		SNConfig.setNetworkType(DataTypes.RANDOM_REGULAR);
 		SNConfig.setDiffusionType(DataTypes.ltModel);
 		SNUtils.createAgentMapUsingActualCoords(snManager, testNodes);
 //		SNUtils.randomAgentMap(snManager, testNodes, 1000);

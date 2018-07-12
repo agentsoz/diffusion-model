@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Random;
 
+import io.github.agentsoz.socialnetwork.util.Global;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,12 +28,13 @@ public class TestLTModel {
 	HashMap<Integer,SocialAgent> agentmap = sn_manager.agentList;
 	final Logger logger = LoggerFactory.getLogger("");
 	LTModel ltModel;
-	Random rand  =  new Random();
-	
+
 	
 	@Before
 	public void setUpRandomAgentMap()
 	{
+		SNConfig.setConfigFile(SNUtils.getMainConfigFile());
+		SNConfig.readConfig();
 		SNConfig.setDiffusionType(DataTypes.ltModel);
 		randomAgentMap(5,1000);
 		logger.info("random agent map initialised: size {}", sn_manager.agentList.size());
@@ -42,8 +44,8 @@ public class TestLTModel {
 	public void randomAgentMap(int nodes, int cordRange) { 
 		
 		for(int id=0; id < nodes; id++) {
-			int x = rand.nextInt(cordRange);
-			int y = rand.nextInt(cordRange);
+			int x = Global.getRandom().nextInt(cordRange);
+			int y = Global.getRandom().nextInt(cordRange);
 			sn_manager.createSocialAgent(Integer.toString(id));sn_manager.setCords(Integer.toString(id),x,y);
 		}
 	}
@@ -102,8 +104,8 @@ public class TestLTModel {
 			//logger.debug(" low: {} med: {} high: {}", ltModel.getLowPanicCount(),ltModel.getMedPanicCount(),ltModel.getHighPanicCount());
 			if(turn == 2) {
 				SNUtils.countLowMedHighAgents(sn_manager);
-				assertEquals(2,SNUtils.getLowCt() /*ltModel.getLowPanicCount()*/,1);
-				assertEquals(3,SNUtils.getMedCt() /*ltModel.getHighPanicCount()*/,1);
+				assertEquals(2,SNUtils.getLowCt(),1);
+				assertEquals(3,SNUtils.getMedCt(),1);
 			}
 			turn++;
 		}

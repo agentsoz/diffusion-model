@@ -62,8 +62,9 @@ public class TestSWNetworkModel {
 		
 		//1. Random cords - agent x,y coords are in meters :  UTM uses meters from reference points
 //		createAgentMap(20000, 5000);
-		
-		//2. generate a large agent map with the coordinates from the input file (Specified in  SNUtils)
+		SNConfig.setConfigFile(SNUtils.getMainConfigFile());
+		SNConfig.readConfig();
+		SNConfig.setNetworkType(DataTypes.SMALL_WORLD);
 		snManager.setupSNConfigs();
 		SNUtils.createAgentMapUsingActualCoords(snManager, numAgents);
 

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class DiffModel {
 
-
+    final Logger logger = LoggerFactory.getLogger("");
 	
 	public void initialise() {}
 
@@ -22,16 +22,10 @@ public abstract class DiffModel {
 
     public void printPanicValues() {}
 
-    public int getLowPanicCount() {return -1;}
-
     public boolean isDiffTurn(long time) {return false;}
 
     public void postDiffProcess(long time) {}
 
-    public int getMedPanicCount() {return -1;}
 
-    public int getHighPanicCount() {return -1;}
-
-    final Logger logger = LoggerFactory.getLogger("");
 	
 }
