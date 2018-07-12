@@ -31,7 +31,7 @@ public class TestSWNetworkModel {
 	 * 
 	 */
 	
-	String logFile =  SNUtils.getNetworkLinksDir() + "/" + "network-vis.log";
+	String logFile =  SNConfig.getNetworkLinksDir() + "/" + "network-vis.log";
 	final Logger logger = Log.createLogger("", logFile);
 
 	
@@ -203,7 +203,7 @@ public class TestSWNetworkModel {
 		swNet.verifyNetwork();
 		swNet.updateAgentMap(agentmap);
 		swNet.verifyNeighbourDistances(agentmap, neiDistance);
-		String fileName = SNUtils.getNetworkLinksDir() + "links.txt";
+		String fileName = SNConfig.getNetworkLinksDir() + "links.txt";
 		swNet.writeNetworkLinksToFile(fileName);
 	}
 }

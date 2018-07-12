@@ -27,7 +27,6 @@ public  class Network{
 
 final Logger logger = LoggerFactory.getLogger("");
 
-//public  static ArrayList<SocialLink> linkList = new  ArrayList<SocialLink>(); // NOT USED PRACTICALLY
 public static int neighbourLinksCount = 0;
 private int linkCountInAgentMaps = 0 ; // counts the #links  in the agent map
 
@@ -146,45 +145,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 		}
 	}
     
-    /* OLRDER METHIOD TO CREATE LINKS
-     * creates a new social link instance and set weight
-     * updates the social agent's link set
-     * since this method is called by interating through a hashmap, where each link is included in two different places,
-     * its not appropriate to claim alreadyLinked as an error or a warning?
-     */
-//	public void setLink(int agent1_Id, int agent2_Id, double weight,HashMap<Integer,SocialAgent> agentList)
-//	{
-//		//link already exists -  even if a
-////		if(alreadylinked(agent1_Id,agent2_Id,agentList))
-//		if(alreadyLinked(agent1_Id,agent2_Id,agentList))
-//		{
-//			logger.trace("abort setLink - link already exists: {} {}", agent1_Id,agent2_Id);
-//			return ;
-//		}
-//
-//		// link doesn't exist
-//		else
-//		{
-//			//new link creation
-//			SocialLink newlink = new SocialLink(agent1_Id,agent2_Id);
-//
-//			newlink.setLinkWeight(weight); // modify the link weight
-//
-//			SocialLink refLink1 = newlink;
-//			SocialLink refLink2 = newlink;
-//
-//
-//			SocialAgent agent1 = agentList.get(agent1_Id);
-//			agent1.addLink(agent2_Id, refLink1);
-//
-//			SocialAgent agent2 = agentList.get(agent2_Id);
-//			agent2.addLink(agent1_Id, refLink2);
-//
-//			Network.linkList.add(newlink);
-//		}
-//
-//	}
-	
+
 	/*
 	 * 
 	 * type variable is defined in this class as a class variable
@@ -253,59 +214,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
         return link1To2 && link2To1;
 		
 	}
-	
-	/*
-	 * If agent1 contains id2 in the linkset? &&
-	 * If agent2 contains id1 in the linkset?
-	 * then return true
-	 */
-//	public boolean alreadylinked(int agent1_Id, int agent2_Id, HashMap<Integer,SocialAgent> agentList)
-//	{
-//		SocialAgent agent1 = agentList.get(agent1_Id);
-//		if(agent1 == null) {
-//			logger.error("agent {} not found in the agent map, aborting" ,agent1_Id);
-//			return false;
-//		}
-//		
-//		HashMap<Integer,SocialLink> agent1_links = agent1.getLinkSet();
-//		
-//		
-//		SocialAgent agent2 = agentList.get(agent2_Id);
-//		if(agent2 == null) {
-//			logger.error("agent {} not found in the agent map, aborting" ,agent2_Id);
-//			return false;
-//		}
-//		
-//		HashMap<Integer,SocialLink> agent2_links = agent2.getLinkSet();
-//		
-//		boolean link1Exists = false;
-//		boolean link2Exists = false;
-//		
-//
-//		SocialLink link1=agent1.getLink(agent2_Id);
-//		if(link1 != null)
-//			link1Exists = true;
-//
-//		SocialLink link2=agent2.getLink(agent1_Id);
-//		if(link2 != null)
-//			link2Exists = true;
-//		
-//				
-//
-//		if(link1Exists && link2Exists) // if both link refernces exists
-//		{
-//			return true;
-//		}
-//		else
-//		{
-//			return false; // one or both link references do not exist
-//		}
-//		
-//	}
-	
 
-
-    
     /*input : agent x,y are in meters
      *output euclidean distance in km
      */
@@ -468,7 +377,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 		}
     
 
-		
+		// write links to a file that can be then visualised using an R script
 		public void writeNetworkLinksToFile(String file, ArrayList<ArrayList<Integer>> network) {
 						
 					

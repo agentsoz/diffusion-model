@@ -69,7 +69,7 @@ public class Utils {
         return Global.getRandom().nextInt(n);
     }
 
-    
+
     // throw an IllegalArgumentException if x is null
     // (x can be of type Object[], double[], int[], ...)
     private static void validateNotNull(Object x) {

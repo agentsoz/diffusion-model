@@ -22,7 +22,7 @@ public class TestRandomRegularNetwork {
 	int testNodes = 10;
 	int testDegree = 2;
 
-	String logFile =  SNUtils.getNetworkLinksDir() + "/" + "network-vis.log";
+	String logFile =  SNConfig.getNetworkLinksDir() + "/" + "network-vis.log";
 	final Logger logger = Log.createLogger("", logFile);
 	
 //	@Ignore
@@ -85,7 +85,7 @@ public class TestRandomRegularNetwork {
 		randRegNet.genRandRegNetwork();
 		randRegNet.displayArraylists();
 		randRegNet.verifyNetworkArraylist();
-		String fileName = SNUtils.getNetworkLinksDir() + "links.txt";
+		String fileName = SNConfig.getNetworkLinksDir() + "links.txt";
 		randRegNet.writeNetworkLinksToFile(fileName, randRegNet.network);
 	}
 	

@@ -18,9 +18,8 @@ public class SNUtils {
 	static long  simTime = 0L;
 	static long stepsize = 60L;
 	static long  endSimTime = 61200L; // 8h=28800L, 61200 = 17 * 60min steps
-//	static String homeLocations = "./case_studies/hawkesbury/homeLocations.txt";
 	static String mainConfig = "./case_studies/hawkesbury/hawkesbury.xml";
-	static String networkLinksDir = "../sn_model_data/network_visuals/";
+
 	final static Logger logger = LoggerFactory.getLogger("");
 
 	private static int lowCt = 0,medCt=0,highCt=0; // social state counters
@@ -51,9 +50,7 @@ public class SNUtils {
 	public static void resetSimulationClock() { 
 		simTime = 0L;
 	}
-	public static String getNetworkLinksDir() {
-		return networkLinksDir;
-	}
+
 	
 	public static void readAndSetSNMainConfigs() { 
 		//Config.setConfigFile(mainConfig);
@@ -82,8 +79,7 @@ public class SNUtils {
 		
 	}
 	public static void createAgentMapUsingActualCoords(SocialNetworkManager snManager, int nodes) { 
-//		int id = 0; // NO need , id is already in the homelocations file
-		int idCount=0; // restricts the number of agent ids selected from the .txt file
+		int idCount=0; // restricts the number of agent ids extracted from the .txt file
 		BufferedReader br = null;
 		FileReader fr = null;
 

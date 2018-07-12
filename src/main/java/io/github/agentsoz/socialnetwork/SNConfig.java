@@ -2,6 +2,7 @@ package io.github.agentsoz.socialnetwork;
 
 
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.Random;
 import javax.xml.parsers.DocumentBuilder;
@@ -34,6 +35,7 @@ public class SNConfig {
 	
 	private static String configFile = null;
 	static Random rand =  Global.getRandom();
+	static String networkLinksDir = "../sn_model_data/network_visuals/";
 	
 	//sn model
 	private static String networkType = " " ;
@@ -72,6 +74,14 @@ public class SNConfig {
 	// TestSNBDIModels
 	private static double perSeed = 15 ;
 
+	public static String getNetworkLinksDir() {
+
+		File dir = new File(networkLinksDir);
+		if(!dir.exists()) { // create networkLinksDir if does not exist
+			dir.mkdir();
+		}
+		return networkLinksDir;
+	}
 
 	public static void setConfigFile(String string) {
 		configFile = string;
