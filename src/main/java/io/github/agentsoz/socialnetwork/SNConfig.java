@@ -34,7 +34,7 @@ public class SNConfig {
 	
 	
 	private static String configFile = null;
-	static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
+	private static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
 
 	static Random rand =  Global.getRandom();
 	static String networkLinksDir = "../sn_model_data/network_visuals/";
@@ -91,10 +91,7 @@ public class SNConfig {
 	public static String getDefaultConfigFile() {
 		return defaultConfig;
 	}
-	public static void setDefaultConfigsAsMainConfig() {
-		configFile =  defaultConfig;
-	}
-	
+
 	public static String getConfigFile() {
 		return configFile;
 	}

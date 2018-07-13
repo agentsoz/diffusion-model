@@ -23,7 +23,7 @@ public class SNModel implements DataSource,DataClient {
         this.config = configFile;
     }
 
-    public void initAgentMap(List<String> idList) {
+    public void initSocialAgentMap(List<String> idList) {
 
         initSNManagerBasedOnConfigs();
         for (String id : idList) {  //populate agentmap
@@ -35,7 +35,6 @@ public class SNModel implements DataSource,DataClient {
         snManager = new SocialNetworkManager(this.config);
     }
     public void genSNModel(){ // set SNManager based on main configs unless already set
-
 
         this.snManager.initSNModel(); // setup configs, init network and diffusion models
         this.snManager.printSNModelconfigs();

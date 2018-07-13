@@ -5,6 +5,7 @@ import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SNModel;
 import io.github.agentsoz.socialnetwork.util.Log;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -17,14 +18,15 @@ public class TestSNModel {
     String logFile = "./testSNModel.log";
     final Logger logger = Log.createLogger("", logFile);
 
-    @Ignore
+  //  @Ignore
     @Test
-    public void testInitAgentMap() {
+    public void testInitSocialAgentMap() {
 
     List<String> ids = Arrays.asList("1", "2", "3");
     SNModel snModel = new SNModel(SNConfig.getDefaultConfigFile());
-    snModel.initAgentMap(ids);
+    snModel.initSocialAgentMap(ids);
     System.out.println(snModel.getSNManager().getAgentMap().keySet().toString());
+    Assert.assertEquals(ids.size(),snModel.getSNManager().getAgentMap().size());
 
 }
     @Ignore
@@ -32,7 +34,7 @@ public class TestSNModel {
     public void testgenSNModel() {
         List<String> ids = Arrays.asList("1", "2", "3");
         SNModel snModel = new SNModel(SNConfig.getDefaultConfigFile());
-        snModel.initAgentMap(ids);
+        snModel.initSocialAgentMap(ids);
 
         DataServer ds = new DataServer("Bushfire");
         snModel.registerDataServer(ds);
