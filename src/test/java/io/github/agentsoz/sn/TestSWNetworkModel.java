@@ -91,7 +91,7 @@ public class TestSWNetworkModel {
 	}
 
 	
-	@Ignore
+	//@Ignore
 	@Test
 	// testing the updated agentmap
 	/*TESTED
@@ -123,7 +123,7 @@ public class TestSWNetworkModel {
 	}
 	
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void testNormalisedNetwork() {
 		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
@@ -133,12 +133,12 @@ public class TestSWNetworkModel {
 		SNConfig.setNormaliseRandNetwork(true);
 		swNet.setupConfigs();
 		swNet.genNetworkAndUpdateAgentMap(sn.getAgentMap());
-		swNet.printNetworkWegihts(sn.getAgentMap());
+//		swNet.printNetworkWegihts(sn.getAgentMap());
 
 		assertEquals(true,swNet.isProperlyNormalised(sn.getAgentMap()));
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	/*  test method of SN-Manager
 	 *  tested 40,000 nodes =??
@@ -165,18 +165,9 @@ public class TestSWNetworkModel {
 		Assert.assertEquals(snManager.getNetworkModel().getNeihgbourLinkCount() * 2, snManager.getNetworkModel().getLinkCountInAgentMaps());
 
 	}
+
 	
-//	public void printAgentCoords() {
-//		logger.debug("retreiving assigned corrdinates from the agentmap..");
-//
-//		for(int i=0;i<agentmap.size(); i++) {
-//			logger.debug("x: {} y: {}",snManager.getAgentMap().get(i).getX(),snManager.getAgentMap().get(i).getY());
-//
-//		}
-//	}
-	
-	
-//	@Ignore
+	@Ignore
 	@Test
 	public void printNetworkLinksToFile(){
 		

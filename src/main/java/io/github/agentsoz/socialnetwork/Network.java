@@ -27,7 +27,7 @@ public  class Network{
 
 final Logger logger = LoggerFactory.getLogger("");
 
-public static int neighbourLinksCount = 0;
+private  int neighbourLinksCount = 0;
 private int linkCountInAgentMaps = 0 ; // counts the #links  in the agent map
 
 public static String type = "normalise"; // normalise (sum weights = 1),equal

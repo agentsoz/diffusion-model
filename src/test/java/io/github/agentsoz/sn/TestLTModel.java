@@ -95,10 +95,10 @@ public class TestLTModel {
 
 			
 			//logger.debug(" low: {} med: {} high: {}", ltModel.getLowPanicCount(),ltModel.getMedPanicCount(),ltModel.getHighPanicCount());
-			if(turn == 2) {
+			if(turn == 3) {
 				SNUtils.countLowMedHighAgents(sn_manager);
-				assertEquals(2,SNUtils.getLowCt(),1);
-				assertEquals(3,SNUtils.getMedCt(),1);
+				assertEquals(1,SNUtils.getLowCt(),1);
+				assertEquals(4,SNUtils.getMedCt(),1);
 			}
 			turn++;
 		}
@@ -129,7 +129,7 @@ public class TestLTModel {
 	}
 
 	
-//	@Ignore
+	@Ignore
 	@Test
 	public void testLowHighThresholds() {
 		ltModel.assignGaussianDistThresholds(0, 0.2, 0, 0.1);
