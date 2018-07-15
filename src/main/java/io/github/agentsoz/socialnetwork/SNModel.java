@@ -15,29 +15,29 @@ public class SNModel implements DataSource,DataClient {
 
     private DataServer dataServer;
     private SocialNetworkManager  snManager;
-    private String config;
+   // private String config;
 
     final Logger logger = LoggerFactory.getLogger("");
 
-    public SNModel(String configFile) {
-        this.config = configFile;
+    public SNModel(String configFile, DataServer ds) {
+        this.snManager = new SocialNetworkManager(configFile);
+       // this.config = configFile;
+        this.dataServer =ds;
     }
 
     public void initSocialAgentMap(List<String> idList) {
 
-        initSNManagerBasedOnConfigs();
-        for (String id : idList) {  //populate agentmap
-            snManager.createSocialAgent(id);
+       // initSNManagerBasedOnConfigs();
+        for (String id : idList) {
+            this.snManager.createSocialAgent(id); //populate agentmap
         }
     }
 
-    public void initSNManagerBasedOnConfigs(){
-        snManager = new SocialNetworkManager(this.config);
-    }
-    public void genSNModel(){ // set SNManager based on main configs unless already set
+    public void initSNModel(){ // set SNManager based on main configs unless already set
 
-        this.snManager.initSNModel(); // setup configs, init network and diffusion models
+        this.snManager.genNetworkAndDiffModels(); // setup configs, gen network and diffusion models
         this.snManager.printSNModelconfigs();
+
         //subscribe to BDI data updates
         this.dataServer.subscribe(this,DataTypes.BDI_STATE_UPDATES);
 
@@ -55,7 +55,7 @@ public class SNModel implements DataSource,DataClient {
 
         if(snManager.processDiffusion((long)dataServer.getTime())) {
             getNewData(dataServer.getTime(),snManager.getCurrentStepDiffusionData());
-            logger.debug("published diffusion latest data {}", dataServer.getTime());
+            logger.debug("published latest diffusion  data {}", dataServer.getTime());
 
         }
 
@@ -69,7 +69,7 @@ public class SNModel implements DataSource,DataClient {
             return dataSet;
         }
         else{
-            return false;
+            return null;
         }
 
     }
@@ -89,14 +89,16 @@ public class SNModel implements DataSource,DataClient {
         return false;
     }
 
-    public void finish() {
-        // terminate the snModel
+    public DataServer getDataServer() {
+        return this.dataServer;
     }
 
-    public void registerDataServer(DataServer ds){
-        this.dataServer = ds;
-    }
+
     public void publishDiffusionDataUpdate() {
         this.dataServer.publish(DataTypes.DIFFUSION, "sn-data");
+    }
+
+    public void finish() {
+        // cleaning
     }
 }

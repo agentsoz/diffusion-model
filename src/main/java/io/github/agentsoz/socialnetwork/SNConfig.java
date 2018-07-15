@@ -73,6 +73,9 @@ public class SNConfig {
 	private static double waitThreshold = 0.0 ;
 	private static double panicThreshold = 0.0 ;
 
+	//ICModel
+    private static double diffProb;
+
 	// TestSNBDIModels
 	private static double perSeed = 15 ;
 
@@ -260,6 +263,14 @@ public class SNConfig {
 		return panicThreshold;
 	}
 
+	//IC model
+    public static void setDiffProbability(double prob) {
+	    diffProb = prob;
+    }
+
+    public static double getDiffProbability(){
+	    return diffProb;
+    }
 
 	//TestSNBDIModels
 	public static double getPerceptSeed() {
@@ -366,8 +377,30 @@ public class SNConfig {
 						}
 						
 					}
-					
-					if (nodeName.equals("diffModel")) {
+					if (nodeName.equals("ic") && getDiffusionType().equals(DataTypes.icModel)) {
+						try {
+
+							String dseed = node.getAttributes().getNamedItem("diff_seed").getNodeValue();
+							seed = Double.parseDouble(dseed);
+
+							String turn = node.getAttributes().getNamedItem("diff_turn").getNodeValue();
+							diffTurn = Integer.parseInt(turn) * 60;
+
+							strategy = node.getAttributes().getNamedItem("strategy").getNodeValue();
+
+                            String prob = node.getAttributes().getNamedItem("diff_probability").getNodeValue();
+                            diffProb  = Double.parseDouble(prob);
+
+                            String sd = node.getAttributes().getNamedItem("standard_deviation").getNodeValue();
+                            standardDev  = Double.parseDouble(sd);
+
+						}
+						catch (Exception e) {
+							System.err.println("SNConfig: ERROR while reading config: " + e.getMessage());
+						}
+						return true;
+					}
+							if (nodeName.equals("diffModel")) {
 						try {
 
 						String dseed = node.getAttributes().getNamedItem("diff_seed").getNodeValue();
@@ -469,6 +502,15 @@ public class SNConfig {
 			logger.info("wait threshold = {}", getWaitThreshold());
 			logger.info("panic threshold = {}", getPanicThreshold());
 		}
+		if(diffusionType.equals(DataTypes.icModel)){
+            logger.info(" IC MODEL configs:");
+            logger.info("diffusion seed = {}", getSeed());
+            logger.info("diffusion turn = {}", getDiffturn());
+            logger.info("diffusion strategy = {}", getStrategy());
+            logger.info("diffusion probability = {}", getDiffProbability());
+            logger.info("standard deviation = {}", getStandardDeviation());
+        }
+
 	}
 	
 	

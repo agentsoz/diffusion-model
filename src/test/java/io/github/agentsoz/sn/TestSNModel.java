@@ -18,35 +18,38 @@ public class TestSNModel {
     String logFile = "./testSNModel.log";
     final Logger logger = Log.createLogger("", logFile);
 
-  //  @Ignore
+    //  @Ignore
     @Test
     public void testInitSocialAgentMap() {
 
-    List<String> ids = Arrays.asList("1", "2", "3");
-    SNModel snModel = new SNModel(SNConfig.getDefaultConfigFile());
-    snModel.initSocialAgentMap(ids);
-    System.out.println(snModel.getSNManager().getAgentMap().keySet().toString());
-    Assert.assertEquals(ids.size(),snModel.getSNManager().getAgentMap().size());
+        DataServer ds1 = DataServer.getServer("TestServer1");
+        List<String> ids = Arrays.asList("1", "2", "3");
 
-}
-    @Ignore
+
+        SNModel snModel = new SNModel(SNConfig.getDefaultConfigFile(), ds1);
+        snModel.initSocialAgentMap(ids);
+        System.out.println(snModel.getSNManager().getAgentMap().keySet().toString());
+        Assert.assertEquals(ids.size(), snModel.getSNManager().getAgentMap().size());
+
+    }
+
+   // @Ignore
     @Test
     public void testgenSNModel() {
+
+        DataServer ds2 = DataServer.getServer("TestServer2");
         List<String> ids = Arrays.asList("1", "2", "3");
-        SNModel snModel = new SNModel(SNConfig.getDefaultConfigFile());
+
+        SNModel snModel = new SNModel(SNConfig.getDefaultConfigFile(), ds2);
         snModel.initSocialAgentMap(ids);
 
-        DataServer ds = new DataServer("Bushfire");
-        snModel.registerDataServer(ds);
-        snModel.genSNModel();
+        snModel.initSNModel();
 
         SNUtils.setEndSimTime(7200L);
-        while(ds.getTime() <= SNUtils.getEndSimTime()) {
+        while (snModel.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
             snModel.stepDiffusionProcess();
-            ds.stepTime();
+            snModel.getDataServer().stepTime();
         }
-
-
 
 
     }

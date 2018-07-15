@@ -4,7 +4,7 @@
 <!-- Specify the diffusion model: lt=Linear Threshold model, ic= Independant Cascade model, clt= Competitive LT model-->
 <!-- specify the network strucuture: random= random ER MODEL), sw=small world model, rand-reg=random-regular model -->
 <snModel
-	diffusionType="lt"
+	diffusionType="ic"
 	networkType="rand-reg"
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 />
@@ -31,26 +31,21 @@
 	
 />
 
-    <!-- diffusion model configuration-->
-    <!-- diff_turn: step size of the diffusion process (mins), seed = percentage of initially active agents (%) , thresholdType = guassian / random -->
-    <!--strategy: seeding strategy that defines the selection of initial set of agents that is active-->
-
-	<ic
-        diff_turn="15"
-		diff_seed="50"
-		strategy="random"
-		diff_probability="0.0"
-        standard_deviation="0.025"
-
-
-
+<!-- diffusion model configuration-->
+<!-- diff_turn: step size of the diffusion process (mins), seed = percentage of initially active agents (%) , thresholdType = guassian / random -->
+	<!--strategy: seeding strategy that defines the selection of initial set of agents that is active-->
+<ic
+        diff_turn="600"
+		diff_seed="53"
+        strategy="random"
+		diff_probability="0.16"
+		standard_deviation="0.0015"
 />
-
 	<!-- stratgey = random or nearfire or prob-->
 	<!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->
 	<!-- 1st config set: common to all diffusion models, 2nd set: specific for LT diffusion model, 3rd set: specific for CLT diffusion model-->
 
-	<diffModel
+<diffModel
 
 
 	diff_turn="60"	

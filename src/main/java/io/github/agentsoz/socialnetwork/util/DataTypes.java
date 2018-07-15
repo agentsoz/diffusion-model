@@ -15,6 +15,7 @@ public class DataTypes {
    public static final String GAUSSIAN		       = "guassian";
    public static final String ltModel		       = "lt";
    public static final String CLTModel		       = "clt";
+   public static final String icModel		       = "ic";
    public static final String BROADCAST            = "global";
    public static final String TIME                 = "time";
    

@@ -63,7 +63,7 @@ public class SocialNetworkManager{
     
 
 // initilises a network, diffusion model as specified in configurations
-    public boolean initSNModel()
+    public boolean genNetworkAndDiffModels()
     {
 
     if(!setupSNConfigs()) {
