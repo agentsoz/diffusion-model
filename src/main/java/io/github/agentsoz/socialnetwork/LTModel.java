@@ -40,8 +40,7 @@ public class LTModel extends DiffModel{
 	private HashMap<Integer,Double> seedMap = new HashMap<Integer,Double>();
 	
 	private int diffSeed;
-	private int diffTurn;
-	private SocialNetworkManager snManager;
+//	private int diffStep;
 	private String threholdType;
 	private double meanLowThreshold;
 	private double meanHighThreshold;
@@ -56,13 +55,10 @@ public class LTModel extends DiffModel{
 
 	public LTModel(double seed, int turn, SocialNetworkManager snMan) { 
 		this.diffSeed = (int) (seed * 0.01 * snMan.getAgentMap().size()); // divide by 100 for the percentage multiply by the #agents
-		this.diffTurn = turn; // already converted to seconds at SNConfig
+		this.diffStep = turn; // already converted to seconds at SNConfig
 		this.snManager = snMan;
 	}
 	
-	public  HashMap<Integer,SocialAgent> getAgentMap() {
-		return this.snManager.getAgentMap();
-	}
 	/*
 	 *  Initialisation method. all the methods to initialise the diff model should run here. 
 	 *  After this method the diff model should be ready for diffusion
@@ -168,13 +164,13 @@ public class LTModel extends DiffModel{
 		
 		logger.info("fixed threshold assigning complete");
 	}
-	@Override
-	public boolean isDiffTurn(long simTime) {
-		boolean result;
-        result = simTime % this.diffTurn == 0;
-		logger.trace("isDiffTurn? {}",result);
-		return result;
-	}
+//	@Override
+//	public boolean isDiffTurn(long simTime) {
+//		boolean result;
+//        result = simTime % this.diffTurn == 0;
+//		logger.trace("isDiffTurn? {}",result);
+//		return result;
+//	}
 	public void setupDiffConfigs() { 
 		threholdType = SNConfig.getDiffusionThresholdType();
 		if(threholdType.equals(DataTypes.GAUSSIAN)) {
@@ -648,7 +644,7 @@ public class LTModel extends DiffModel{
 		logger.debug("assigned config parameters:");
 		logger.debug("thresholdType {}", this.threholdType);
 		logger.debug("seed {}", this.diffSeed);
-		logger.debug("turn {}", this.diffTurn);
+		logger.debug("turn {}", this.diffStep);
 		logger.debug("meanLowT {}", this.meanLowThreshold);
 		logger.debug("meanHighT {}", this.meanHighThreshold);
 		logger.debug("standard deviation {}", this.standardDev);

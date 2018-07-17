@@ -39,7 +39,7 @@
 		diff_seed="53"
         strategy="random"
 		diff_probability="0.16"
-		standard_deviation="0.0015"
+		standard_deviation="0.05"
 />
 	<!-- stratgey = random or nearfire or prob-->
 	<!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->

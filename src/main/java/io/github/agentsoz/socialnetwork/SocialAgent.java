@@ -29,6 +29,9 @@ private double panicLevel=0.0;
 private HashMap<Integer,Double> linkMap;
 private HashMap<String,Double> contentValuesMap =  new HashMap<String, Double>();
 
+//LT/probabilistic models
+private ArrayList<String> adoptedContentList;
+
 public HashMap<Integer,SocialLink> links ;
 final Logger logger = LoggerFactory.getLogger("");
 private static DecimalFormat df = new DecimalFormat(".##");
@@ -72,8 +75,32 @@ private static DecimalFormat df = new DecimalFormat(".##");
 
 	}
 
+	public ArrayList<String> getAdoptedContentList() {
+		return adoptedContentList;
+	}
 
+	public void initAdoptedContentList() {
+		if(this.adoptedContentList == null) {
+			this.adoptedContentList = new ArrayList<String>();
+		}
+	}
 
+	public void adoptContent(String newContent) {
+		if(this.adoptedContentList == null) {
+			this.adoptedContentList = new ArrayList<String>();
+		}
+		this.adoptedContentList.add(newContent);
+	}
+
+	public boolean alreadyAdoptedContent(String content) {
+		if(this.adoptedContentList.contains(content)) {
+			return true;
+		}
+		else{
+			return false;
+		}
+
+	}
 	public double getContentlevel(String type) {
 		return this.contentValuesMap.get(type);
 	}
