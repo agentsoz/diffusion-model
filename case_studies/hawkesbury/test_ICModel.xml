@@ -31,16 +31,20 @@
 	
 />
 
-<!-- diffusion model configuration-->
-<!-- diff_turn: step size of the diffusion process (mins), seed = percentage of initially active agents (%) , thresholdType = guassian / random -->
-	<!--strategy: seeding strategy that defines the selection of initial set of agents that is active-->
-<ic
-        diff_turn="600"
-		diff_seed="53"
-        strategy="random"
-		diff_probability="0.16"
-		standard_deviation="0.05"
-/>
+<!-- diffusion model configurations-->
+    <!--IC diffusion model-->
+    <!-- step_size: step size of the diffusion process (mins)-->
+	<!--seeding_strategy: seeding strategy that defines the selection of initial set of agents that is active: random, none -->
+    <!--seed = percentage of initially active agents (%)-->
+    <!--diffusion_probaility: mean diffusion probability that is varied using a standard deviation (sigma) to randomly draw probabilities from a gaussian distribution-->
+<ic>
+    <step_size>600</step_size>
+	<seeding_strategy seed="53">random</seeding_strategy>
+    <diffusion_probability sigma="0.05">0.16</diffusion_probability>
+</ic>
+
+
+
 	<!-- stratgey = random or nearfire or prob-->
 	<!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->
 	<!-- 1st config set: common to all diffusion models, 2nd set: specific for LT diffusion model, 3rd set: specific for CLT diffusion model-->

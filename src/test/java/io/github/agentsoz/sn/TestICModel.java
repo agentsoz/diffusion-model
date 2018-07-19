@@ -42,7 +42,7 @@ public class TestICModel {
         ICModel testIC = (ICModel) sn.getDiffModel();
 
         //test IC model configs
-        testIC.registerNewContent("testContentX");
+        testIC.registerContentIfNotRegistered("testContentX");
         testIC.selectRandomSeed(SNConfig.getSeed(),"testContentX");
 
        Assert.assertEquals(42, ICModelDataCollector.getAdoptedAgentsForContent(sn,"testContentX"));
@@ -70,7 +70,7 @@ public class TestICModel {
         SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
         ICModel icModel = new ICModel(sn, 30, 0.0);
 
-        icModel.registerNewContent("contentX");
+        icModel.registerContentIfNotRegistered("contentX");
         icModel.addExposureAttempt(1,2,"contentX");
         assertTrue(icModel.neighbourAlreadyExposed(1,2,"contentX"));
         Assert.assertFalse(icModel.neighbourAlreadyExposed(2,1,"contentX"));
@@ -92,7 +92,7 @@ public class TestICModel {
             assertTrue(0.01 < prob && prob < 0.31);
         }
 
-        icModel.registerNewContent("contentA");
+        icModel.registerContentIfNotRegistered("contentA");
         icModel.initSeedBasedOnStrategy();
         icModel.icDiffusion();
         int adoptedAgents = ICModelDataCollector.getAdoptedAgentsForContent(sn,"contentA");

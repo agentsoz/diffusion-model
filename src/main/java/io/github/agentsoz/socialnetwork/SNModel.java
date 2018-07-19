@@ -3,26 +3,32 @@ package io.github.agentsoz.socialnetwork;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
+import io.github.agentsoz.socialnetwork.util.DiffusedInformation;
+import io.github.agentsoz.socialnetwork.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 //wrapper class of SNManager class, provides API functionalities through DataServer
 public class SNModel implements DataSource,DataClient {
 
     private DataServer dataServer;
     private SocialNetworkManager  snManager;
-   // private String config;
+    private TreeMap<Double,DiffusedInformation> overallInfoSpreadMap;
+    private double lastUpdateTimeInMinutes = -1 ;
+    private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 
     final Logger logger = LoggerFactory.getLogger("");
 
     public SNModel(String configFile, DataServer ds) {
         this.snManager = new SocialNetworkManager(configFile);
-       // this.config = configFile;
         this.dataServer =ds;
+        this.overallInfoSpreadMap =  new TreeMap<Double,DiffusedInformation>();
     }
 
     public void initSocialAgentMap(List<String> idList) {
@@ -35,6 +41,7 @@ public class SNModel implements DataSource,DataClient {
 
     public void initSNModel(){ // set SNManager based on main configs unless already set
 
+        //setTimestepUnit();
         this.snManager.genNetworkAndDiffModels(); // setup configs, gen network and diffusion models
         this.snManager.printSNModelconfigs();
 
@@ -60,19 +67,18 @@ public class SNModel implements DataSource,DataClient {
         }
 
     }
-
     @Override
-    public Object getNewData(double time, Object data) { // pass the agent states/levels:
-        if(dataServer != null) {
-            HashMap<Double,Object> dataSet = new HashMap<Double, Object>();
-            dataServer.publish(DataTypes.DIFFUSION,dataSet);
-            return dataSet;
+    public Object getNewData(double timestep, Object parameters) {
+        double currentTime = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
+        SortedMap<Double, DiffusedInformation> periodicInfoSpread = overallInfoSpreadMap.subMap(lastUpdateTimeInMinutes, currentTime);
+        lastUpdateTimeInMinutes = currentTime;
+        Double nextTime = overallInfoSpreadMap.higherKey(currentTime);
+        if (nextTime != null) {
+            dataServer.registerTimedUpdate(DataTypes.DIFFUSION, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
         }
-        else{
-            return null;
-        }
-
+        return periodicInfoSpread;
     }
+
 
     @Override
     public boolean dataUpdate(double time, String dataType, Object data) { // data package from the BDI side
@@ -81,7 +87,9 @@ public class SNModel implements DataSource,DataClient {
 
             case DataTypes.BDI_STATE_UPDATES: { // update social states based on BDI reasoning
 
-                logger.debug("received BDI state updates");
+                logger.debug("SNModel: received BDI state updates");
+                ICModel icModel = (ICModel) this.snManager.getDiffModel();
+                icModel.updateSocialStatesFromBDIPercepts(data);
                 return true;
             }
 
@@ -93,10 +101,17 @@ public class SNModel implements DataSource,DataClient {
         return this.dataServer;
     }
 
-
-    public void publishDiffusionDataUpdate() {
-        this.dataServer.publish(DataTypes.DIFFUSION, "sn-data");
+    /**
+     * Set the time step unit for this model
+     * @param unit the time step unit to use
+     */
+    void setTimestepUnit(Time.TimestepUnit unit) {
+        timestepUnit = unit;
     }
+
+    //public void publishDiffusionDataUpdate() {
+//        this.dataServer.publish(DataTypes.DIFFUSION, "sn-data");
+//    }
 
     public void finish() {
         // cleaning

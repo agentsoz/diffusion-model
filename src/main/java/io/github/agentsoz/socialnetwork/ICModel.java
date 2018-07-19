@@ -38,16 +38,19 @@ public class ICModel extends DiffModel{
         }
     }
 
-    public void registerNewContent(String newContent){
 
-        if(this.contentList.contains(newContent)) {
-            logger.info("content {} is already added to the content list",newContent);
+    public void registerContentIfNotRegistered(String newContent){
+
+        if(!this.contentList.contains(newContent)) {
+
+            // add new content type to contentList and exposed map
+            this.contentList.add(newContent);
+            this.exposedMap.put(newContent,new ArrayList<String>());
+
+            logger.info("content {} registered in the IC model",newContent);
             return ;
         }
 
-        // add new content type to contentList and exposed map
-        this.contentList.add(newContent);
-        this.exposedMap.put(newContent,new ArrayList<String>());
     }
 
     public void initSeedBasedOnStrategy() {
@@ -74,6 +77,26 @@ public class ICModel extends DiffModel{
 
         logger.info("ICModel - random seed: set {} agents for content {}", selected,content);
 
+
+    }
+
+    @Override
+    public void updateSocialStatesFromBDIPercepts(Object data) {
+
+        logger.debug("ICModel: updating social states based on BDI percepts");
+        HashMap<String,Integer []> perceptMap = (HashMap<String,Integer []>) data ;
+
+        for( Map.Entry entry: perceptMap.entrySet()) {
+
+            String content = (String) entry.getKey();
+            int[] agentIds = (int[]) entry.getValue();
+
+            //register content if not registered
+            registerContentIfNotRegistered(content);
+
+            //adopt content
+            setSpecificSeed(agentIds,content);
+        }
 
     }
 

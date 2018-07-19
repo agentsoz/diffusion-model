@@ -380,23 +380,26 @@ public class SNConfig {
 					if (nodeName.equals("ic") && getDiffusionType().equals(DataTypes.icModel)) {
 						try {
 
-							String dseed = node.getAttributes().getNamedItem("diff_seed").getNodeValue();
-							seed = Double.parseDouble(dseed);
+							Element eElement = (Element) node;
 
-							String turn = node.getAttributes().getNamedItem("diff_turn").getNodeValue();
+							String turn = eElement.getElementsByTagName("step_size").item(0).getTextContent();
 							diffTurn = Integer.parseInt(turn) * 60;
 
-							strategy = node.getAttributes().getNamedItem("strategy").getNodeValue();
+							strategy = eElement.getElementsByTagName("seeding_strategy").item(0).getTextContent();
 
-                            String prob = node.getAttributes().getNamedItem("diff_probability").getNodeValue();
+							String dseed = eElement.getElementsByTagName("seeding_strategy").item(0).getAttributes().getNamedItem("seed").getNodeValue();
+							seed = Double.parseDouble(dseed);
+
+
+                            String prob = eElement.getElementsByTagName("diffusion_probability").item(0).getTextContent();
                             diffProb  = Double.parseDouble(prob);
 
-                            String sd = node.getAttributes().getNamedItem("standard_deviation").getNodeValue();
+                            String sd = eElement.getElementsByTagName("diffusion_probability").item(0).getAttributes().getNamedItem("sigma").getNodeValue();
                             standardDev  = Double.parseDouble(sd);
 
 						}
 						catch (Exception e) {
-							System.err.println("SNConfig: ERROR while reading config: " + e.getMessage());
+							System.err.println("SNConfig: ERROR while reading IC config: " + e.getMessage());
 						}
 						return true;
 					}
