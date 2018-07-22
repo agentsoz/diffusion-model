@@ -3,7 +3,7 @@ package io.github.agentsoz.socialnetwork;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
-import io.github.agentsoz.socialnetwork.util.DiffusedInformation;
+import io.github.agentsoz.socialnetwork.util.DiffusedContent;
 import io.github.agentsoz.socialnetwork.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class SNModel implements DataSource, DataClient {
 
     private DataServer dataServer;
     private SocialNetworkManager snManager;
-    private TreeMap<Double, DiffusedInformation> overallInfoSpreadMap;
+    private TreeMap<Double, DiffusedContent> allStepsInfoSpreadMap;
     private double lastUpdateTimeInMinutes = -1;
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 
@@ -28,7 +28,7 @@ public class SNModel implements DataSource, DataClient {
     public SNModel(String configFile, DataServer ds) {
         this.snManager = new SocialNetworkManager(configFile);
         this.dataServer = ds;
-        this.overallInfoSpreadMap = new TreeMap<Double, DiffusedInformation>();
+        this.allStepsInfoSpreadMap = new TreeMap<Double, DiffusedContent>();
     }
 
     public void initSocialAgentMap(List<String> idList) {
@@ -65,9 +65,9 @@ public class SNModel implements DataSource, DataClient {
                 ICModel icModel = (ICModel) getSNManager().getDiffModel();
                 HashMap<String, Integer[]> latestUpdate = icModel.getLatestDiffusionUpdates();
 
-                DiffusedInformation di = new DiffusedInformation();
-                di.setInfoSpreadMap(latestUpdate);
-                this.overallInfoSpreadMap.put(dataServer.getTime(), di);
+                DiffusedContent dc = new DiffusedContent();
+                dc.setContentSpreadMap(latestUpdate);
+                this.allStepsInfoSpreadMap.put(dataServer.getTime(), dc);
 
                 logger.debug("put timed diffusion updates for ICModel at {}", dataServer.getTime());
 
@@ -80,9 +80,9 @@ public class SNModel implements DataSource, DataClient {
     @Override
     public Object getNewData(double timestep, Object parameters) {
         double currentTime = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
-        SortedMap<Double, DiffusedInformation> periodicInfoSpread = overallInfoSpreadMap.subMap(lastUpdateTimeInMinutes, currentTime);
+        SortedMap<Double, DiffusedContent> periodicInfoSpread = allStepsInfoSpreadMap.subMap(lastUpdateTimeInMinutes, currentTime);
         lastUpdateTimeInMinutes = currentTime;
-        Double nextTime = overallInfoSpreadMap.higherKey(currentTime);
+        Double nextTime = allStepsInfoSpreadMap.higherKey(currentTime);
         if (nextTime != null) {
             dataServer.registerTimedUpdate(DataTypes.DIFFUSION, this, Time.convertTime(nextTime, Time.TimestepUnit.MINUTES, timestepUnit));
         }
@@ -109,6 +109,10 @@ public class SNModel implements DataSource, DataClient {
 
     public DataServer getDataServer() {
         return this.dataServer;
+    }
+
+    public TreeMap<Double,DiffusedContent> getAllStepsSpreadMap() {
+        return  this.allStepsInfoSpreadMap;
     }
 
     /**

@@ -1,9 +1,7 @@
 package io.github.agentsoz.sn;
 
-import io.github.agentsoz.socialnetwork.ICModel;
-import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
+import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.socialnetwork.*;
 import io.github.agentsoz.socialnetwork.datacollection.ICModelDataCollector;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
@@ -112,4 +110,20 @@ public class TestICModel {
         System.out.println(adoptedAgents);
 
     }
+
+    @Test
+    public void testWriteFile(){
+
+        String testfile = "./src/test/output/icmodel_outputs.txt";
+        DataServer ds = DataServer.getServer("test");
+        SNModel sn = new SNModel(testConfigFile,ds);
+
+
+    }
+
+    @Test
+    public void testICDiffusionOutputs(){
+
+    }
+
 }
