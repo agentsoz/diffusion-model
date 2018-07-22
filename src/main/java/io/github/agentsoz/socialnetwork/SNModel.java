@@ -15,38 +15,38 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 //wrapper class of SNManager class, provides API functionalities through DataServer
-public class SNModel implements DataSource,DataClient {
+public class SNModel implements DataSource, DataClient {
 
     private DataServer dataServer;
-    private SocialNetworkManager  snManager;
-    private TreeMap<Double,DiffusedInformation> overallInfoSpreadMap;
-    private double lastUpdateTimeInMinutes = -1 ;
+    private SocialNetworkManager snManager;
+    private TreeMap<Double, DiffusedInformation> overallInfoSpreadMap;
+    private double lastUpdateTimeInMinutes = -1;
     private Time.TimestepUnit timestepUnit = Time.TimestepUnit.SECONDS;
 
     final Logger logger = LoggerFactory.getLogger("");
 
     public SNModel(String configFile, DataServer ds) {
         this.snManager = new SocialNetworkManager(configFile);
-        this.dataServer =ds;
-        this.overallInfoSpreadMap =  new TreeMap<Double,DiffusedInformation>();
+        this.dataServer = ds;
+        this.overallInfoSpreadMap = new TreeMap<Double, DiffusedInformation>();
     }
 
     public void initSocialAgentMap(List<String> idList) {
 
-       // initSNManagerBasedOnConfigs();
+        // initSNManagerBasedOnConfigs();
         for (String id : idList) {
             this.snManager.createSocialAgent(id); //populate agentmap
         }
     }
 
-    public void initSNModel(){ // set SNManager based on main configs unless already set
+    public void initSNModel() { // set SNManager based on main configs unless already set
 
         //setTimestepUnit();
         this.snManager.genNetworkAndDiffModels(); // setup configs, gen network and diffusion models
         this.snManager.printSNModelconfigs();
 
         //subscribe to BDI data updates
-        this.dataServer.subscribe(this,DataTypes.BDI_STATE_UPDATES);
+        this.dataServer.subscribe(this, DataTypes.BDI_STATE_UPDATES);
 
     }
 
@@ -60,13 +60,23 @@ public class SNModel implements DataSource,DataClient {
 
     public void stepDiffusionProcess() {
 
-        if(snManager.processDiffusion((long)dataServer.getTime())) {
-            getNewData(dataServer.getTime(),snManager.getCurrentStepDiffusionData());
-            logger.debug("published latest diffusion  data {}", dataServer.getTime());
+        if (snManager.processDiffusion((long) dataServer.getTime())) {
+            if (SNConfig.getDiffusionType().equals(DataTypes.icModel)) {
+                ICModel icModel = (ICModel) getSNManager().getDiffModel();
+                HashMap<String, Integer[]> latestUpdate = icModel.getLatestDiffusionUpdates();
+
+                DiffusedInformation di = new DiffusedInformation();
+                di.setInfoSpreadMap(latestUpdate);
+                this.overallInfoSpreadMap.put(dataServer.getTime(), di);
+
+                logger.debug("put timed diffusion updates for ICModel at {}", dataServer.getTime());
+
+            }
 
         }
 
     }
+
     @Override
     public Object getNewData(double timestep, Object parameters) {
         double currentTime = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES);
@@ -103,6 +113,7 @@ public class SNModel implements DataSource,DataClient {
 
     /**
      * Set the time step unit for this model
+     *
      * @param unit the time step unit to use
      */
     void setTimestepUnit(Time.TimestepUnit unit) {

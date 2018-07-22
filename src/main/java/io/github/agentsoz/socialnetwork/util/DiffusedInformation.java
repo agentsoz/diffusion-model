@@ -5,16 +5,20 @@ import java.util.HashMap;
 public class DiffusedInformation {
 
     // contenttype, active agents IDs
-    HashMap<String,Integer[]> infoSpread;
+    HashMap<String,Integer[]> infoSpreadMap;
 
-    DiffusedInformation()
+    public DiffusedInformation()
     {
-        this.infoSpread = new HashMap<String,Integer[]>();
+        this.infoSpreadMap = new HashMap<String,Integer[]>();
     }
 
     public int getTotalDiffusionContents() {
-        return infoSpread.size();
+        return infoSpreadMap.size();
     }
 
 
+    public void setInfoSpreadMap(HashMap<String,Integer[]> currentSpreadMap) {
+
+        this.infoSpreadMap = currentSpreadMap;
+    }
 }

@@ -1,5 +1,6 @@
 package io.github.agentsoz.socialnetwork;
 
+import io.github.agentsoz.socialnetwork.datacollection.ICModelDataCollector;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
@@ -178,6 +179,16 @@ public class ICModel extends DiffModel{
         }
     }
 
+
+    public HashMap<String, Integer[]> getLatestDiffusionUpdates() {
+
+        HashMap<String, Integer[]> latestSpread =  new HashMap<String, Integer[]>();
+        for(String content: this.contentList) {
+           Integer[] contentArray =  ICModelDataCollector.getAdoptedAgentIdArrayForContent(snManager,content);
+           latestSpread.put(content,contentArray);
+        }
+            return latestSpread;
+    }
 
     public void updateSocialState(int id, String content) {
 

@@ -45,12 +45,12 @@ public class TestICModel {
         testIC.registerContentIfNotRegistered("testContentX");
         testIC.selectRandomSeed(SNConfig.getSeed(),"testContentX");
 
-       Assert.assertEquals(42, ICModelDataCollector.getAdoptedAgentsForContent(sn,"testContentX"));
+       Assert.assertEquals(42, ICModelDataCollector.getAdoptedAgentCountForContent(sn,"testContentX"));
 
        //test setSpecificSeed
         int[] testIds = {0,1,2};
         testIC.setSpecificSeed(testIds, "testContentY");
-        Assert.assertEquals(3, ICModelDataCollector.getAdoptedAgentsForContent(sn,"testContentY"));
+        Assert.assertEquals(3, ICModelDataCollector.getAdoptedAgentCountForContent(sn,"testContentY"));
 
     }
 
@@ -92,10 +92,23 @@ public class TestICModel {
             assertTrue(0.01 < prob && prob < 0.31);
         }
 
+    }
+
+    @Test
+    public void testICDiffusion(){
+
+        // SD = 0.05, p = 0.16
+        Global.setRandomSeed(4711);
+        SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
+        SNUtils.randomAgentMap(sn, 100, 1000);
+        sn.setupSNConfigs();
+        sn.genNetworkAndDiffModels();
+
+        ICModel icModel = (ICModel) sn.getDiffModel();
         icModel.registerContentIfNotRegistered("contentA");
         icModel.initSeedBasedOnStrategy();
         icModel.icDiffusion();
-        int adoptedAgents = ICModelDataCollector.getAdoptedAgentsForContent(sn,"contentA");
+        int adoptedAgents = ICModelDataCollector.getAdoptedAgentCountForContent(sn,"contentA");
         System.out.println(adoptedAgents);
 
     }
