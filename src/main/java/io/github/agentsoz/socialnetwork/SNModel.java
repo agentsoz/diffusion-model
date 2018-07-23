@@ -65,6 +65,7 @@ public class SNModel implements DataSource, DataClient {
                 ICModel icModel = (ICModel) getSNManager().getDiffModel();
                 HashMap<String, Integer[]> latestUpdate = icModel.getLatestDiffusionUpdates();
 
+
                 DiffusedContent dc = new DiffusedContent();
                 dc.setContentSpreadMap(latestUpdate);
                 this.allStepsInfoSpreadMap.put(dataServer.getTime(), dc);

@@ -117,13 +117,27 @@ public class TestICModel {
         String testfile = "./src/test/output/icmodel_outputs.txt";
         DataServer ds = DataServer.getServer("test");
         SNModel sn = new SNModel(testConfigFile,ds);
+        SNConfig.setDiffturn(60);
+        SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
 
+        sn.initSNModel();
+        ICModel ic = (ICModel) sn.getSNManager().getDiffModel();
+        ic.registerContentIfNotRegistered("contentX");
+
+        //setup sim configs
+        SNUtils.setEndSimTime(150000);
+        sn.getDataServer().setTime(0.0);
+
+        while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
+            sn.stepDiffusionProcess();
+            sn.getDataServer().stepTime();
+        }
+
+        //end of simulation, now print to file
+        ICModelDataCollector.writeICDiffusionOutputsToFile(sn.getAllStepsSpreadMap(),testfile);
 
     }
 
-    @Test
-    public void testICDiffusionOutputs(){
 
-    }
 
 }
