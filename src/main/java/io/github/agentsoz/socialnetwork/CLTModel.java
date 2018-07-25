@@ -86,9 +86,9 @@ public class CLTModel extends LTModel {
     }
 
     @Override
-    public void doDiffProcess(long time){
+    public void doDiffProcess(){
 
-        logger.debug("competitive diffusion: {}  simtime: {}", diffTurnCount, time);
+        logger.debug("competitive diffusion: {} ", diffTurnCount);
         runCompetitiveDiffusion();
 
         diffTurnCount++;

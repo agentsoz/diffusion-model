@@ -109,6 +109,11 @@ public class ICModel extends DiffModel{
     }
 
 
+    @Override
+    public void doDiffProcess() {
+        icDiffusion();
+    }
+
     public void icDiffusion() {
 
         for(SocialAgent agent: getAgentMap().values()) { // for each agent

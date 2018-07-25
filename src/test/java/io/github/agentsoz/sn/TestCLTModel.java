@@ -162,16 +162,16 @@ public class TestCLTModel {
 
        // testCLT.printSeedMaps();
 
-        testCLT.doDiffProcess(1);
+        testCLT.doDiffProcess();
        // checkSeedValues(testCLT);
         checkTurn1ContentValues(testCLT);
         testCLT.printAgentContentValues();
 
 
-        testCLT.doDiffProcess(2);
+        testCLT.doDiffProcess();
         checkTurn2ContentValues(testCLT);
 
-        testCLT.doDiffProcess(3);
+        testCLT.doDiffProcess();
         checkTurn3ContentValues(testCLT);
 
         //print final agent values and adopted content

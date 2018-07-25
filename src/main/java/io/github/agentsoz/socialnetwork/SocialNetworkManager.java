@@ -155,6 +155,8 @@ public class SocialNetworkManager{
      * Used by SN and SN-BDI and SN-BDI-ABM componants, so includes general functions,
       * any specific functions (e.g. publish data to dataserver, write diffusion data)
      * should be called in the application side.
+     *
+     * This method includes the constraint of stepsize check before the diffusion model steps. diffuse() method does not have any restrictions
      */
     public boolean processDiffusion(long time)
     {
@@ -167,7 +169,7 @@ public class SocialNetworkManager{
     	else if(diffModel.isDiffTurn(time)) {
     		logger.debug("SNManger started executing diffusion process at {}..",time);
 //        	diffModel.preDiffProcess(); // e.g. external diffusion
-        	diffModel.doDiffProcess(time);
+        	diffModel.doDiffProcess();
         	diffModel.postDiffProcess(time); // e.g. data collection , send data to BDI side
 
         	
@@ -188,6 +190,17 @@ public class SocialNetworkManager{
 
 	}
 
+	public void diffuseContent() {
+		if(diffModel.equals(null)) {
+			logger.error("Diffusion model not set, aborting");
+			return ;
+		}
+		else{
+			diffModel.doDiffProcess();
+		}
+
+
+	}
 
 	public String getAgentState(int id) {
 		SocialAgent agent = agentList.get(id);
@@ -195,13 +208,6 @@ public class SocialNetworkManager{
 		return s;
 	}
 
-	public HashMap<Integer,Double> getCurrentStepDiffusionData() {
-
-		HashMap<Integer,Double> data =  new HashMap<Integer, Double>();
-		data.put(1,0.5); // #FIXME implement the Diffusion data update
-
-    	return data;
-	}
 
 	public DiffModel getDiffModel() { 
 		return this.diffModel;

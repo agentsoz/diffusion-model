@@ -24,7 +24,7 @@ public abstract class DiffModel {
 
     public void preDiffProcess() {}
 
-    public void doDiffProcess(long time) {}
+    public void doDiffProcess() {}
 
     public void postDiffProcess() {}
 

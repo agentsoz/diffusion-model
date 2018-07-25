@@ -186,7 +186,7 @@ public class LTModel extends DiffModel{
 	public void preDiffProcess() {}
 
     @Override
-	public void doDiffProcess(long time) {
+	public void doDiffProcess() {
     	logger.trace("diffusion process: turn {}", diffTurnCount);
     	
     	ltDiffuse();
