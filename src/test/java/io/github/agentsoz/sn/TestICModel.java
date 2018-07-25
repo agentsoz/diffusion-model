@@ -43,12 +43,13 @@ public class TestICModel {
         testIC.registerContentIfNotRegistered("testContentX");
         testIC.selectRandomSeed(SNConfig.getSeed(),"testContentX");
 
-       Assert.assertEquals(42, ICModelDataCollector.getAdoptedAgentCountForContent(sn,"testContentX"));
+        ICModelDataCollector dc = new ICModelDataCollector(); // data collector
+        Assert.assertEquals(42, dc.getAdoptedAgentCountForContent(sn,"testContentX"));
 
        //test setSpecificSeed
-        int[] testIds = {0,1,2};
+        Integer[] testIds = {0,1,2};
         testIC.setSpecificSeed(testIds, "testContentY");
-        Assert.assertEquals(3, ICModelDataCollector.getAdoptedAgentCountForContent(sn,"testContentY"));
+        Assert.assertEquals(3, dc.getAdoptedAgentCountForContent(sn,"testContentY"));
 
     }
 
@@ -106,7 +107,9 @@ public class TestICModel {
         icModel.registerContentIfNotRegistered("contentA");
         icModel.initSeedBasedOnStrategy();
         icModel.icDiffusion();
-        int adoptedAgents = ICModelDataCollector.getAdoptedAgentCountForContent(sn,"contentA");
+
+        ICModelDataCollector dc = new ICModelDataCollector();
+        int adoptedAgents = dc.getAdoptedAgentCountForContent(sn,"contentA");
         System.out.println(adoptedAgents);
 
     }
@@ -117,24 +120,32 @@ public class TestICModel {
         String testfile = "./src/test/output/icmodel_outputs.txt";
         DataServer ds = DataServer.getServer("test");
         SNModel sn = new SNModel(testConfigFile,ds);
-        SNConfig.setDiffturn(60);
         SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
 
         sn.initSNModel();
+        SNConfig.setDiffturn(60);
+        SNConfig.setSeed(15);
         ICModel ic = (ICModel) sn.getSNManager().getDiffModel();
-        ic.registerContentIfNotRegistered("contentX");
+        ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
+        ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
+
+        ic.recordCurrentStepSpread(0.0); //record seed spread
 
         //setup sim configs
-        SNUtils.setEndSimTime(150000);
+        SNUtils.setEndSimTime(3600*8);
         sn.getDataServer().setTime(0.0);
+        sn.getDataServer().setTimeStep(SNConfig.getDiffturn());
 
         while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
-            sn.stepDiffusionProcess();
+           // sn.stepDiffusionProcess();
+            sn.getSNManager().diffuseContent();
             sn.getDataServer().stepTime();
+            ic.recordCurrentStepSpread(sn.getDataServer().getTime());
         }
 
         //end of simulation, now print to file
-        ICModelDataCollector.writeICDiffusionOutputsToFile(sn.getAllStepsSpreadMap(),testfile);
+        ICModelDataCollector dc = new ICModelDataCollector();
+        ic.getDataCollector().writeSpreadDataToFile(testfile);
 
     }
 

@@ -6,12 +6,18 @@ import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
 
 import java.util.*;
-
+/*
+    IC Model should handle  and pass back String array of agent ids
+    current  handling methods:
+    updateSocialStatesFromBDIPercepts()
+    getLatestDiffusionUpdates()
+ */
 public class ICModel extends DiffModel{
 
     private double meanDiffProbability;
     private ArrayList<String> contentList;
     private HashMap<String,ArrayList<String>> exposedMap;
+    private ICModelDataCollector dc;
 
     public ICModel(SocialNetworkManager sn, int step, double prob) {
 
@@ -22,6 +28,7 @@ public class ICModel extends DiffModel{
         // instatiate contentList and exposedMap
         this.contentList = new ArrayList<String>();
         this.exposedMap =  new HashMap<String,ArrayList<String>>();
+        this.dc = new ICModelDataCollector();
 
     }
 
@@ -37,8 +44,14 @@ public class ICModel extends DiffModel{
         for(SocialAgent agent: getAgentMap().values()) {
             agent.initAdoptedContentList();
         }
+
     }
 
+    public void initRandomSeed(String newContent) {
+
+        registerContentIfNotRegistered(newContent);
+        selectRandomSeed(SNConfig.getSeed(), newContent);
+    }
 
     public void registerContentIfNotRegistered(String newContent){
 
@@ -82,28 +95,35 @@ public class ICModel extends DiffModel{
     }
 
     @Override
+    // set seed/state from external model
     public void updateSocialStatesFromBDIPercepts(Object data) {
 
         logger.debug("ICModel: updating social states based on BDI percepts");
-        HashMap<String,Integer []> perceptMap = (HashMap<String,Integer []>) data ;
+        HashMap<String,String []> perceptMap = (HashMap<String,String []>) data ;
 
         for( Map.Entry entry: perceptMap.entrySet()) {
 
             String content = (String) entry.getKey();
-            int[] agentIds = (int[]) entry.getValue();
+            String[] agentIds = (String[]) entry.getValue();
 
             //register content if not registered
             registerContentIfNotRegistered(content);
 
-            //adopt content
-            setSpecificSeed(agentIds,content);
+
+            //convert the String array to Integer
+            Integer[] intIdArray = new Integer[agentIds.length];
+            for(int i =0; i < agentIds.length; i++) {
+                intIdArray[i] = Integer.parseInt(agentIds[i]);
+            }
+
+            setSpecificSeed(intIdArray,content);
         }
 
     }
 
-    public void setSpecificSeed(int[] idArray, String content) {
+    public void setSpecificSeed(Integer[] idArray, String content) {
 
-        for(int id:idArray) {
+        for(Integer id:idArray) {
             updateSocialState(id,content);
         }
     }
@@ -185,12 +205,19 @@ public class ICModel extends DiffModel{
     }
 
 
-    public HashMap<String, Integer[]> getLatestDiffusionUpdates() {
+    public HashMap<String, String[]> getLatestDiffusionUpdates() {
 
-        HashMap<String, Integer[]> latestSpread =  new HashMap<String, Integer[]>();
+        HashMap<String, String[]> latestSpread =  new HashMap<String, String[]>();
         for(String content: this.contentList) {
-           Integer[] contentArray =  ICModelDataCollector.getAdoptedAgentIdArrayForContent(snManager,content);
-           latestSpread.put(content,contentArray);
+           Integer[] contentArray =  this.dc.getAdoptedAgentIdArrayForContent(snManager,content);
+
+           //convert Integer[] to  String[] and pass back to the BDI model
+            String[] strIdArray = new String[contentArray.length];
+            for(int i =0; i < contentArray.length; i++) {
+                strIdArray[i] = String.valueOf(contentArray[i]);
+            }
+
+           latestSpread.put(content,strIdArray);
         }
             return latestSpread;
     }
@@ -201,5 +228,14 @@ public class ICModel extends DiffModel{
        agent.adoptContent(content);
 
 
+    }
+
+    public void recordCurrentStepSpread(double timestep) {
+
+        this.dc.collectCurrentStepSpreadData(this.snManager,this.contentList,timestep);
+    }
+
+    public ICModelDataCollector getDataCollector() {
+        return this.dc;
     }
 }

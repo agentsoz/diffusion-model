@@ -60,10 +60,11 @@ public class SNModel implements DataSource, DataClient {
 
     public void stepDiffusionProcess() {
 
-        if (snManager.processDiffusion((long) dataServer.getTime())) {
+      //  if (snManager.processDiffusion((long) dataServer.getTime())) {
+            this.snManager.diffuseContent();
             if (SNConfig.getDiffusionType().equals(DataTypes.icModel)) {
                 ICModel icModel = (ICModel) getSNManager().getDiffModel();
-                HashMap<String, Integer[]> latestUpdate = icModel.getLatestDiffusionUpdates();
+                HashMap<String, String[]> latestUpdate = icModel.getLatestDiffusionUpdates();
 
 
                 DiffusedContent dc = new DiffusedContent();
@@ -73,8 +74,6 @@ public class SNModel implements DataSource, DataClient {
                 logger.debug("put timed diffusion updates for ICModel at {}", dataServer.getTime());
 
             }
-
-        }
 
     }
 
