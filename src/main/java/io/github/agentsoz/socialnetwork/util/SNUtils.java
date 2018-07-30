@@ -9,7 +9,6 @@ import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 import io.github.agentsoz.socialnetwork.SocialAgent;
 
 import java.io.*;
-import java.util.Random;
 import java.util.Scanner;
 
 public class SNUtils {

@@ -30,7 +30,7 @@ package io.github.agentsoz.socialnetwork;
  */
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
+//import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.agentsoz.socialnetwork.util.Global;
@@ -73,7 +73,7 @@ public class RandomNetwork extends Network {
 			return ;
 		}
 		
-		Random rand = Global.getRandom();
+	//	Random rand = Global.getRandom();
 		// indices: 0 to nodes-1 
 	      for(int i=0; i < this.nodes; i++) {
 	    	  
@@ -87,7 +87,7 @@ public class RandomNetwork extends Network {
 	             else if (j < i) // already compared  || we only need to consider a triangle and not the rectangle 
 	               continue; // 
 	             else {
-	                   if (rand.nextDouble() <= prob) {  //uniformly distributed double random value between 0.0 and 1.0
+	                   if (Global.getRandom().nextDouble() <= prob) {  //uniformly distributed double random value between 0.0 and 1.0
 	                	   logger.trace("i : {} j: {}", i,j);
 	                      neighbours.add(j); // link established
 	                   	  linkCount++;
