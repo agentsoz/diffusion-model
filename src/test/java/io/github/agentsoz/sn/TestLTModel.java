@@ -94,9 +94,9 @@ public class TestLTModel {
 			
 			//logger.debug(" low: {} med: {} high: {}", ltModel.getLowPanicCount(),ltModel.getMedPanicCount(),ltModel.getHighPanicCount());
 			if(turn == 3) {
-				SNUtils.countLowMedHighAgents(sn_manager);
-				assertEquals(1,SNUtils.getLowCt(),1);
-				assertEquals(4,SNUtils.getMedCt(),1);
+				ltModel.getDataCollector().countLowMedHighAgents(sn_manager);
+				assertEquals(1,ltModel.getDataCollector().getLowCt(),1);
+				assertEquals(4,ltModel.getDataCollector().getMedCt(),1);
 			}
 			turn++;
 		}

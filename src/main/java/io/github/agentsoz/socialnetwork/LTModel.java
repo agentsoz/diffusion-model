@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import io.github.agentsoz.socialnetwork.datacollection.LTModelDataCollector;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
@@ -33,6 +34,7 @@ public class LTModel extends DiffModel{
 
 
 	private static DecimalFormat df = new DecimalFormat(".##");
+	private LTModelDataCollector dc;
 	
 	protected HashMap<Integer,double[]> thresholdMap = new HashMap<Integer,double[]>();
 	private HashMap<Integer,Double> seedMap = new HashMap<Integer,Double>();
@@ -55,6 +57,8 @@ public class LTModel extends DiffModel{
 		this.diffSeed = (int) (seed * 0.01 * snMan.getAgentMap().size()); // divide by 100 for the percentage multiply by the #agents
 		this.diffStep = turn; // already converted to seconds at SNConfig
 		this.snManager = snMan;
+
+		this.dc = new LTModelDataCollector();
 	}
 	
 	/*
@@ -292,10 +296,10 @@ public class LTModel extends DiffModel{
 		}
 
 		// counting social states
-		SNUtils.countLowMedHighAgents(this.snManager);
+		dc.countLowMedHighAgents(this.snManager);
 
 		logger.info("initialise random seed complete-expected active agents: {}", selected);
-		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",SNUtils.getLowCt(), SNUtils.getMedCt());
+		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt());
 	}
 	
 	/* function: selects the agents near fire 
@@ -360,8 +364,8 @@ public class LTModel extends DiffModel{
 		
 		logger.info("initialise near fire seed complete- selected agents ({}): {}", this.diffSeed, selected);
 
-		SNUtils.countLowMedHighAgents(this.snManager);
-		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",SNUtils.getLowCt(), SNUtils.getMedCt() );
+		dc.countLowMedHighAgents(this.snManager);
+		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt() );
 
 
 	}
@@ -598,8 +602,12 @@ public class LTModel extends DiffModel{
 	public int getDiffTurnCount() {
 		return this.diffTurnCount;
 	}
-	
-	public boolean isActive(int id) { 
+
+	public LTModelDataCollector getDataCollector() {
+		return dc;
+	}
+
+	public boolean isActive(int id) {
 		boolean result=false;
 		SocialAgent agent= getAgentMap().get(id);
 		if(agent.getState().equals(DataTypes.MEDIUM) || agent.getState().equals(DataTypes.HIGH) ) { 

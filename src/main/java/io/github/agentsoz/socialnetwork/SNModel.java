@@ -124,9 +124,9 @@ public class SNModel implements DataSource, DataClient {
         timestepUnit = unit;
     }
 
-    //public void publishDiffusionDataUpdate() {
-//        this.dataServer.publish(DataTypes.DIFFUSION, "sn-data");
-//    }
+    public void publishDiffusionDataUpdate() {
+        this.dataServer.publish(DataTypes.DIFFUSION, "sn-data");
+    }
 
     public void finish() {
         // cleaning
