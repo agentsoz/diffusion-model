@@ -1,7 +1,6 @@
 package io.github.agentsoz.sn;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import org.junit.Before;
@@ -25,7 +24,6 @@ public class TestNormaliseWeights {
 	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	Network net = new Network();
-	Random random = new Random();
 	int nodes = 5;
 	int degree = 3;
 	double swDist = 1.0;

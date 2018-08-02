@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import io.github.agentsoz.socialnetwork.util.Global;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -377,7 +378,7 @@ public class SWNetwork extends Network {
 			  	}
 			  	
 			  	// have random agents - probability check
-				 if (rand.nextDouble() <= this.prob) {  
+				 if (Global.getRandom().nextDouble() <= this.prob) {
 					 
 					 
 					 int existingId = tempNeighbours.get(i);
@@ -451,7 +452,7 @@ public class SWNetwork extends Network {
 			  if(checkNewNeighbourPossiblity(agentmap,tempNeighbours,neighbours)) { 
 				
 				  //  probability check
-					 if (rand.nextDouble() <= this.prob) {
+					 if (Global.getRandom().nextDouble() <= this.prob) {
 						 boolean selected = false;
 						 
 						 int existingId = tempNeighbours.get(i);

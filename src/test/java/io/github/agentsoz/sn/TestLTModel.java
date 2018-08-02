@@ -3,9 +3,7 @@ package io.github.agentsoz.sn;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
-import java.util.Random;
 
-import io.github.agentsoz.socialnetwork.util.Global;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

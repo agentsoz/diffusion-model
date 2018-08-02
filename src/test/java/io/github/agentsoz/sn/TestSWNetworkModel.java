@@ -3,7 +3,6 @@ package io.github.agentsoz.sn;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,8 +36,7 @@ public class TestSWNetworkModel {
 	
 	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
-	Random random = new Random();
-	
+
 	double neiDistance = 0.8;
 	double rewireProb = 0.0;
 	int avgDegree = 3; 

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Random;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,6 @@ private int linkCountInAgentMaps = 0 ; // counts the #links  in the agent map
 
 public static String type = "normalise"; // normalise (sum weights = 1),equal
 
-Random rand = Global.getRandom();
 	/**
      *  initialises the social agents by mapping agent Ids from the BDI system
 	 * @return 
@@ -40,7 +38,7 @@ Random rand = Global.getRandom();
      */
 //generic function to get a random function out of an arraylist
 	public  int randomID(ArrayList<Integer> list) {
-		int randID = list.get(rand.nextInt(list.size())); // exclusive of size
+		int randID = list.get(Global.getRandom().nextInt(list.size())); // exclusive of size
 		return randID;
 	}	
 
@@ -96,7 +94,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 	public void createLink(int agent1_Id, int agent2_Id, HashMap<Integer,SocialAgent> agentList)
 	{
 		
-		double weight = rand.nextDouble();
+		double weight = Global.getRandom().nextDouble();
 		logger.trace("generated weight: {} ", weight);
 		
 		SocialAgent agent1 = agentList.get(agent1_Id);

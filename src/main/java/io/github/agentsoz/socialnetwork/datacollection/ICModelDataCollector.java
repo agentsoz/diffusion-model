@@ -91,7 +91,7 @@ public class ICModelDataCollector {
                             count = stepSpreadCountMap.get(con);
                         }
 
-                        dataFile.print("\t" + count);
+                        dataFile.print("\t\t" + count);
 
                     }
 
