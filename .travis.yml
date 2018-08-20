@@ -5,11 +5,13 @@ addons:
     packages:
       - oracle-java8-installer  # https://github.com/travis-ci/travis-ci/issues/3259
 before_install:
+  # Disabling below since there is a cyclic depdendency here.
+  # this travis builds bdi-abm whose travis builds this repo! 
   # Build BDI-ABM Integration snapshot dependency
-  - cd $HOME && git clone --depth=1 --branch=ees https://github.com/agentsoz/bdi-abm-integration.git
-  - cd $HOME/bdi-abm-integration && git checkout ees && git log -1
-  - cd $HOME/bdi-abm-integration && mvn clean install -N
-  - cd $HOME/bdi-abm-integration/integrations/bdi-abm && mvn clean install
+  # - cd $HOME && git clone --depth=1 --branch=ees https://github.com/agentsoz/bdi-abm-integration.git
+  # - cd $HOME/bdi-abm-integration && git checkout ees && git log -1
+  # - cd $HOME/bdi-abm-integration && mvn clean install -N
+  # - cd $HOME/bdi-abm-integration/integrations/bdi-abm && mvn clean install
 script:
   - cd $TRAVIS_BUILD_DIR && mvn package
 env:
