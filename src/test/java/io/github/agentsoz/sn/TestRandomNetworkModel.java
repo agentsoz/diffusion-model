@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 
 import java.util.HashMap;
-import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -26,8 +25,7 @@ public class TestRandomNetworkModel {
 	
 	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
-	Random random = new Random();
-	
+
 	@Ignore
 //	@Before  // Regardless of @Ignore, this method will run
 	public void setUp()

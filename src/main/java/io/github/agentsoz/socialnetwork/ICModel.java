@@ -79,7 +79,7 @@ public class ICModel extends DiffModel{
 
         int selected = 0 ;
         List<Integer> idList = new ArrayList<Integer>(getAgentMap().keySet());
-        Collections.shuffle(idList);
+        Collections.shuffle(idList,Global.getRandom()); // provide the random object for deterministic behaviour for testing
 
         while( selected < numOfSeedAgents) {
 

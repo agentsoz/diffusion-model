@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
+import io.github.agentsoz.socialnetwork.datacollection.LTModelDataCollector;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
@@ -33,8 +33,8 @@ public class LTModel extends DiffModel{
 
 
 
-	Random rand  = Global.getRandom();
 	private static DecimalFormat df = new DecimalFormat(".##");
+	private LTModelDataCollector dc;
 	
 	protected HashMap<Integer,double[]> thresholdMap = new HashMap<Integer,double[]>();
 	private HashMap<Integer,Double> seedMap = new HashMap<Integer,Double>();
@@ -57,6 +57,8 @@ public class LTModel extends DiffModel{
 		this.diffSeed = (int) (seed * 0.01 * snMan.getAgentMap().size()); // divide by 100 for the percentage multiply by the #agents
 		this.diffStep = turn; // already converted to seconds at SNConfig
 		this.snManager = snMan;
+
+		this.dc = new LTModelDataCollector();
 	}
 	
 	/*
@@ -206,9 +208,9 @@ public class LTModel extends DiffModel{
 		double highT=0.0,actT;
 		double[] tresholdArr = new double[2];
 		
-		actT = this.rand.nextDouble();
+		actT = Global.getRandom().nextDouble();
 		while(actT >= highT) { 
-			highT = this.rand.nextDouble();
+			highT = Global.getRandom().nextDouble();
 		}
 		
 		tresholdArr[0] = Double.valueOf(df.format(actT));
@@ -270,10 +272,10 @@ public class LTModel extends DiffModel{
 		while(selected < this.diffSeed) {
 			
 			List<Integer> keysAsArray = new ArrayList<Integer>(getAgentMap().keySet());
-			int randomId= keysAsArray.get(rand.nextInt(keysAsArray.size() - 1)); // first randomly select an id 
+			int randomId= keysAsArray.get(Global.getRandom().nextInt(keysAsArray.size() - 1)); // first randomly select an id
 			
 			while(selectedAgentIds.contains(randomId)) {
-				randomId= keysAsArray.get(rand.nextInt(keysAsArray.size() - 1)); // another random id
+				randomId= keysAsArray.get(Global.getRandom().nextInt(keysAsArray.size() - 1)); // another random id
 			}
 			
 			selectedAgentIds.add(randomId); // finally add the unique random id to the selected list
@@ -284,7 +286,7 @@ public class LTModel extends DiffModel{
 			
 			logger.trace("extDiffuse - actT: {}",min);
 			double max = 1.0;
-			double randomPanicVal =  min + ((max - min) * rand.nextDouble());
+			double randomPanicVal =  min + ((max - min) * Global.getRandom().nextDouble());
 						
 			//2steps to update panic levels.
 			updatePanicValue(randomId,randomPanicVal);
@@ -294,10 +296,10 @@ public class LTModel extends DiffModel{
 		}
 
 		// counting social states
-		SNUtils.countLowMedHighAgents(this.snManager);
+		dc.countLowMedHighAgents(this.snManager);
 
 		logger.info("initialise random seed complete-expected active agents: {}", selected);
-		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",SNUtils.getLowCt(), SNUtils.getMedCt());
+		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt());
 	}
 	
 	/* function: selects the agents near fire 
@@ -338,10 +340,10 @@ public class LTModel extends DiffModel{
 		while(selected < this.diffSeed) { // percentage
 			
 			//List<Integer> keysAsArray = new ArrayList<Integer>(getAgentMap().keySet());
-			int randomId= agentsNearFire.get(rand.nextInt(agentsNearFire.size() - 1)); // first randomly select an id 
+			int randomId= agentsNearFire.get(Global.getRandom().nextInt(agentsNearFire.size() - 1)); // first randomly select an id
 			
 			while(selectedAgentIds.contains(randomId)) {
-				randomId= agentsNearFire.get(rand.nextInt(agentsNearFire.size() - 1)); // another random id
+				randomId= agentsNearFire.get(Global.getRandom().nextInt(agentsNearFire.size() - 1)); // another random id
 			}
 			
 			selectedAgentIds.add(randomId); // finally add the unique random id to the selected list
@@ -352,7 +354,7 @@ public class LTModel extends DiffModel{
 			
 			logger.trace("agentsNearFire  strategy - actT: {}",min);
 			double max = 1.0;
-			double randomPanicVal =  min + ((max - min) * rand.nextDouble());
+			double randomPanicVal =  min + ((max - min) * Global.getRandom().nextDouble());
 						
 			updatePanicValue(randomId,randomPanicVal);
 			seedMap.put(randomId, randomPanicVal);
@@ -362,8 +364,8 @@ public class LTModel extends DiffModel{
 		
 		logger.info("initialise near fire seed complete- selected agents ({}): {}", this.diffSeed, selected);
 
-		SNUtils.countLowMedHighAgents(this.snManager);
-		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",SNUtils.getLowCt(), SNUtils.getMedCt() );
+		dc.countLowMedHighAgents(this.snManager);
+		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt() );
 
 
 	}
@@ -388,7 +390,7 @@ public class LTModel extends DiffModel{
 		}
 		
 		//shuffle the id list -  TESTED with small size
-		Collections.shuffle(replicateIdList);
+		Collections.shuffle(replicateIdList,Global.getRandom());
 		//logger.trace("after shuffle: {}",replicateIdList.toString());
 		
 				for(int id: replicateIdList) { 
@@ -404,14 +406,14 @@ public class LTModel extends DiffModel{
 				if (dist <= 0) {dist = 0;} // max activation probability will be 0.75
 				double activationProb = getProbabilityForDistanceFromFormula(dist);
 				
-				if( rand.nextDouble() <= activationProb) {
+				if( Global.getRandom().nextDouble() <= activationProb) {
 					
 					
 					double min = getActivationThreshold(agent.getID());
 					
 					logger.trace("probabilistic seed strategy - actT: {} id: {}",min,id);
 					double max = 1.0;
-					double randomPanicVal =  min + ((max - min) * rand.nextDouble()); // random panic value
+					double randomPanicVal =  min + ((max - min) * Global.getRandom().nextDouble()); // random panic value
 		//			logger.trace("seed selected agent: {} plevel: {}",agent.getID(),randomPanicVal );
 					//2steps
 					seedMap.put(agent.getID(), randomPanicVal);
@@ -600,8 +602,12 @@ public class LTModel extends DiffModel{
 	public int getDiffTurnCount() {
 		return this.diffTurnCount;
 	}
-	
-	public boolean isActive(int id) { 
+
+	public LTModelDataCollector getDataCollector() {
+		return dc;
+	}
+
+	public boolean isActive(int id) {
 		boolean result=false;
 		SocialAgent agent= getAgentMap().get(id);
 		if(agent.getState().equals(DataTypes.MEDIUM) || agent.getState().equals(DataTypes.HIGH) ) { 

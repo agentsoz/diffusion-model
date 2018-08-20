@@ -1,6 +1,7 @@
 package io.github.agentsoz.socialnetwork;
 
 import io.github.agentsoz.socialnetwork.util.DataTypes;
+import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
 
 import java.util.HashMap;
@@ -164,12 +165,12 @@ public class CLTModel extends LTModel {
                 SocialAgent agent = getAgentMap().get(id);
                 double actProb  = getContentBasedProbability(id,agent.getX(),type); //get activation probability based on distance and contenttype
                 logger.trace("generated activation probability: {}",actProb);
-                if(rand.nextDouble() <= actProb) {
+                if(Global.getRandom().nextDouble() <= actProb) {
                     //selected
                     logger.trace("agent {} selected",id);
                     double min = getAgentContentTreshold(id,type);
                     double max = 1.0;
-                    double randomPanicVal =  min + ((max - min) * rand.nextDouble()); // random panic value
+                    double randomPanicVal =  min + ((max - min) * Global.getRandom().nextDouble()); // random panic value
 
                     //update seedmap
                     getSeedMap(type).put(id,randomPanicVal);
@@ -219,8 +220,8 @@ public class CLTModel extends LTModel {
             replicateIdList.add(id);
         }
 
-        //shuffle the id list
-        Collections.shuffle(replicateIdList);
+        //shuffle the id list, provide random object for deterministic results for testing
+        Collections.shuffle(replicateIdList, Global.getRandom());
 
         return replicateIdList;
     }

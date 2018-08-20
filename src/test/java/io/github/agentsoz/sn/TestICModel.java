@@ -110,12 +110,14 @@ public class TestICModel {
 
         ICModelDataCollector dc = new ICModelDataCollector();
         int adoptedAgents = dc.getAdoptedAgentCountForContent(sn,"contentA");
-        System.out.println(adoptedAgents);
+        Assert.assertEquals(64,adoptedAgents);
 
     }
 
     @Test
     public void testWriteFile(){
+
+        Global.setRandomSeed(4711); // deterministic results for testing
 
         String testfile = "./src/test/output/icmodel_outputs.txt";
         DataServer ds = DataServer.getServer("test");

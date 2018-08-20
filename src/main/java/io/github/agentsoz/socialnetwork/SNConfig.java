@@ -4,7 +4,6 @@ package io.github.agentsoz.socialnetwork;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Random;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -19,15 +18,7 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 
 
-/**
- * 
- * Configuration class of the sn model. This is needed:
- * 1. sn configs are separated from the other configs
- * 2. useful when running only the social network model 
- *
- *config parameters are printed in this class and not in respective network/diff model class.
- *Because, if something went wrong during instantiation of network/diff model the configs will not be printed.
- */
+
 public class SNConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger("");
@@ -36,7 +27,7 @@ public class SNConfig {
 	private static String configFile = null;
 	private static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
 
-	static Random rand =  Global.getRandom();
+//	static Random rand =  Global.getRandom();
 	static String networkLinksDir = "../sn_model_data/network_visuals/";
 	
 	//sn model
