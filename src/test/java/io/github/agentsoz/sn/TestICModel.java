@@ -118,8 +118,8 @@ public class TestICModel {
     public void testWriteFile(){
 
         Global.setRandomSeed(4711); // deterministic results for testing
+        String outFile = "./src/test/output/icmodel_outputs.txt";
 
-        String testfile = "./src/test/output/icmodel_outputs.txt";
         DataServer ds = DataServer.getServer("test");
         SNModel sn = new SNModel(testConfigFile,ds);
         SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
@@ -147,7 +147,7 @@ public class TestICModel {
 
         //end of simulation, now print to file
         ICModelDataCollector dc = new ICModelDataCollector();
-        ic.getDataCollector().writeSpreadDataToFile(testfile);
+        ic.getDataCollector().writeSpreadDataToFile(outFile);
 
     }
 

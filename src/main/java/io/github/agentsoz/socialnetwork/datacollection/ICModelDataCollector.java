@@ -6,11 +6,8 @@ import io.github.agentsoz.socialnetwork.util.DiffusedContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 
 public class ICModelDataCollector {
 
@@ -59,12 +56,20 @@ public class ICModelDataCollector {
     }
 
 
-        public  void writeSpreadDataToFile(String file) {
+        public  void writeSpreadDataToFile(String fileName) {
 
+            File file = new File(fileName); // create output directory if not exists
+            if (!file.exists()) {
+                if (file.getParentFile().mkdir()) {
+                    logger.debug(" IC model data collection output dir created");
+                }
+            }
+
+           // String filePath = outDir.concat(fileName);
         PrintWriter  dataFile=null;
         try {
             if(dataFile == null) {
-                dataFile = new PrintWriter(file, "UTF-8");
+                dataFile = new PrintWriter(fileName, "UTF-8");
 
                 double lastTimeStep = this.icDiffSpread.lastKey(); // returns highest value stored
                 Set<String> finalContentSet = this.icDiffSpread.get(lastTimeStep).keySet();
