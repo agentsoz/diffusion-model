@@ -5,7 +5,7 @@ addons:
     packages:
       - oracle-java8-installer  # https://github.com/travis-ci/travis-ci/issues/3259
 script:
-  - cd $TRAVIS_BUILD_DIR && mvn package -DskipTests
+  - cd $TRAVIS_BUILD_DIR && mvn package
 env:
   global:
     - MAVEN_OPTS="-Xmx2g -Xms2g"
