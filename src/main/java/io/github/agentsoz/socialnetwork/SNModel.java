@@ -3,11 +3,11 @@ package io.github.agentsoz.socialnetwork;
 import io.github.agentsoz.dataInterface.DataClient;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.dataInterface.DataSource;
+import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.DiffusedContent;
 import io.github.agentsoz.socialnetwork.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.github.agentsoz.socialnetwork.util.DataTypes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,24 +25,46 @@ public class SNModel implements DataSource, DataClient {
 
     final Logger logger = LoggerFactory.getLogger("");
 
+    public SNModel(String configFile) {
+        this.snManager = new SocialNetworkManager(configFile);
+        this.allStepsInfoSpreadMap = new TreeMap<Double, DiffusedContent>();
+    }
+
     public SNModel(String configFile, DataServer ds) {
         this.snManager = new SocialNetworkManager(configFile);
         this.dataServer = ds;
         this.allStepsInfoSpreadMap = new TreeMap<Double, DiffusedContent>();
     }
 
-    public void initSocialAgentMap(List<String> idList) {
+//    public void initSocialAgentMap(List<String> idList) {
+//
+//        // initSNManagerBasedOnConfigs();
+//
+//    }
 
-        // initSNManagerBasedOnConfigs();
+    public void initSNModel() { // init SN model with already populated social agent map
+
+
+        this.getSNManager().setupSNConfigs(); //setup configs and create log first
+
+        this.snManager.genNetworkAndDiffModels(); // gen network and diffusion models
+        this.snManager.printSNModelconfigs();
+
+        //subscribe to BDI data updates
+        this.dataServer.subscribe(this, DataTypes.BDI_STATE_UPDATES);
+
+    }
+
+    public void initSNModel(List<String> idList) { // init SN model with given agent id list
+
+
+        this.getSNManager().setupSNConfigs(); //first, setup configs and create log
+
         for (String id : idList) {
             this.snManager.createSocialAgent(id); //populate agentmap
         }
-    }
 
-    public void initSNModel() { // set SNManager based on main configs unless already set
-
-        //setTimestepUnit();
-        this.snManager.genNetworkAndDiffModels(); // setup configs, gen network and diffusion models
+        this.snManager.genNetworkAndDiffModels(); // gen network and diffusion models
         this.snManager.printSNModelconfigs();
 
         //subscribe to BDI data updates
@@ -66,7 +88,7 @@ public class SNModel implements DataSource, DataClient {
                 ICModel icModel = (ICModel) getSNManager().getDiffModel();
                 HashMap<String, String[]> latestUpdate = icModel.getLatestDiffusionUpdates();
 
-
+                icModel.recordCurrentStepSpread(this.dataServer.getTime());
                 DiffusedContent dc = new DiffusedContent();
                 dc.setContentSpreadMap(latestUpdate);
                 this.allStepsInfoSpreadMap.put(dataServer.getTime(), dc);
@@ -129,6 +151,10 @@ public class SNModel implements DataSource, DataClient {
     }
 
     public void finish() {
-        // cleaning
+
+        //output diffusion outcomes and wrap up
+        ICModel icModel = (ICModel) this.snManager.getDiffModel();
+        icModel.finish();
+        icModel.getDataCollector().writeSpreadDataToFile(); //uses the file path specified in the config
     }
 }

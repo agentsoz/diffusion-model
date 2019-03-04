@@ -3,10 +3,14 @@
 <!-- Social Network Model Configurations -->
 <!-- Specify the diffusion model: lt=Linear Threshold model, ic= Independant Cascade model, clt= Competitive LT model-->
 <!-- specify the network strucuture: random= random ER MODEL), sw=small world model, rand-reg=random-regular model -->
+	<!-- out_file = temporal spread outputs for each content type. The main output file-->
 <snModel
 	diffusionType="lt"
 	networkType="rand-reg"
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
+	log_file="./diffusion.log"
+	log_level="i"
+	out_file="./diffusion.out"
 />
 
 <!-- network configurations-->

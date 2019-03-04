@@ -3,10 +3,14 @@
 <!-- Social Network Model Configurations -->
 <!-- Specify the diffusion model: lt=Linear Threshold model, ic= Independant Cascade model, clt= Competitive LT model-->
 <!-- specify the network strucuture: random= random ER MODEL), sw=small world model, rand-reg=random-regular model -->
+	<!-- spcify the logfile path and log level (i=info, d=debug, t=trace) -->
 <snModel
 	diffusionType="ic"
 	networkType="rand-reg"
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
+	log_file="./test/output/diffusion.log"
+	log_level="i"
+	out_file="./test/output/diffusion.out"
 />
 
 <!-- network configurations-->

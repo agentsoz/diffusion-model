@@ -39,6 +39,7 @@ public class TestNormaliseWeights {
 
 		//agent x,y coords are in meters :  UTM uses meters from reference points
 		SNConfig.setDiffusionType(DataTypes.ltModel);
+		snManager.setupSNConfigs();
 		SNUtils.randomAgentMap(snManager,nodes, 1000);
 		
 
@@ -51,7 +52,9 @@ public class TestNormaliseWeights {
 	public void testNormaliseWeightsWithRandomRegularNetwork()
 	{
 		RandomRegularNetwork randNet = new RandomRegularNetwork(nodes,degree);
+
 		SNConfig.setNormaliseRandRegNetwork(true); // IMPORTANT
+		snManager.setupSNConfigs();
 		randNet.genNetworkAndUpdateAgentMap(agentmap);
 
 		randNet.displayAgentMap(agentmap);

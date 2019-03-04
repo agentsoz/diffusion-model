@@ -29,7 +29,13 @@ public class SNConfig {
 
 //	static Random rand =  Global.getRandom();
 	static String networkLinksDir = "../sn_model_data/network_visuals/";
-	
+
+	//logs
+	private static String logFile = "./diffusion.log"; // default logfile, overwritten by the configuration file
+	private static String logLevel = "d"; // default log level
+
+    //default output file path, can be overwritten by the config
+    private static String outFile = "./diffusion.out";
 	//sn model
 	private static String networkType = " " ;
 	private static String diffusionType = " " ;
@@ -106,7 +112,32 @@ public class SNConfig {
 	public static String getDiffusionType() {
 		return diffusionType;
 	}
-	
+
+	//logs
+	public static void setLogFile(String filePath) {
+		logFile=filePath;
+	}
+
+	public  static String getLogFilePath() {
+		return logFile;
+	}
+
+	public static void setLogLevel(String level) {
+		logLevel=level;
+	}
+
+	public  static String getLogLevel() {
+		return logLevel;
+	}
+
+	//output file
+    public static void setOutputFile(String filePath) {
+        outFile=filePath;
+    }
+
+    public  static String getOutputFilePath() {
+        return outFile;
+    }
 	// RANDOM NETWORK
 	public static int getRandomNetAvgLinks() {
 		return randomNetAvgLinks;
@@ -302,11 +333,20 @@ public class SNConfig {
 
 						String cordFile =  node.getAttributes().getNamedItem("coord_file").getNodeValue();
 						setAgentCoordFile(cordFile);
+
+						String logfile =  node.getAttributes().getNamedItem("log_file").getNodeValue();
+						setLogFile(logfile);
+
+						String logLevel =  node.getAttributes().getNamedItem("log_level").getNodeValue();
+						setLogLevel(logLevel);
+
+						String oFile =  node.getAttributes().getNamedItem("out_file").getNodeValue();
+						setOutputFile(oFile);
 						
 						}
 						catch (Exception e) {
 							System.err
-									.println("WARNING: could not read from the node snModel "	+ e.getMessage());
+									.println("SNConfig: could not read from the node snModel "	+ e.getMessage());
 						}
 						
 					}
@@ -450,6 +490,7 @@ public class SNConfig {
 	public static  void printNetworkConfigs() {
 		
 		logger.info("sn model: network {} | diffusion model {}", getNetworkType(), getDiffusionType());
+		logger.info("LogFile: path {} | level {}", getLogFilePath(), getLogLevel());
 		if(networkType.equals(DataTypes.RANDOM)) {
 			logger.info(" RANDOM network configs:");
 			logger.info("normalise network = {}", normaliseRandNetwork());

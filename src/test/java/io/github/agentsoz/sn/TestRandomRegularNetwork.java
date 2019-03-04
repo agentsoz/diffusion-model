@@ -44,7 +44,7 @@ public class TestRandomRegularNetwork {
 		
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	// test the adjacency matrix generated and other properties of the random network
 	// as a matrix (before updating to the agentMap)

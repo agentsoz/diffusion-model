@@ -7,6 +7,9 @@
 	diffusionType="clt"
 	networkType="sw"
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
+	log_file="./diffusion.log"
+	log_level="d"
+	out_file="./test/output/diffusion.out"
 />
 
 <!-- network types-->

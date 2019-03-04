@@ -1,6 +1,7 @@
 package io.github.agentsoz.socialnetwork;
 
 import io.github.agentsoz.socialnetwork.util.DataTypes;
+import io.github.agentsoz.socialnetwork.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.agentsoz.socialnetwork.util.Global;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 
 public class SocialNetworkManager{
 
-	final Logger logger = LoggerFactory.getLogger("");
+	Logger logger=null; //= LoggerFactory.getLogger("");
 
 	public HashMap<Integer, SocialAgent> agentList = new HashMap<Integer, SocialAgent>();
 
@@ -65,12 +66,12 @@ public class SocialNetworkManager{
 // initilises a network, diffusion model as specified in configurations
     public boolean genNetworkAndDiffModels()
     {
-
-    if(!setupSNConfigs()) {
-		logger.error("Error in setting configurations");
-		return false;
-	}
-	else if(!generateSocialNetwork()){
+// separated setting up configurationa from this method
+//    if(!setupSNConfigs()) {
+//		logger.error("Error in setting configurations");
+//		return false;
+//	}
+ if(!generateSocialNetwork()){
 		logger.error("Error in generating network model");
 		return false;
 	}
@@ -97,8 +98,14 @@ public class SocialNetworkManager{
 			return false;
 		}
 		else {
+			//all configurations set, so now create the log file.
+			logger = Log.createLogger("", SNConfig.getLogFilePath());
+
 			return true;
 		}
+
+
+
     }
 
     public void printSNModelconfigs() {

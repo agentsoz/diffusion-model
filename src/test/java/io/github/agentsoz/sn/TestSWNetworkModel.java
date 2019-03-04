@@ -101,6 +101,7 @@ public class TestSWNetworkModel {
 	{
 
 		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
+		sn.setupSNConfigs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
 
@@ -125,6 +126,7 @@ public class TestSWNetworkModel {
 	@Test
 	public void testNormalisedNetwork() {
 		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
+		sn.setupSNConfigs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
 		SWNetwork swNet = new SWNetwork(4.0, 5, 1.0);

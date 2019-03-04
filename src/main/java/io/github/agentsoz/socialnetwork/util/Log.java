@@ -1,5 +1,6 @@
 package io.github.agentsoz.socialnetwork.util;
 
+import io.github.agentsoz.socialnetwork.SNConfig;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -14,7 +15,7 @@ public class Log {
  *  Logger class used for  test clases
  */
 	private static Logger logger = null;
-	private static Level logLevel = Level.DEBUG;
+	private static Level logLevel;
 	
 	
 	public static Logger createLogger(String string, String file) {
@@ -33,10 +34,33 @@ public class Log {
 		Logger logger = (Logger) LoggerFactory.getLogger(string);
 		logger.detachAndStopAllAppenders(); // detach console (doesn't seem to work)
 		logger.addAppender(fileAppender); // attach file appender
-		logger.setLevel(logLevel);
+		assignLogLevel(logger); // set log level as specified in the config
 		logger.setAdditive(true); /* set to true if root should log too */
 
 		return logger;
+	}
+
+	public static void assignLogLevel(Logger log) {
+		Level l=null;
+		String configLevel = SNConfig.getLogLevel(); // get level as specified in the SN config
+		if(configLevel.equals("d")){
+			l=Level.DEBUG;
+		}
+		else if(configLevel.equals("i")){
+			l=Level.INFO;
+		}
+		else if(configLevel.equals("w")){
+			l=Level.WARN;
+		}
+		else if(configLevel.equals("t")){
+			l=Level.TRACE;
+		}
+		else if(configLevel.equals("e")){
+			l=Level.ERROR;
+		}
+
+		log.setLevel(l);
+
 	}
 
 	public static void setLogLevel(Level level) {

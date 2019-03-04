@@ -16,7 +16,7 @@ public class ICModel extends DiffModel{
 
     private double meanDiffProbability;
     private ArrayList<String> contentList;
-    private HashMap<String,ArrayList<String>> exposedMap;
+    private HashMap<String,ArrayList<String>> attemptedLinksMap;
     private ICModelDataCollector dc;
 
     public ICModel(SocialNetworkManager sn, int step, double prob) {
@@ -27,7 +27,7 @@ public class ICModel extends DiffModel{
 
         // instatiate contentList and exposedMap
         this.contentList = new ArrayList<String>();
-        this.exposedMap =  new HashMap<String,ArrayList<String>>();
+        this.attemptedLinksMap =  new HashMap<String,ArrayList<String>>();
         this.dc = new ICModelDataCollector();
 
     }
@@ -57,9 +57,10 @@ public class ICModel extends DiffModel{
 
         if(!this.contentList.contains(newContent)) {
 
-            // add new content type to contentList and exposed map
+            // add new content type to contentList, attemptedLinksmap and init exposed count for exposedCountMap
             this.contentList.add(newContent);
-            this.exposedMap.put(newContent,new ArrayList<String>());
+            this.attemptedLinksMap.put(newContent,new ArrayList<String>());
+            this.dc.getExposedCountMap().put(newContent,0); // init the count
 
             logger.info("content {} registered in the IC model",newContent);
             return ;
@@ -140,7 +141,7 @@ public class ICModel extends DiffModel{
             ArrayList<String> contentList = agent.getAdoptedContentList();
             if(!contentList.isEmpty()) {
                 for(String content: contentList) { // for each content
-
+                    int exposedCount = 0;
                     List<Integer> neiIDs = new ArrayList<Integer>(agent.getLinkMap().keySet());
 
                     //Integer[] neiIDs = (Integer[]) agent.getLinkMap().keySet().toArray();
@@ -148,16 +149,24 @@ public class ICModel extends DiffModel{
 
                         if(!getAgentMap().get(nid).alreadyAdoptedContent(content) && !neighbourAlreadyExposed(agent.getID(),nid,content)) {
 
-                            if(Global.getRandom().nextDouble() <= getRandomDiffProbability()) {
+                            if(Global.getRandom().nextDouble() <= getRandomDiffProbability()) { //activation
 
                                 //probabilistic diffusion successful
                                 updateSocialState(nid,content);
 
                             }
+                            else{ // inactive-exposure
+                                exposedCount++;
+                            }
 
                             addExposureAttempt(agent.getID(),nid,content);
+
                         }
                     }
+
+                    //update exposeCountMap
+                    int newCount = this.dc.getExposedCountMap().get(content) + exposedCount;
+                    this.dc.getExposedCountMap().put(content,newCount);
                 }
 
 
@@ -170,7 +179,7 @@ public class ICModel extends DiffModel{
     }
     public void addExposureAttempt(int nodeID, int neighbourID, String content) {
 
-        if(!this.contentList.contains(content) || !this.exposedMap.containsKey(content)) {
+        if(!this.contentList.contains(content) || !this.attemptedLinksMap.containsKey(content)) {
             logger.error("content {} not registered properly in the IC model", content);
             return ;
         }
@@ -178,7 +187,7 @@ public class ICModel extends DiffModel{
         String directedLinkID = String.valueOf(nodeID).concat(String.valueOf(neighbourID));
       //  logger.info("linkID: {}",directedLinkID);
 
-        ArrayList<String> attemptList =  this.exposedMap.get(content);
+        ArrayList<String> attemptList =  this.attemptedLinksMap.get(content);
         if(attemptList.contains(directedLinkID)) {
             logger.warn("Exposure attempt for content {} already exists: node {} neighbour {}", content, nodeID,neighbourID);
             return;
@@ -193,17 +202,24 @@ public class ICModel extends DiffModel{
         String directedLinkID = String.valueOf(nodeID).concat(String.valueOf(neighbourID));
       //  logger.info("linkID: {}",directedLinkID);
 
-        ArrayList<String> attemptList =  this.exposedMap.get(content);
+        ArrayList<String> attemptList =  this.attemptedLinksMap.get(content);
         if(attemptList.contains(directedLinkID))
         {
             return true;
         }
-        else{
+        else {
 
             return false;
         }
     }
 
+//    public int getTotExposedAgents(){
+//        int ct=0;
+//        for(ArrayList<String> attemptLists: this.exposedMap.values()) {
+//            ct=ct+ attemptLists.size();
+//        }
+//        return ct;
+//    }
 
     public HashMap<String, String[]> getLatestDiffusionUpdates() {
 
@@ -237,5 +253,15 @@ public class ICModel extends DiffModel{
 
     public ICModelDataCollector getDataCollector() {
         return this.dc;
+    }
+
+    public void finish(){
+        logger.info("total number of inactive agents: {} ", this.dc.getTotalInactiveAgents(snManager));
+
+        for(String content : contentList) {
+
+            logger.info(" Content {} : active agents= {} | exposed agents {}", content, this.dc.getAdoptedAgentCountForContent(snManager,content), this.dc.getExposedAgentCountForContent(content));
+        }
+
     }
 }
