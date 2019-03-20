@@ -161,6 +161,54 @@ public class TestICModel {
 
     }
 
+    // broadcast one global content, along with same x,y local contents
+    @Test
+    public void testConentBroadcast(){
 
+        Global.setRandomSeed(4711); // deterministic results for testing
+        String outFile = "./test/output/diffusion.out";
+
+        DataServer ds = DataServer.getServer("test");
+        SNModel sn = new SNModel(testConfigFile,ds);
+        sn.getSNManager().setupSNConfigs();
+        SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
+
+        sn.initSNModel();
+        SNConfig.setDiffturn(60);
+        SNConfig.setSeed(15);
+        ICModel ic = (ICModel) sn.getSNManager().getDiffModel();
+
+        ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
+        ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
+
+        ic.recordCurrentStepSpread(0.0); //record seed spread
+
+        //setup sim configs
+        SNUtils.setEndSimTime(3600*8);
+        sn.getDataServer().setTime(0.0);
+        sn.getDataServer().setTimeStep(SNConfig.getDiffturn());
+
+        while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
+            // sn.stepDiffusionProcess();
+
+            if( sn.getDataServer().getTime() == 3600*4) {
+                ic.registerContentIfNotRegistered("evac-now",DataTypes.GLOBAL);
+                String [] globalcontentArr = {"evac-now"};
+                ic.updateSocialStatesFromGlobalContent(globalcontentArr);
+            }
+            sn.getSNManager().diffuseContent();
+            sn.getDataServer().stepTime();
+            ic.recordCurrentStepSpread(sn.getDataServer().getTime());
+        }
+
+        //end of simulation, now print to file
+        ic.finish();
+        ICModelDataCollector dc = new ICModelDataCollector();
+        ic.getDataCollector().writeSpreadDataToFile(outFile);
+
+        assertEquals(24, dc.getAdoptedAgentCountForContent(sn.getSNManager(),"contentX"));
+        assertEquals(27, dc.getAdoptedAgentCountForContent(sn.getSNManager(),"contentY"));
+        assertEquals(ic.getAgentMap().size(), dc.getAdoptedAgentCountForContent(sn.getSNManager(),"evac-now"));
+    }
 
 }

@@ -121,7 +121,7 @@ public class SNModel implements DataSource, DataClient {
 
                 logger.debug("SNModel: received BDI state updates");
                 ICModel icModel = (ICModel) this.snManager.getDiffModel();
-                icModel.updateSocialStatesFromBDIPercepts(data);
+                icModel.updateSocialStatesFromLocalContent(data);
                 return true;
             }
 

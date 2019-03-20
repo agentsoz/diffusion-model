@@ -100,14 +100,32 @@ public class ICModel extends DiffModel{
 
         logger.info("ICModel - random seed: set {} agents for content {}", selected,content);
 
+    }
+
+    // set seed/state from external model, use only for global content types
+    public void updateSocialStatesFromGlobalContent(Object data) {
+
+        logger.debug("ICModel: broadcasting global messages to social agents");
+        String [] contents = (String []) data ;
+
+        for( String content: contents) {
+
+            //register content if not registered
+            registerContentIfNotRegistered(content,DataTypes.GLOBAL);
+
+
+            //get ids of all agents to broadcast message
+            Integer[] intIdArray = getAgentMap().keySet().toArray(new Integer[getAgentMap().size()]) ;
+            setSpecificSeed(intIdArray,content);
+        }
 
     }
 
-    @Override
-    // set seed/state from external model, use only for local content types
-    public void updateSocialStatesFromBDIPercepts(Object data) {
 
-        logger.debug("ICModel: updating social states based on BDI percepts");
+    // set seed/state from external model, use only for local content types
+    public void updateSocialStatesFromLocalContent(Object data) {
+
+        logger.debug("ICModel: updating social states from local contents");
         HashMap<String,String []> perceptMap = (HashMap<String,String []>) data ;
 
         for( Map.Entry entry: perceptMap.entrySet()) {
@@ -215,7 +233,7 @@ public class ICModel extends DiffModel{
 
     }
 
-    
+
     public boolean neighbourAlreadyExposed(int nodeID, int neighbourID, String content) {
 
         String directedLinkID = String.valueOf(nodeID).concat(String.valueOf(neighbourID));

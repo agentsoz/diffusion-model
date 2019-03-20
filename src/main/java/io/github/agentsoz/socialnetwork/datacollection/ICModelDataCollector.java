@@ -48,8 +48,12 @@ public class ICModelDataCollector {
     }
 
     public  int getExposedAgentCountForContent(String content) {
-
-        return this.getExposedCountMap().get(content);
+        if(!this.getExposedCountMap().containsKey(content)) { // global content
+            return 0;
+        }
+        else{
+            return this.getExposedCountMap().get(content); // local content
+        }
     }
 
     public  int getAdoptedAgentCountForContent(SocialNetworkManager sn, String content) {
