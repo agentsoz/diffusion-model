@@ -21,7 +21,7 @@ public class ICModelDataCollector {
         this.icDiffSpread = new TreeMap<Double, HashMap<String, Integer>>();
     }
 
-    public void collectCurrentStepSpreadData(SocialNetworkManager sn, ArrayList<String> currentContentList, double time) {
+    public void collectCurrentStepSpreadData(SocialNetworkManager sn, Collection<String> currentContentList, double time) {
 
         HashMap<String, Integer> currentSpreadCountMap = new HashMap<String, Integer>();
         for(String content: currentContentList) {

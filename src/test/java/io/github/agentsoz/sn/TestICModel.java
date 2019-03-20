@@ -3,6 +3,7 @@ package io.github.agentsoz.sn;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.socialnetwork.*;
 import io.github.agentsoz.socialnetwork.datacollection.ICModelDataCollector;
+import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 import org.junit.Assert;
@@ -43,7 +44,7 @@ public class TestICModel {
         ICModel testIC = (ICModel) sn.getDiffModel();
 
         //test IC model configs
-        testIC.registerContentIfNotRegistered("testContentX");
+        testIC.registerContentIfNotRegistered("testContentX",DataTypes.LOCAL);
         testIC.selectRandomSeed(SNConfig.getSeed(),"testContentX");
 
         ICModelDataCollector dc = new ICModelDataCollector(); // data collector
@@ -72,7 +73,7 @@ public class TestICModel {
         SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
         ICModel icModel = new ICModel(sn, 30, 0.0);
 
-        icModel.registerContentIfNotRegistered("contentX");
+        icModel.registerContentIfNotRegistered("contentX",DataTypes.LOCAL);
         icModel.addExposureAttempt(1,2,"contentX");
         assertTrue(icModel.neighbourAlreadyExposed(1,2,"contentX"));
         Assert.assertFalse(icModel.neighbourAlreadyExposed(2,1,"contentX"));
@@ -108,8 +109,8 @@ public class TestICModel {
         sn.genNetworkAndDiffModels();
 
         ICModel icModel = (ICModel) sn.getDiffModel();
-        icModel.registerContentIfNotRegistered("contentA");
-        icModel.initSeedBasedOnStrategy();
+        icModel.registerContentIfNotRegistered("contentA",DataTypes.LOCAL);
+        icModel.initSeedBasedOnStrategy("contentA");
         icModel.icDiffusion();
 
         ICModelDataCollector dc = new ICModelDataCollector();
@@ -122,7 +123,7 @@ public class TestICModel {
     public void testWriteFile(){
 
         Global.setRandomSeed(4711); // deterministic results for testing
-        String outFile = "./test/output/icmodel_outputs.txt";
+        String outFile = "./test/output/diffusion.out";
 
         DataServer ds = DataServer.getServer("test");
         SNModel sn = new SNModel(testConfigFile,ds);
