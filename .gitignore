@@ -5,3 +5,4 @@
 # exclude intelliJ files:
 **/*.iml
 /.idea
+.DS_Store

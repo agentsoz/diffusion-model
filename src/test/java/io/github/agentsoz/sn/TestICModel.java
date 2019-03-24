@@ -10,6 +10,8 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -125,7 +127,7 @@ public class TestICModel {
         Global.setRandomSeed(4711); // deterministic results for testing
         String outFile = "./test/output/diffusion.out";
 
-        DataServer ds = DataServer.getServer("test");
+        DataServer ds = DataServer.getServer("test"); //use a different dataserver for each test case, o.w mvn tests fail
         SNModel sn = new SNModel(testConfigFile,ds);
         sn.getSNManager().setupSNConfigs();
         SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
@@ -168,7 +170,7 @@ public class TestICModel {
         Global.setRandomSeed(4711); // deterministic results for testing
         String outFile = "./test/output/diffusion.out";
 
-        DataServer ds = DataServer.getServer("test");
+        DataServer ds = DataServer.getServer("test1"); // use a different dataserver for each test case, o.w mvn tests fail
         SNModel sn = new SNModel(testConfigFile,ds);
         sn.getSNManager().setupSNConfigs();
         SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
@@ -193,9 +195,17 @@ public class TestICModel {
 
             if( sn.getDataServer().getTime() == 3600*4) {
                 ic.registerContentIfNotRegistered("evac-now",DataTypes.GLOBAL);
-                String [] globalcontentArr = {"evac-now"};
+                ArrayList<String> globalcontentArr = new ArrayList<String>();
+                globalcontentArr.add("evac-now");
                 ic.updateSocialStatesFromGlobalContent(globalcontentArr);
             }
+            if( sn.getDataServer().getTime() == 3600*6) { // checking if sent again from BDI side, what will happen
+                ic.registerContentIfNotRegistered("evac-now",DataTypes.GLOBAL);
+                ArrayList<String> globalcontents = new ArrayList<String>();
+                globalcontents.add("evac-now");
+                ic.updateSocialStatesFromGlobalContent(globalcontents);
+            }
+
             sn.getSNManager().diffuseContent();
             sn.getDataServer().stepTime();
             ic.recordCurrentStepSpread(sn.getDataServer().getTime());

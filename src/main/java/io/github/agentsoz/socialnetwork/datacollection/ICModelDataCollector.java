@@ -49,6 +49,7 @@ public class ICModelDataCollector {
 
     public  int getExposedAgentCountForContent(String content) {
         if(!this.getExposedCountMap().containsKey(content)) { // global content
+            logger.info("content type {} not found in exposed count map, probably global content, returning 0", content);
             return 0;
         }
         else{

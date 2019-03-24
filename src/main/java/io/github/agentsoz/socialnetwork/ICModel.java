@@ -17,6 +17,7 @@ public class ICModel extends DiffModel{
 
     private double meanDiffProbability;
     private HashMap<String,String> contentList; // content, type (local/ global)
+    private ArrayList<String> diffusedGlobalContent; // to ensure global content are diffused just one time.
     private HashMap<String,ArrayList<String>> attemptedLinksMap;
     private ICModelDataCollector dc;
 
@@ -28,6 +29,7 @@ public class ICModel extends DiffModel{
 
         // instatiate contentList and exposedMap
         this.contentList = new HashMap<String,String>();
+        this.diffusedGlobalContent = new ArrayList<String>();
         this.attemptedLinksMap =  new HashMap<String,ArrayList<String>>();
         this.dc = new ICModelDataCollector();
 
@@ -70,7 +72,7 @@ public class ICModel extends DiffModel{
             }
 
 
-            logger.info("IC model: registered content {} of type {} {}",newContent, type, contentList.toString());
+            logger.info("IC model: registered content {} of type {}",newContent, type);
             return ;
         }
 
@@ -102,21 +104,29 @@ public class ICModel extends DiffModel{
 
     }
 
+
     // set seed/state from external model, use only for global content types
     public void updateSocialStatesFromGlobalContent(Object data) {
 
-        logger.debug("ICModel: broadcasting global messages to social agents");
-        String [] contents = (String []) data ;
+        logger.info("ICModel: broadcasting global messages to social agents");
+        ArrayList<String> contents = (ArrayList<String>) data ;
 
         for( String content: contents) {
 
-            //register content if not registered
-            registerContentIfNotRegistered(content,DataTypes.GLOBAL);
+            // if not diffused, diffuse content
+            if(!this.diffusedGlobalContent.contains(content)) {
 
+                //register first
+                registerContentIfNotRegistered(content, DataTypes.GLOBAL);
 
-            //get ids of all agents to broadcast message
-            Integer[] intIdArray = getAgentMap().keySet().toArray(new Integer[getAgentMap().size()]) ;
-            setSpecificSeed(intIdArray,content);
+                logger.info("diffusing global content: {} ", content);
+                //get ids of all agents to broadcast message
+                Integer[] intIdArray = getAgentMap().keySet().toArray(new Integer[getAgentMap().size()]);
+                setSpecificSeed(intIdArray, content);
+
+                //finally add to diffused contents
+                this.diffusedGlobalContent.add(content);
+            }
         }
 
     }
