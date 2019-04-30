@@ -36,6 +36,8 @@ public class SNConfig {
 
     //default output file path, can be overwritten by the config
     private static String outFile = "./diffusion.out";
+    private static String dynamicSeedFile = "./test.txt";
+
 	//sn model
 	private static String networkType = " " ;
 	private static String diffusionType = " " ;
@@ -138,6 +140,16 @@ public class SNConfig {
     public  static String getOutputFilePath() {
         return outFile;
     }
+
+    //dynamic seed file
+    public static void setDynamicSeedFile(String filePath) {
+        dynamicSeedFile=filePath;
+    }
+
+    public  static String getDynamicSeedFile() {
+        return dynamicSeedFile;
+    }
+
 	// RANDOM NETWORK
 	public static int getRandomNetAvgLinks() {
 		return randomNetAvgLinks;
@@ -342,7 +354,9 @@ public class SNConfig {
 
 						String oFile =  node.getAttributes().getNamedItem("out_file").getNodeValue();
 						setOutputFile(oFile);
-						
+
+							String seedFile =  node.getAttributes().getNamedItem("dynamic_seed_file").getNodeValue();
+                            setDynamicSeedFile(seedFile);
 						}
 						catch (Exception e) {
 							System.err
@@ -491,6 +505,8 @@ public class SNConfig {
 		
 		logger.info("sn model: network {} | diffusion model {}", getNetworkType(), getDiffusionType());
 		logger.info("LogFile: path {} | level {}", getLogFilePath(), getLogLevel());
+        logger.info("Dyanmic seed file: path {} ", getDynamicSeedFile());
+
 		if(networkType.equals(DataTypes.RANDOM)) {
 			logger.info(" RANDOM network configs:");
 			logger.info("normalise network = {}", normaliseRandNetwork());

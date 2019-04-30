@@ -9,6 +9,9 @@ import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 import io.github.agentsoz.socialnetwork.SocialAgent;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class SNUtils {
@@ -55,7 +58,14 @@ public class SNUtils {
 		SNConfig.readConfig();
 		logger.trace("setting SN main configs complete");
 	}
-	
+
+	public static void readAndSetGivenSNMainConfig(String config) {
+		//Config.setConfigFile(mainConfig);
+		SNConfig.setConfigFile(config);
+		SNConfig.readConfig();
+		logger.trace("setting SN main configs complete");
+	}
+
 //	public static void setMainConfigFile() {
 //		SNConfig.setConfigFile(SNConfig.getDefaultConfigFile());
 //	}
@@ -133,6 +143,108 @@ public class SNUtils {
 		}
 
 	}
+    // reads timing of blocked percepts of the format (time,id), and store the agent ids to activate for diffusion step
+    public static void readAndStoreDynamicSeed(HashMap<Integer,ArrayList<String>> seedMap) {
+        int idCount=0; // restricts the number of agent ids extracted from the .txt file
+        BufferedReader br = null;
+        FileReader fr = null;
+
+        logger.info("reading dynamic seed file and storing dynamic seed.....");
+
+        HashMap<Integer, String> timedPercepts = new HashMap<Integer, String>();
+        try {
+
+            fr = new FileReader(SNConfig.getDynamicSeedFile());
+            br = new BufferedReader(fr);
+
+            String sCurrentLine;
+            String[] perceptsArray;
+
+            br = new BufferedReader(new FileReader(SNConfig.getDynamicSeedFile()));
+
+            while ( (sCurrentLine = br.readLine()) != null) { // store timed updates
+                if(idCount >= 1) { // skipping the headers of the table
+                   // logger.trace(sCurrentLine);
+                    perceptsArray = sCurrentLine.split(",");
+                    logger.trace("time: {}, id: {}",perceptsArray[0],perceptsArray[1]);
+                    timedPercepts.put(Integer.parseInt(perceptsArray[0]), perceptsArray[1]);
+
+                }
+                idCount++;
+
+
+            }
+
+            logger.info("read and stored {} number of agents for dynamic seed", idCount-1);
+
+            // initialise seedMap
+            int time = SNConfig.getDiffturn(); // define a time interval start values
+
+
+            while(time <= SNUtils.getEndSimTime() ) {  // initialise dynamic seed map
+                    //logger.info("step: {}",time);
+                    ArrayList<String> idList = new ArrayList<String>();
+                    seedMap.put(time,idList);
+
+                    time =  time + SNConfig.getDiffturn(); // increment the step
+
+
+            }
+
+
+
+            // check time intervals and create id lists for each diffusion step
+            for(int pTime: timedPercepts.keySet()){
+
+                // re-initialising intervals
+                int maxTime = SNConfig.getDiffturn(); // define a time interval to extract percept ids. Max start from diffusion step and min start from 0.
+                int minTime = 0;
+
+                while(maxTime<= SNUtils.getEndSimTime()) {
+
+                    if(minTime < pTime && pTime <= maxTime) {
+                        ArrayList<String> list = seedMap.get(maxTime); // get id list
+                        String id = timedPercepts.get(pTime); // get id
+                        list.add(id);
+                        break; //found the time interval, exit while loop
+                    }
+
+                    // step time interval
+                    maxTime = maxTime + SNConfig.getDiffturn();
+                    minTime = minTime - SNConfig.getDiffturn();
+                }
+
+
+            }
+
+            logger.info("dynamic seeding pattern:");
+            for(int entry : seedMap.keySet()) { // print out final dynamic seed map
+                logger.info("time: {} | id list: {}", entry, seedMap.get(entry).size());
+            }
+
+        } catch (IOException e) {
+            logger.error("IO exception:");
+            e.printStackTrace();
+
+        } finally {
+
+            try {
+
+                if (br != null)
+                    br.close();
+
+                if (fr != null)
+                    fr.close();
+
+            } catch (IOException ex) {
+
+                ex.printStackTrace();
+
+            }
+
+        }
+
+    }
 
 	public static void createTestNetwork(String networkFile, SocialNetworkManager snman) {
 		Network net =  new Network();

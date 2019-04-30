@@ -41,6 +41,7 @@ public class DataTypes {
    public static final String MATSIM_AGENT_UPDATES = "matsim_agent_updates";
    public static final String FIRE_ALERT           = "fire_alert";
    public static final String DIFFUSION            = "diffusion";
+   public static final String BROADCAST            = "broadcast";
    public static final String FIREALERT 		   = "FireAlert";
    public static final String LEAVENOW		 	   = "leave now";
 }

@@ -82,6 +82,7 @@ public class ICModel extends DiffModel{
         if (SNConfig.getStrategy().equals(DataTypes.RANDOM)) {
             selectRandomSeed(SNConfig.getSeed(), content);
         }
+
     }
 
     public void selectRandomSeed(double seedPercentage, String content) {
@@ -146,6 +147,7 @@ public class ICModel extends DiffModel{
             //register content if not registered
             registerContentIfNotRegistered(content,DataTypes.LOCAL);
 
+            logger.trace("content: {} id list: {}", content, agentIds);
 
             //convert the String array to Integer
             Integer[] intIdArray = new Integer[agentIds.length];
@@ -156,6 +158,7 @@ public class ICModel extends DiffModel{
             setSpecificSeed(intIdArray,content);
         }
 
+        logger.debug("social states updated");
     }
 
     public void setSpecificSeed(Integer[] idArray, String content) {
@@ -168,11 +171,14 @@ public class ICModel extends DiffModel{
 
     @Override
     public void doDiffProcess() {
+
         icDiffusion();
+
     }
 
     public void icDiffusion() {
 
+        logger.trace("starting ic diffusion procecss...");
         for(SocialAgent agent: getAgentMap().values()) { // for each agent
             ArrayList<String> contentList = agent.getAdoptedContentList();
             if(!contentList.isEmpty()) {
@@ -212,6 +218,8 @@ public class ICModel extends DiffModel{
 
             }
         }
+
+        logger.trace(" ic diffusion procecss ended...");
     }
 
     public double getRandomDiffProbability() {
