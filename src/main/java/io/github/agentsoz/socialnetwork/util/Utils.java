@@ -22,7 +22,7 @@ public class Utils {
         }
         else {
             double gausVal = Global.getRandom().nextGaussian() * desiredSD + desiredMean;
-            while (gausVal < 0 || gausVal >= 1) {  // lessthan 0 OR >= 1
+            while (gausVal < 0 || gausVal > 1) {  // lessthan 0 OR > 1
                 gausVal = Global.getRandom().nextGaussian() * desiredSD + desiredMean;
             }
 
@@ -36,8 +36,8 @@ public class Utils {
         }
         else {
             double gausVal = Global.getRandom().nextGaussian() * desiredSD + desiredMean;
-            double lbound = desiredMean - 3 * desiredSD; // interval lb
-            double ubound = desiredMean + 3 * desiredSD; // interval ub
+            double lbound = desiredMean - (3 * desiredSD); // interval lb
+            double ubound = desiredMean + (3 * desiredSD); // interval ub
 
             if (lbound < 0.0) {
                 lbound = 0.0;
@@ -46,7 +46,7 @@ public class Utils {
                 ubound = 1.0;
             }
 
-            while (gausVal < lbound || gausVal >= ubound) {  // lessthan 0 OR >= 1
+            while (gausVal < lbound || gausVal > ubound) {  // lessthan 0 OR > 1
                 gausVal = Global.getRandom().nextGaussian() * desiredSD + desiredMean;
             }
 

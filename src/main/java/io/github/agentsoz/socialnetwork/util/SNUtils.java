@@ -23,8 +23,11 @@ public class SNUtils {
 
 	final static Logger logger = LoggerFactory.getLogger("");
 
+	public static void setStepsize(long stepsize) {
+		SNUtils.stepsize = stepsize;
+	}
 
-	public static void stepTime() { 
+	public static void stepTime() {
 		simTime = simTime +stepsize;
 	}
 

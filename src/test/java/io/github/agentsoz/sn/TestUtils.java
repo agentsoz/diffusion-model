@@ -17,7 +17,16 @@ public class TestUtils {
 	public void testRandomGaussianValues() { 
 		int testCount = 25;
 		for(int i=0;i<testCount; i++) {
-			System.out.println(Utils.getRandomGaussion(0.05, 0.75));
+			System.out.println(Utils.getRandomGaussion(0.0, 0.0));
+		}
+	}
+
+	@Ignore
+	@Test
+	public void testRandomGaussianWithin3SDValues() {
+		int testCount = 25;
+		for(int i=0;i<testCount; i++) {
+			System.out.println(Utils.getRandomGaussionWithinThreeSD(0.0, 0.6));
 		}
 	}
 
