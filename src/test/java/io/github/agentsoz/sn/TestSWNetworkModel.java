@@ -60,9 +60,9 @@ public class TestSWNetworkModel {
 		
 		//1. Random cords - agent x,y coords are in meters :  UTM uses meters from reference points
 //		createAgentMap(20000, 5000);
-		snManager.setupSNConfigs();
+		snManager.setupSNConfigsAndLogs();
 		SNConfig.setNetworkType(DataTypes.SMALL_WORLD);
-	//	snManager.setupSNConfigs();
+	//	snManager.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(snManager, numAgents);
 
 
@@ -101,7 +101,7 @@ public class TestSWNetworkModel {
 	{
 
 		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
-		sn.setupSNConfigs();
+		sn.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
 
@@ -126,7 +126,7 @@ public class TestSWNetworkModel {
 	@Test
 	public void testNormalisedNetwork() {
 		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
-		sn.setupSNConfigs();
+		sn.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
 		SWNetwork swNet = new SWNetwork(4.0, 5, 1.0);
@@ -149,7 +149,7 @@ public class TestSWNetworkModel {
 		//method1 -  set configs from the config file
 //		SNUtils.setMainConfigFile();
 		
-//		snManager.setupSNConfigs(); 
+//		snManager.setupSNConfigsAndLogs();
 		
 		//method2 - set configs using setters -  should set after initSNModel as the configs are read again from the file in initSNmodel method
 		SNConfig.setNetworkType(DataTypes.SMALL_WORLD);

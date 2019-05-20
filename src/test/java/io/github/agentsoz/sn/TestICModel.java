@@ -24,7 +24,7 @@ public class TestICModel {
     @Ignore
     public void testConfigs(){
         SocialNetworkManager testSN = new SocialNetworkManager(testConfigFile);
-        testSN.setupSNConfigs();
+        testSN.setupSNConfigsAndLogs();
         testSN.printSNModelconfigs();
 
         assertEquals(53.0, SNConfig.getSeed(),0);
@@ -39,7 +39,7 @@ public class TestICModel {
     public void testRandomSeed() {
 
         SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
-        sn.setupSNConfigs();
+        sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn,80,1000);
 
         sn.genNetworkAndDiffModels();
@@ -86,7 +86,7 @@ public class TestICModel {
         // SD = 0.05, p = 0.16
         Global.setRandomSeed(4711);
         SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
-        sn.setupSNConfigs();
+        sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
 
         sn.genNetworkAndDiffModels();
@@ -106,7 +106,7 @@ public class TestICModel {
         // SD = 0.05, p = 0.16
         Global.setRandomSeed(4711);
         SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
-        sn.setupSNConfigs();
+        sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
         sn.genNetworkAndDiffModels();
 
@@ -129,7 +129,7 @@ public class TestICModel {
 
         DataServer ds = DataServer.getServer("test"); //use a different dataserver for each test case, o.w mvn tests fail
         SNModel sn = new SNModel(testConfigFile,ds);
-        sn.getSNManager().setupSNConfigs();
+        sn.getSNManager().setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
 
         sn.initSNModel();
@@ -172,7 +172,7 @@ public class TestICModel {
 
         DataServer ds = DataServer.getServer("test1"); // use a different dataserver for each test case, o.w mvn tests fail
         SNModel sn = new SNModel(testConfigFile,ds);
-        sn.getSNManager().setupSNConfigs();
+        sn.getSNManager().setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
 
         sn.initSNModel();

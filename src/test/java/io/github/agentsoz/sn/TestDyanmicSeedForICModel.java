@@ -4,12 +4,8 @@ import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.socialnetwork.ICModel;
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SocialNetworkManager;
-import io.github.agentsoz.socialnetwork.datacollection.ICModelDataCollector;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.*;
 
@@ -31,7 +27,7 @@ percepts input file, set seeding strategy to dynamic.
     public void testDyanmicSeed() {
         DataServer ds = DataServer.getServer("test100"); // use a different dataserver for each test case, o.w mvn tests fail
         SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
-        sn.setupSNConfigs();
+        sn.setupSNConfigsAndLogs();
         sn.printSNModelconfigs();
         SNUtils.randomAgentMap(sn,50000,1000);
 

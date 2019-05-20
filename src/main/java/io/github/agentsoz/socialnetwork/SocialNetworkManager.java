@@ -67,7 +67,7 @@ public class SocialNetworkManager{
     public boolean genNetworkAndDiffModels()
     {
 // separated setting up configurationa from this method
-//    if(!setupSNConfigs()) {
+//    if(!setupSNConfigsAndLogs()) {
 //		logger.error("Error in setting configurations");
 //		return false;
 //	}
@@ -89,7 +89,7 @@ public class SocialNetworkManager{
 
     }
     
-    public boolean setupSNConfigs(){
+    public boolean setupSNConfigsAndLogs(){
 
     	SNConfig.setConfigFile(mainConfigFile);
     	
@@ -104,9 +104,28 @@ public class SocialNetworkManager{
 			return true;
 		}
 
-
-
     }
+
+    //used in running lhs batch runs, to only set configs other than log, which will be created using a separate method.
+	public boolean setupSNConfigs(){
+
+		SNConfig.setConfigFile(mainConfigFile);
+		boolean result= true;
+
+		if (!SNConfig.readConfig()) {
+			logger.error("Failed to load SN configuration from '"+SNConfig.getConfigFile()+"'. Aborting");
+			result = false;
+		}
+			return result;
+	}
+
+    //used when logfile needs to shifted to different directories when executing lhs batch runs
+    public void getLogger(String file){
+
+		SNConfig.setLogFile(file);
+		logger = Log.getOrCreateLogger("", file);
+
+	}
 
     public void printSNModelconfigs() {
 		SNConfig.printNetworkConfigs();

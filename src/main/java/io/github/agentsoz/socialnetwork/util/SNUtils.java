@@ -154,7 +154,7 @@ public class SNUtils {
 
         logger.info("reading dynamic seed file and storing dynamic seed.....");
 
-        HashMap<Integer, String> timedPercepts = new HashMap<Integer, String>();
+        HashMap<String,Integer> timedPercepts = new HashMap<String,Integer>(); // format id, time NOT  time, id. Because then can't have multiple ids of same time.
         try {
 
             fr = new FileReader(SNConfig.getDynamicSeedFile());
@@ -170,15 +170,13 @@ public class SNUtils {
                    // logger.trace(sCurrentLine);
                     perceptsArray = sCurrentLine.split(",");
                     logger.trace("time: {}, id: {}",perceptsArray[0],perceptsArray[1]);
-                    timedPercepts.put(Integer.parseInt(perceptsArray[0]), perceptsArray[1]);
+                    timedPercepts.put(perceptsArray[1], Integer.parseInt(perceptsArray[0])); // store the otherway round as id, time
 
                 }
                 idCount++;
 
 
             }
-
-            logger.info("read and stored {} number of agents for dynamic seed", idCount-1);
 
             // initialise seedMap
             int time = SNConfig.getDiffturn(); // define a time interval start values
@@ -197,7 +195,10 @@ public class SNUtils {
 
 
             // check time intervals and create id lists for each diffusion step
-            for(int pTime: timedPercepts.keySet()){
+            for(Map.Entry entry: timedPercepts.entrySet()){
+
+            	String id = (String) entry.getKey();
+            	int pTime = (int) entry.getValue();
 
                 // re-initialising intervals
                 int maxTime = SNConfig.getDiffturn(); // define a time interval to extract percept ids. Max start from diffusion step and min start from 0.
@@ -207,23 +208,32 @@ public class SNUtils {
 
                     if(minTime < pTime && pTime <= maxTime) {
                         ArrayList<String> list = seedMap.get(maxTime); // get id list
-                        String id = timedPercepts.get(pTime); // get id
                         list.add(id);
                         break; //found the time interval, exit while loop
                     }
 
                     // step time interval
                     maxTime = maxTime + SNConfig.getDiffturn();
-                    minTime = minTime - SNConfig.getDiffturn();
+                    minTime = minTime + SNConfig.getDiffturn();
+
+                    // value is not within maximum range
+//					if(maxTime == SNUtils.getEndSimTime()){
+//						logger.error("time value {} outside maximum sim time range", pTime );
+//					}
                 }
 
 
             }
 
+            // verificatoin
             logger.info("dynamic seeding pattern:");
+            int ct = 0;
             for(int entry : seedMap.keySet()) { // print out final dynamic seed map
                 logger.info("time: {} | id list: {}", entry, seedMap.get(entry).size());
+                ct = ct + seedMap.get(entry).size();
             }
+				// should all be  same
+			logger.info("total seed read {} | total seed stored  {} | total sorted into diffusion step intervals: {}", idCount-1, timedPercepts.size(), ct);
 
         } catch (IOException e) {
             logger.error("IO exception:");

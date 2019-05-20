@@ -32,7 +32,7 @@ public class TestRandomNetworkModel {
 	{
 		logger.info("setting up to test Random network model.....");
 
-		snManager.setupSNConfigs();
+		snManager.setupSNConfigsAndLogs();
 		
 		//agent x,y coords are in meters :  UTM uses meters from reference points
 		snManager.createSocialAgent("0");snManager.setCords("0", 0, 0);
@@ -53,7 +53,7 @@ public class TestRandomNetworkModel {
 	
 
 		//agent x,y coords are in meters :  UTM uses meters from reference points
-		snManager.setupSNConfigs();
+		snManager.setupSNConfigsAndLogs();
 		SNUtils.randomAgentMap(snManager,5, 100000);
 		
 	}
@@ -92,7 +92,7 @@ public class TestRandomNetworkModel {
 	{
 		// method1
 		//SNUtils.setMainConfigFile();
-		snManager.setupSNConfigs();
+		snManager.setupSNConfigsAndLogs();
 		
 		//method2
 		SNConfig.setNetworkType(DataTypes.RANDOM);

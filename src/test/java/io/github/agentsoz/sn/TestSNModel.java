@@ -5,12 +5,10 @@ import io.github.agentsoz.socialnetwork.ICModel;
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SNModel;
 import io.github.agentsoz.socialnetwork.util.Global;
-import io.github.agentsoz.socialnetwork.util.Log;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.slf4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +28,7 @@ public class TestSNModel {
 
 
         SNModel snModel = new SNModel(testConfigFile,ds1);
-        snModel.getSNManager().setupSNConfigs();
+        snModel.getSNManager().setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(snModel.getSNManager(), 1000, 1000);
         snModel.initSNModel();
 

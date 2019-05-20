@@ -67,4 +67,14 @@ public class Log {
 		logger.setLevel(level);
 
 	}
+
+	// create the logger only onetime
+	public static Logger getOrCreateLogger(String string, String file){
+		if(logger == null) { // first time, create it
+			logger = createLogger(string,file);
+			logger.info("logger created: {}", file);
+		}
+
+		return logger;
+	}
 }

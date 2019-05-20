@@ -45,7 +45,7 @@ public class SNModel implements DataSource, DataClient {
     public void initSNModel() { // init SN model with already populated social agent map
 
 
-        this.getSNManager().setupSNConfigs(); //setup configs and create log first
+        this.getSNManager().setupSNConfigsAndLogs(); //setup configs and create log first
 
         this.snManager.genNetworkAndDiffModels(); // gen network and diffusion models
         this.snManager.printSNModelconfigs();
@@ -58,7 +58,7 @@ public class SNModel implements DataSource, DataClient {
     public void initSNModel(List<String> idList) { // init SN model with given agent id list
 
 
-        this.getSNManager().setupSNConfigs(); //first, setup configs and create log
+        this.getSNManager().setupSNConfigsAndLogs(); //first, setup configs and create log
 
         for (String id : idList) {
             this.snManager.createSocialAgent(id); //populate agentmap

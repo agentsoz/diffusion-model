@@ -26,7 +26,7 @@ public class TestCLTModel {
     @Before
     public void setConfigs() {
 
-        testSN.setupSNConfigs();
+        testSN.setupSNConfigsAndLogs();
         SNUtils.createAgentMapUsingActualCoords(testSN,5); // generate agent map
         logger.debug("test agent map size: {}",testSN.getAgentMap().size());
 
@@ -143,7 +143,7 @@ public class TestCLTModel {
 
 
         SocialNetworkManager cltSNmanager = new SocialNetworkManager(testConfigFile);
-        cltSNmanager.setupSNConfigs(); // set sn configs
+        cltSNmanager.setupSNConfigsAndLogs(); // set sn configs
         SNUtils.randomAgentMap(cltSNmanager,9,1000); // cant use the actual cords as they do not match with the
         SNUtils.createTestNetwork(cltDiffNetFile,cltSNmanager); // create the test network
 

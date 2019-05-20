@@ -32,7 +32,7 @@ public class TestLTModel {
 	public void setUpRandomAgentMap()
 	{
 
-		sn_manager.setupSNConfigs();
+		sn_manager.setupSNConfigsAndLogs();
 		SNUtils.randomAgentMap(sn_manager,5,1000);
 		logger.info("random agent map initialised: size {}", sn_manager.agentList.size());
 		ltModel = new LTModel(2,3,sn_manager); // random values to create the model
@@ -46,7 +46,7 @@ public class TestLTModel {
 	public void testInitialise() { 
 		
 	//	SNUtils.setMainConfigFile();
-		sn_manager.setupSNConfigs();
+		sn_manager.setupSNConfigsAndLogs();
 		sn_manager.generateDiffModel(); // initialise is already run here
 
 		
@@ -120,7 +120,7 @@ public class TestLTModel {
 	@Test
 	public void testConfigsFromFile() { 
 		//SNUtils.setMainConfigFile();
-		sn_manager.setupSNConfigs();
+		sn_manager.setupSNConfigsAndLogs();
 		sn_manager.generateDiffModel();
 		sn_manager.getDiffModel().initialise();
 		sn_manager.getDiffModel().printConfigParams();
