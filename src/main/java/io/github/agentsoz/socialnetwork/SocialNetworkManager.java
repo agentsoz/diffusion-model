@@ -136,8 +136,8 @@ public class SocialNetworkManager{
     {
     	
     	if(this.agentList.size() < 2) {
-		logger.error("sn initialisation falied: size of agent list is too small: {}  exiting..",this.agentList.size() );
-		return false;
+		logger.warn("only {} social agent in the list, too small for diffusion",this.agentList.size() );
+		//return false;
     	}
     	
     	NetworkFactory netFactory =  new NetworkFactory();
