@@ -20,6 +20,7 @@ public class ICModel extends DiffModel{
     private ArrayList<String> diffusedGlobalContent; // to ensure global content are diffused just one time.
     private HashMap<String,ArrayList<String>> attemptedLinksMap;
     private ICModelDataCollector dc;
+    private HashMap<String, ArrayList<String>> currentStepActiveAgents =  new HashMap<String, ArrayList<String>>();
 
     public ICModel(SocialNetworkManager sn, int step, double prob) {
 
@@ -172,6 +173,8 @@ public class ICModel extends DiffModel{
     @Override
     public void doDiffProcess() {
 
+
+        this.currentStepActiveAgents.clear(); //clear previous step active agents.
         icDiffusion();
 
     }
@@ -199,6 +202,7 @@ public class ICModel extends DiffModel{
 
                                 //probabilistic diffusion successful
                                 updateSocialState(nid,content);
+                                addActiveAgentToCurrenStepActiveAgentsList(nid,content);
 
                             }
                             else{ // inactive-exposure
@@ -220,6 +224,18 @@ public class ICModel extends DiffModel{
         }
 
         logger.trace(" ic diffusion procecss ended...");
+    }
+
+    private void addActiveAgentToCurrenStepActiveAgentsList(int agentid, String content) {
+
+            ArrayList<String> idList = this.currentStepActiveAgents.get(content);
+            if(idList == null) {
+                idList =  new ArrayList<String>();
+                this.currentStepActiveAgents.put(content,idList);
+            }
+
+            idList.add(String.valueOf(agentid));
+
     }
 
     public double getRandomDiffProbability() {
@@ -279,23 +295,26 @@ public class ICModel extends DiffModel{
 //        return ct;
 //    }
 
-    public HashMap<String, String[]> getLatestDiffusionUpdates() {
+    public HashMap<String, ArrayList<String>> getLatestDiffusionUpdates() {
 
-        HashMap<String, String[]> latestSpread =  new HashMap<String, String[]>();
-        for(String content: this.contentList.keySet()) { // want to send both global and local content types for reasoning.
+        return this.currentStepActiveAgents;
 
-           Integer[] contentArray =  this.dc.getAdoptedAgentIdArrayForContent(snManager,content);
-
-           //convert Integer[] to  String[] and pass back to the BDI model
-            String[] strIdArray = new String[contentArray.length];
-            for(int i =0; i < contentArray.length; i++) {
-                strIdArray[i] = String.valueOf(contentArray[i]);
-            }
-
-           latestSpread.put(content,strIdArray);
-        }
-            return latestSpread;
+//        HashMap<String, String[]> latestSpread =  new HashMap<String, String[]>();
+//        for(String content: this.contentList.keySet()) { // want to send both global and local content types for reasoning.
+//
+//           Integer[] contentArray =  this.dc.getAdoptedAgentIdArrayForContent(snManager,content);
+//
+//           //convert Integer[] to  String[] and pass back to the BDI model
+//            String[] strIdArray = new String[contentArray.length];
+//            for(int i =0; i < contentArray.length; i++) {
+//                strIdArray[i] = String.valueOf(contentArray[i]);
+//            }
+//
+//           latestSpread.put(content,strIdArray);
+//        }
+//            return latestSpread;
     }
+
 
     public void updateSocialState(int id, String content) {
 
@@ -305,7 +324,7 @@ public class ICModel extends DiffModel{
 
     }
 
-    public void recordCurrentStepSpread(double timestep) {
+    public void recordCurrentStepSpread(double timestep) { // recording total active agents
 
         this.dc.collectCurrentStepSpreadData(this.snManager,this.contentList.keySet(),timestep);
     }

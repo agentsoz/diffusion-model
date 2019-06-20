@@ -9,10 +9,7 @@ import io.github.agentsoz.socialnetwork.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 //wrapper class of SNManager class, provides API functionalities through DataServer
 public class SNModel implements DataSource, DataClient {
@@ -86,7 +83,7 @@ public class SNModel implements DataSource, DataClient {
             this.snManager.diffuseContent();
             if (SNConfig.getDiffusionType().equals(DataTypes.icModel)) {
                 ICModel icModel = (ICModel) getSNManager().getDiffModel();
-                HashMap<String, String[]> latestUpdate = icModel.getLatestDiffusionUpdates();
+                HashMap<String, ArrayList<String>> latestUpdate = icModel.getLatestDiffusionUpdates();
 
                 icModel.recordCurrentStepSpread(this.dataServer.getTime());
                 DiffusedContent dc = new DiffusedContent();
