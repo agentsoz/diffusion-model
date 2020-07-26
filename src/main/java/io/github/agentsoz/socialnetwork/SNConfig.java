@@ -28,7 +28,7 @@ public class SNConfig {
 	private static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
 
 //	static Random rand =  Global.getRandom();
-	static String networkLinksDir = "../sn_model_data/network_visuals/";
+	static String networkLinksDir = "./sn_model_data/network_visuals/";
 
 	//logs
 	private static String logFile = "./diffusion.log"; // default logfile, overwritten by the configuration file
