@@ -33,7 +33,7 @@ public class TestCLTModel {
 
         cltModel = new CLTModel(SNConfig.getWaitSeed(),
                 SNConfig.getPanicSeed(),
-                SNConfig.getDiffturn(),
+                SNConfig.getDiffTurn_lt(),
                 testSN);
         cltModel.setupDiffConfigs();
 
@@ -48,16 +48,16 @@ public class TestCLTModel {
 
         SNConfig.printDiffusionConfigs();
 
-        assertEquals("clt", SNConfig.getDiffusionType());
+        assertEquals("lt", SNConfig.getDiffusionModelsList().get(0)); // #FIXME
         assertEquals("sw", SNConfig.getNetworkType());
 
-        assertEquals(7200,SNConfig.getDiffturn());
-        assertEquals(0.01,SNConfig.getStandardDeviation(),0);
-        assertEquals(DataTypes.PROBILITY,SNConfig.getStrategy());
-        assertEquals(DataTypes.GAUSSIAN,SNConfig.getDiffusionThresholdType());
-        assertEquals(13.12,SNConfig.getSeed(),0);
+        assertEquals(7200,SNConfig.getDiffTurn_lt());
+        assertEquals(0.01,SNConfig.getStandardDeviation_lt(),0);
+        assertEquals(DataTypes.PROBILITY,SNConfig.getStrategy_lt());
+        assertEquals(DataTypes.GAUSSIAN,SNConfig.getDiffusionThresholdType_lt());
+        assertEquals(13.12,SNConfig.getSeed_lt(),0);
 
-        assertEquals(0.353,SNConfig.getMeanLowPanicThreshold(),0);
+        assertEquals(0.353,SNConfig.getMeanLowPanicThreshold_lt(),0);
        //   assertEquals(0.751,SNConfig.getMeanHighPanicThreshold(),0); // this is not read from the configs.
 
         assertEquals(25.32,SNConfig.getPanicSeed(),0);
@@ -73,12 +73,12 @@ public class TestCLTModel {
         //calculate expected boundary values for both thresholds
 
 
-        double waitlb = SNConfig.getWaitThreshold() - 3 * SNConfig.getStandardDeviation();
-        double waitub = SNConfig.getWaitThreshold() + 3 * SNConfig.getStandardDeviation();
+        double waitlb = SNConfig.getWaitThreshold() - 3 * SNConfig.getStandardDeviation_lt();
+        double waitub = SNConfig.getWaitThreshold() + 3 * SNConfig.getStandardDeviation_lt();
 
         logger.debug(" wait threshold boundaries: {}  - {}", waitlb,waitub);
-        double paniclb = SNConfig.getPanicThreshold() - 3 * SNConfig.getStandardDeviation();
-        double panicub = SNConfig.getPanicThreshold() + 3 * SNConfig.getStandardDeviation();
+        double paniclb = SNConfig.getPanicThreshold() - 3 * SNConfig.getStandardDeviation_lt();
+        double panicub = SNConfig.getPanicThreshold() + 3 * SNConfig.getStandardDeviation_lt();
 
         logger.debug(" panic threshold boundaries: {}  - {}", paniclb,panicub);
 
@@ -149,7 +149,7 @@ public class TestCLTModel {
 
         CLTModel testCLT = new CLTModel(SNConfig.getWaitSeed(),
                 SNConfig.getPanicSeed(),
-                SNConfig.getDiffturn(),
+                SNConfig.getDiffTurn_lt(),
                 cltSNmanager);
         testCLT.setupDiffConfigs();
 

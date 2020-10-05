@@ -5,7 +5,7 @@
 <!-- specify the network strucuture: random= random ER MODEL), sw=small world model, rand-reg=random-regular model -->
 	<!-- spcify the logfile path and log level (i=info, d=debug, t=trace) -->
 <snModel
-	diffusionType="ic"
+	diffusionModels="ic"
 	networkType="rand-reg"
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 	log_file="./test/output/diffusion.log"
@@ -24,16 +24,16 @@
 
         normalise="true"
         avg_links="3"
-	
+
 />
 
 <!--specify distance in km-->
 <swNetwork
-	normalise="true" 
+	normalise="true"
 	distance="0.8"
 	avg_links="3"
 	rewire_probability="0.0"
-	
+
 />
 
 <!-- diffusion model configurations-->
@@ -54,15 +54,15 @@
 	<!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->
 	<!-- 1st config set: common to all diffusion models, 2nd set: specific for LT diffusion model, 3rd set: specific for CLT diffusion model-->
 
-<diffModel
+<lt
 
 
-	diff_turn="60"	
+	diff_turn="60"
 	standard_deviation="0.025"
 	strategy="random"
 	thresholdType="guassian"
-	
-	diff_seed="5" 
+
+	diff_seed="5"
 	mean_act_threshold="0.3"
 	mean_high_threshold="0.7"
 
@@ -71,9 +71,7 @@
 	waitT="0.5"
 	panicT="0.5"
 
-	
+
 />
 
 </diffusion>
-
-

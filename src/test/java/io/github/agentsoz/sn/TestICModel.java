@@ -7,7 +7,6 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -21,17 +20,17 @@ public class TestICModel {
 
 
     @Test
-    @Ignore
+ //   @Ignore
     public void testConfigs(){
         SocialNetworkManager testSN = new SocialNetworkManager(testConfigFile);
         testSN.setupSNConfigsAndLogs();
         testSN.printSNModelconfigs();
 
-        assertEquals(53.0, SNConfig.getSeed(),0);
-        assertEquals(36000,SNConfig.getDiffturn(),0);
-        assertEquals("random",SNConfig.getStrategy());
-        assertEquals(0.16,SNConfig.getDiffProbability(),0);
-        assertEquals(0.05,SNConfig.getStandardDeviation(),0);
+        assertEquals(53.0, SNConfig.getSeed_ic(),0);
+        assertEquals(36000,SNConfig.getDiffTurn_ic(),0);
+        assertEquals("random",SNConfig.getStrategy_ic());
+        assertEquals(0.16,SNConfig.getDiffusionProbability_ic(),0);
+        assertEquals(0.05,SNConfig.getStandardDeviation_ic(),0);
 
     }
 
@@ -47,7 +46,7 @@ public class TestICModel {
 
         //test IC model configs
         testIC.registerContentIfNotRegistered("testContentX",DataTypes.LOCAL);
-        testIC.selectRandomSeed(SNConfig.getSeed(),"testContentX");
+        testIC.selectRandomSeed(SNConfig.getSeed_ic(),"testContentX");
 
         ICModelDataCollector dc = new ICModelDataCollector(); // data collector
         Assert.assertEquals(42, dc.getAdoptedAgentCountForContent(sn,"testContentX"));
@@ -133,8 +132,8 @@ public class TestICModel {
         SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
 
         sn.initSNModel();
-        SNConfig.setDiffturn(60);
-        SNConfig.setSeed(15);
+        SNConfig.setDiffturn_ic(60);
+        SNConfig.setSeed_ic(15);
         ICModel ic = (ICModel) sn.getSNManager().getDiffModel();
         ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
         ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
@@ -144,7 +143,7 @@ public class TestICModel {
         //setup sim configs
         SNUtils.setEndSimTime(3600*8);
         sn.getDataServer().setTime(0.0);
-        sn.getDataServer().setTimeStep(SNConfig.getDiffturn());
+        sn.getDataServer().setTimeStep(SNConfig.getDiffTurn_ic());
 
         while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
            // sn.stepDiffusionProcess();
@@ -176,8 +175,8 @@ public class TestICModel {
         SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
 
         sn.initSNModel();
-        SNConfig.setDiffturn(60);
-        SNConfig.setSeed(15);
+        SNConfig.setDiffturn_ic(60);
+        SNConfig.setSeed_ic(15);
         ICModel ic = (ICModel) sn.getSNManager().getDiffModel();
 
         ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
@@ -188,7 +187,7 @@ public class TestICModel {
         //setup sim configs
         SNUtils.setEndSimTime(3600*8);
         sn.getDataServer().setTime(0.0);
-        sn.getDataServer().setTimeStep(SNConfig.getDiffturn());
+        sn.getDataServer().setTimeStep(SNConfig.getDiffTurn_ic());
 
         while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
             // sn.stepDiffusionProcess();

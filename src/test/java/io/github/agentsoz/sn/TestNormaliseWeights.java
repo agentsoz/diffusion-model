@@ -38,7 +38,7 @@ public class TestNormaliseWeights {
 	
 
 		//agent x,y coords are in meters :  UTM uses meters from reference points
-		SNConfig.setDiffusionType(DataTypes.ltModel);
+		SNConfig.addToDiffusionModelsList(DataTypes.ltModel);
 		snManager.setupSNConfigsAndLogs();
 		SNUtils.randomAgentMap(snManager,nodes, 1000);
 		

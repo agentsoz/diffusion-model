@@ -38,7 +38,7 @@ public class TestRandomRegularNetwork {
 //		SNConfig.readConfig();
 		snManager.setupSNConfigsAndLogs();
 		SNConfig.setNetworkType(DataTypes.RANDOM_REGULAR);
-		SNConfig.setDiffusionType(DataTypes.ltModel);
+		SNConfig.addToDiffusionModelsList(DataTypes.ltModel);
 		SNUtils.createAgentMapUsingActualCoords(snManager, testNodes);
 //		SNUtils.randomAgentMap(snManager, testNodes, 1000);
 		

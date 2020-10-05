@@ -46,11 +46,11 @@ percepts input file, set seeding strategy to dynamic.
         SNUtils.setEndSimTime(3600*17); // 61200 secs
         ds.setTime(0.0);
         testIC.recordCurrentStepSpread(0.0); //record seed spread
-        ds.setTimeStep(SNConfig.getDiffturn());
+        ds.setTimeStep(SNConfig.getDiffTurn_ic());
 
         while(ds.getTime() <= SNUtils.getEndSimTime()) {
 
-            if(ds.getTime() % SNConfig.getDiffturn() == 0 && ds.getTime() > 0){ // avoid ds = 0.0
+            if(ds.getTime() % SNConfig.getDiffTurn_ic() == 0 && ds.getTime() > 0){ // avoid ds = 0.0
 
                 ArrayList<String> idListForStep = dynamicSeedMap.get((int)ds.getTime());
                 if( idListForStep != null && idListForStep.size() != 0){ // if there are agents that need to be activated

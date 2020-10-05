@@ -4,7 +4,7 @@
 <!-- Social Network Model Configurations -->
 <!-- specify the network strucuture ( random(ER MODEL) /sw/rand-reg)and the diffusion model for the sn model-->
 <snModel
-	diffusionType="clt"
+	diffusionModels="lt"
 	networkType="sw"
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 	log_file="./diffusion.log"
@@ -28,7 +28,7 @@
 
 <!--specify distance in km-->
 <swNetwork
-	normalise="true" 
+	normalise="true"
 	distance="0.8"
 	avg_links="1"
 	rewire_probability="0.0"
@@ -39,14 +39,14 @@
 <!-- stratgey = random or nearfire or prob- STANDARD IS PROB-->
 <!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->
 <!-- separated as common lt clt-->
-<diffModel 
+<lt
 
-	diff_turn="120"	
+	diff_turn="120"
 	standard_deviation="0.01"
 	strategy="prob"
 	thresholdType="guassian"
-	
-	diff_seed="13.12" 
+
+	diff_seed="13.12"
 	mean_act_threshold="0.353"
 	mean_high_threshold="0.751"
 
@@ -55,9 +55,7 @@
 	waitT="0.244"
 	panicT="0.576"
 
-	
+
 />
 
 </diffusion>
-
-

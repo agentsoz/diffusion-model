@@ -44,7 +44,7 @@ public class CLTModel extends LTModel {
     public void setupDiffConfigs() {
        this.meanWaitThreshold = SNConfig.getWaitThreshold();
        this.meanPanicThreshold = SNConfig.getPanicThreshold();
-       this.standardDev = SNConfig.getStandardDeviation();
+       this.standardDev = SNConfig.getStandardDeviation_lt();
 
         logger.trace("diffusion configs assigned to CLTModel..");
     }
@@ -75,7 +75,7 @@ public class CLTModel extends LTModel {
 
     @Override
     public void assignThresholds() {
-        if(SNConfig.getDiffusionThresholdType().equals(DataTypes.GAUSSIAN)) {
+        if(SNConfig.getDiffusionThresholdType_lt().equals(DataTypes.GAUSSIAN)) {
             for(int id: getAgentMap().keySet()) {
                 assignGaussianDistThresholds(id,this.meanWaitThreshold,this.meanPanicThreshold,this.standardDev);
 

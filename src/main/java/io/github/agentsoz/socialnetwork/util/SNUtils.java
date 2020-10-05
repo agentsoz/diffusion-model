@@ -31,12 +31,12 @@ public class SNUtils {
 		simTime = simTime +stepsize;
 	}
 
-	public static boolean isDiffTurn(long simTime) {
-		boolean result;
-		result = (simTime % SNConfig.getDiffturn() == 0) || simTime == 1.0; // simtime ==1 is needed to start reasoning in the BDI side when seed is set.
-		logger.trace("isDiffTurn? {} {}",simTime, SNConfig.getDiffturn());
-		return result;
-	}
+//	public static boolean isDiffTurn(long simTime) {
+//		boolean result;
+//		result = (simTime % SNConfig.getDiffturn() == 0) || simTime == 1.0; // simtime ==1 is needed to start reasoning in the BDI side when seed is set.
+//		logger.trace("isDiffTurn? {} {}",simTime, SNConfig.getDiffturn());
+//		return result;
+//	}
 
 	public static long getSimTime() { 
 		return simTime;
@@ -146,6 +146,7 @@ public class SNUtils {
 		}
 
 	}
+//	#FIXME diffusion turn hardcoded to IC model diffusion turn
     // reads timing of blocked percepts of the format (time,id), and store the agent ids to activate for diffusion step
     public static void readAndStoreDynamicSeed(HashMap<Integer,ArrayList<String>> seedMap) {
         int idCount=0; // restricts the number of agent ids extracted from the .txt file
@@ -178,8 +179,9 @@ public class SNUtils {
 
             }
 
-            // initialise seedMap
-            int time = SNConfig.getDiffturn(); // define a time interval start values
+            // initialise seedMap, define a time interval start values
+            int time = SNConfig.getDiffTurn_ic(); //#FIXME set to ic model config, make this generic, to set based on passed model arg
+
 
 
             while(time <= SNUtils.getEndSimTime() ) {  // initialise dynamic seed map
@@ -187,7 +189,7 @@ public class SNUtils {
                     ArrayList<String> idList = new ArrayList<String>();
                     seedMap.put(time,idList);
 
-                    time =  time + SNConfig.getDiffturn(); // increment the step
+                    time =  time + SNConfig.getDiffTurn_ic(); // increment the step
 
 
             }
@@ -201,7 +203,7 @@ public class SNUtils {
             	int pTime = (int) entry.getValue();
 
                 // re-initialising intervals
-                int maxTime = SNConfig.getDiffturn(); // define a time interval to extract percept ids. Max start from diffusion step and min start from 0.
+                int maxTime = SNConfig.getDiffTurn_ic(); // define a time interval to extract percept ids. Max start from diffusion step and min start from 0.
                 int minTime = 0;
 
                 while(maxTime<= SNUtils.getEndSimTime()) {
@@ -213,8 +215,8 @@ public class SNUtils {
                     }
 
                     // step time interval
-                    maxTime = maxTime + SNConfig.getDiffturn();
-                    minTime = minTime + SNConfig.getDiffturn();
+                    maxTime = maxTime + SNConfig.getDiffTurn_ic();
+                    minTime = minTime + SNConfig.getDiffTurn_ic();
 
                     // value is not within maximum range
 //					if(maxTime == SNUtils.getEndSimTime()){

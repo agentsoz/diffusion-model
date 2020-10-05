@@ -5,7 +5,6 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 /*
     IC Model should handle  and pass back String array of agent ids
@@ -54,7 +53,7 @@ public class ICModel extends DiffModel{
     public void initRandomSeed(String newContent) {
 
         registerContentIfNotRegistered(newContent,DataTypes.LOCAL);
-        selectRandomSeed(SNConfig.getSeed(), newContent);
+        selectRandomSeed(SNConfig.getSeed_ic(), newContent);
     }
 
     public void registerContentIfNotRegistered(String newContent, String type){
@@ -80,8 +79,8 @@ public class ICModel extends DiffModel{
     }
 
     public void initSeedBasedOnStrategy(String content) {
-        if (SNConfig.getStrategy().equals(DataTypes.RANDOM)) {
-            selectRandomSeed(SNConfig.getSeed(), content);
+        if (SNConfig.getStrategy_ic().equals(DataTypes.RANDOM)) {
+            selectRandomSeed(SNConfig.getSeed_ic(), content);
         }
 
     }
@@ -239,7 +238,7 @@ public class ICModel extends DiffModel{
     }
 
     public double getRandomDiffProbability() {
-        return Utils.getRandomGaussionWithinThreeSD(SNConfig.getStandardDeviation(),getMeanDiffProbability());
+        return Utils.getRandomGaussionWithinThreeSD(SNConfig.getStandardDeviation_ic(),getMeanDiffProbability());
     }
 
     public void addExposureAttempt(int nodeID, int neighbourID, String content) {

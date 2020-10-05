@@ -27,7 +27,27 @@ public class TestLTModel {
 	final Logger logger = LoggerFactory.getLogger("");
 	LTModel ltModel;
 
-	
+
+	public static String testConfigFile = "case_studies/hawkesbury/test_LTModel.xml";
+
+
+	@Test
+	//   @Ignore
+	public void testConfigs(){
+		SocialNetworkManager testSN = new SocialNetworkManager(testConfigFile);
+		testSN.setupSNConfigsAndLogs();
+		testSN.printSNModelconfigs();
+
+		assertEquals(13.0, SNConfig.getSeed_lt(),0);
+		assertEquals(3000,SNConfig.getDiffTurn_lt(),0);
+		assertEquals("custom",SNConfig.getStrategy_lt());
+		assertEquals("guassian",SNConfig.getDiffusionThresholdType_lt());
+//		assertEquals(0.16,SNConfig.getDiffusionProbability_ic(),0);
+		assertEquals(0.089,SNConfig.getStandardDeviation_lt(),0);
+		assertEquals(0.691,SNConfig.getMeanLowPanicThreshold_lt(),0.0);
+
+	}
+
 	@Before
 	public void setUpRandomAgentMap()
 	{
@@ -47,7 +67,7 @@ public class TestLTModel {
 		
 	//	SNUtils.setMainConfigFile();
 		sn_manager.setupSNConfigsAndLogs();
-		sn_manager.generateDiffModel(); // initialise is already run here
+		sn_manager.generateDiffModels(); // initialise is already run here
 
 		
 		sn_manager.getDiffModel().printConfigParams();
@@ -77,7 +97,7 @@ public class TestLTModel {
 		
 		// set conifgs
 	//	SNUtils.setMainConfigFile();
-		SNConfig.setDiffusionThresholdType("random");
+		SNConfig.setDiffusionThresholdType_lt("random");
 		
 		ltModel.initialise(); // no diffusion seed, so initActiveAgents do not run
         sn_manager.getAgentMap().get(0).setIsSeedTrue();
@@ -121,7 +141,7 @@ public class TestLTModel {
 	public void testConfigsFromFile() { 
 		//SNUtils.setMainConfigFile();
 		sn_manager.setupSNConfigsAndLogs();
-		sn_manager.generateDiffModel();
+		sn_manager.generateDiffModels();
 		sn_manager.getDiffModel().initialise();
 		sn_manager.getDiffModel().printConfigParams();
 	}

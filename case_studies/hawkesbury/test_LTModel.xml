@@ -5,12 +5,12 @@
 <!-- specify the network strucuture: random= random ER MODEL), sw=small world model, rand-reg=random-regular model -->
 	<!-- spcify the logfile path and log level (i=info, d=debug, t=trace) -->
 <snModel
-	diffusionModels="ic"
+	diffusionModels="lt"
 	networkType="rand-reg"
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 	log_file="./test/output/diffusion.log"
-	log_level="d"
-	out_file="./test/output/diffusion-dynamic-seed.out"
+	log_level="i"
+	out_file="./test/output/diffusion.out"
 	dynamic_seed_file="./test_data/blocked-percept-seed.csv"
 />
 
@@ -39,39 +39,34 @@
 <!-- diffusion model configurations-->
     <!--IC diffusion model-->
     <!-- step_size: step size of the diffusion process (mins)-->
-	<!--seeding_strategy: seeding strategy that defines the selection of initial set of agents that is active: random, dynamic -->
+	<!--seeding_strategy: seeding strategy that defines the selection of initial set of agents that is active: random, none -->
     <!--seed = percentage of initially active agents (%)-->
     <!--diffusion_probaility: mean diffusion probability that is varied using a standard deviation (sigma) to randomly draw probabilities from a gaussian distribution-->
 <ic>
-    <step_size>100</step_size>
-	<seeding_strategy seed="0">dynamic</seeding_strategy>
-    <diffusion_probability sigma="0.0">0.0</diffusion_probability>
+    <step_size>600</step_size>
+	<seeding_strategy seed="53">random</seeding_strategy>
+    <diffusion_probability sigma="0.05">0.16</diffusion_probability>
 </ic>
 
 
 
 	<!-- stratgey = random or nearfire or prob-->
 	<!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->
-	<!-- 1st config set: common to all diffusion models, 2nd set: specific for LT diffusion model, 3rd set: specific for CLT diffusion model-->
+	<!-- 1st set: specific for LT diffusion model, 2nd set:specific for CLT diffusion model(panic/wait seed and T)-->
 
 <lt
-
-
-	diff_turn="60"
-	standard_deviation="0.025"
-	strategy="random"
+	diff_turn="50"
+	standard_deviation="0.089"
+	strategy="custom"
 	thresholdType="guassian"
-
-	diff_seed="5"
-	mean_act_threshold="0.3"
+	diff_seed="13"
+	mean_act_threshold="0.691"
 	mean_high_threshold="0.7"
 
 	panicSeed="10"
 	waitSeed="30"
 	waitT="0.5"
 	panicT="0.5"
-
-
 />
 
 </diffusion>

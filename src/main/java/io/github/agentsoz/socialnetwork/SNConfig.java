@@ -4,6 +4,8 @@ package io.github.agentsoz.socialnetwork;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -15,8 +17,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import io.github.agentsoz.socialnetwork.util.DataTypes;
-import io.github.agentsoz.socialnetwork.util.Global;
-
 
 
 public class SNConfig {
@@ -40,7 +40,7 @@ public class SNConfig {
 
 	//sn model
 	private static String networkType = " " ;
-	private static String diffusionType = " " ;
+	private static ArrayList<String> diffusionModels;
 	
 	//random network
 	private static boolean randNetNormalise = false ;
@@ -58,13 +58,13 @@ public class SNConfig {
 	private static String agentCoordFile; // agent cooordinate file
 	
 	//ltmodel
-	private static double seed = 0 ;
-	private static int diffTurn = 0 ; // check designs for a detailed design
-	private static String strategy = " " ;
-	private static double meanLowPanicThreshold = 0.0 ; // activation threshold
+	private static double seed_lt = 0 ;
+	private static int diffTurn_lt = 0 ; // check designs for a detailed design
+	private static String strategy_lt = " " ;
+	private static double meanLowPanicThreshold_lt = 0.0 ; // activation threshold
 	private static double meanHighPanicThreshold = 0.0 ;
-	private static String diffThresholdType = " " ;
-	private static double standardDev = 0.0 ;
+	private static String diffThresholdType_lt = " " ;
+	private static double standardDev_lt = 0.0 ;
 
 	//CLTmodel
 	private static double waitSeed = 0 ;
@@ -72,11 +72,18 @@ public class SNConfig {
 	private static double waitThreshold = 0.0 ;
 	private static double panicThreshold = 0.0 ;
 
+
 	//ICModel
-    private static double diffProb;
+    private static double diffusionProbability_ic = 0.0;
+	private static int diffTurn_ic = 0;
+	private static String strategy_ic = " " ;
+	private static double seed_ic=0;
+	private static double standardDev_ic = 0.0;
 
 	// TestSNBDIModels
 	private static double perSeed = 15 ;
+
+
 
 	public static String getNetworkLinksDir() {
 
@@ -107,12 +114,12 @@ public class SNConfig {
 		 networkType = type;
 	}
 	
-	public static void setDiffusionType(String difmodel) {
-		 diffusionType=difmodel;
+	public static void addToDiffusionModelsList(String difmodel) {
+		 diffusionModels.add(difmodel);
 	}
 	
-	public static String getDiffusionType() {
-		return diffusionType;
+	public static ArrayList<String> getDiffusionModelsList() {
+		return diffusionModels;
 	}
 
 	//logs
@@ -141,7 +148,7 @@ public class SNConfig {
         return outFile;
     }
 
-    //dynamic seed file
+    //dynamic seed_lt file
     public static void setDynamicSeedFile(String filePath) {
         dynamicSeedFile=filePath;
     }
@@ -230,28 +237,28 @@ public class SNConfig {
 	
 	
 	// LT MODEL
-	public static double getSeed() {
-		return seed;
+	public static double getSeed_lt() {
+		return seed_lt;
 	}
 	
-	public static void setSeed(double sd) {
-		 seed=sd;
+	public static void setSeed_lt(double sd) {
+		 seed_lt =sd;
 	}
 	
-	public static void setDiffturn(int tn) {
-		 diffTurn=tn * 60; // converting to seconds
+	public static void setDiffTurn_lt(int tn) {
+		 diffTurn_lt =tn * 60; // converting to seconds
 	}
 	
-	public static int getDiffturn() {
-		return diffTurn;
+	public static int getDiffTurn_lt() {
+		return diffTurn_lt;
 	}
 
-	public static double getMeanLowPanicThreshold() {
-		return meanLowPanicThreshold;
+	public static double getMeanLowPanicThreshold_lt() {
+		return meanLowPanicThreshold_lt;
 	}
 	
-	public static void setMeanLowPanicThreshold(double lowT) {
-		 meanLowPanicThreshold = lowT;
+	public static void setMeanLowPanicThreshold_lt(double lowT) {
+		 meanLowPanicThreshold_lt = lowT;
 	}
 
 	
@@ -263,24 +270,24 @@ public class SNConfig {
 		 meanHighPanicThreshold = highT;
 	}
 	
-	public static void setDiffusionThresholdType(String type) {
-		 diffThresholdType=type;
+	public static void setDiffusionThresholdType_lt(String type) {
+		 diffThresholdType_lt =type;
 	}
 	
-	public static String getDiffusionThresholdType() {
-		return diffThresholdType;
+	public static String getDiffusionThresholdType_lt() {
+		return diffThresholdType_lt;
 	}
 
-	public static double getStandardDeviation() {
-		return standardDev;
+	public static double getStandardDeviation_lt() {
+		return standardDev_lt;
 	}
 	
-	public static void setStrategy(String stra) {
-		strategy = stra ; 
+	public static void setStrategy_lt(String stra) {
+		strategy_lt = stra ;
 	}
 	
-	public static String getStrategy() {
-		return strategy;
+	public static String getStrategy_lt() {
+		return strategy_lt;
 	}
 	
 	//CLT model specifics
@@ -297,14 +304,30 @@ public class SNConfig {
 		return panicThreshold;
 	}
 
-	//IC model
-    public static void setDiffProbability(double prob) {
-	    diffProb = prob;
-    }
+	//IC model getters and setters
 
-    public static double getDiffProbability(){
-	    return diffProb;
-    }
+	public static double getDiffusionProbability_ic() {
+		return diffusionProbability_ic;
+	}
+	public static int getDiffTurn_ic() {
+		return diffTurn_ic;
+	}
+	public static String getStrategy_ic() {
+		return strategy_ic;
+	}
+	public static double getSeed_ic() {
+		return seed_ic;
+	}
+	public static double getStandardDeviation_ic() {
+		return standardDev_ic;
+	}
+	public static void setDiffturn_ic(int i) {
+		diffTurn_ic = i * 60;
+	}
+
+	public static void setSeed_ic(int i) {
+		seed_ic = i ;
+	}
 
 	//TestSNBDIModels
 	public static double getPerceptSeed() {
@@ -340,8 +363,9 @@ public class SNConfig {
 						String ntype = node.getAttributes().getNamedItem("networkType").getNodeValue();
 						networkType  = ntype;
 						
-						String dtype = node.getAttributes().getNamedItem("diffusionType").getNodeValue();
-						diffusionType  = dtype;
+						String difModels = node.getAttributes().getNamedItem("diffusionModels").getNodeValue();
+						//comma seperated string, split and initialise diffusionModels arraylist
+						diffusionModels = new ArrayList(Arrays.asList(difModels.split(","))) ;
 
 						String cordFile =  node.getAttributes().getNamedItem("coord_file").getNodeValue();
 						setAgentCoordFile(cordFile);
@@ -422,25 +446,25 @@ public class SNConfig {
 						}
 						
 					}
-					if (nodeName.equals("ic") && getDiffusionType().equals(DataTypes.icModel)) {
+					if (nodeName.equals("ic") && getDiffusionModelsList().contains(DataTypes.icModel)) {
 						try {
 
 							Element eElement = (Element) node;
 
 							String turn = eElement.getElementsByTagName("step_size").item(0).getTextContent();
-							diffTurn = Integer.parseInt(turn) * 60;
+							diffTurn_ic = Integer.parseInt(turn) * 60;
 
-							strategy = eElement.getElementsByTagName("seeding_strategy").item(0).getTextContent();
+							strategy_ic = eElement.getElementsByTagName("seeding_strategy").item(0).getTextContent();
 
 							String dseed = eElement.getElementsByTagName("seeding_strategy").item(0).getAttributes().getNamedItem("seed").getNodeValue();
-							seed = Double.parseDouble(dseed);
+							seed_ic = Double.parseDouble(dseed);
 
 
                             String prob = eElement.getElementsByTagName("diffusion_probability").item(0).getTextContent();
-                            diffProb  = Double.parseDouble(prob);
+                            diffusionProbability_ic = Double.parseDouble(prob);
 
                             String sd = eElement.getElementsByTagName("diffusion_probability").item(0).getAttributes().getNamedItem("sigma").getNodeValue();
-                            standardDev  = Double.parseDouble(sd);
+                            standardDev_ic  = Double.parseDouble(sd);
 
 						}
 						catch (Exception e) {
@@ -448,30 +472,31 @@ public class SNConfig {
 						}
 						return true;
 					}
-							if (nodeName.equals("diffModel")) {
+							if (nodeName.equals("lt") && getDiffusionModelsList().contains(DataTypes.ltModel)) {
 						try {
 
 						String dseed = node.getAttributes().getNamedItem("diff_seed").getNodeValue();
-						seed  = Double.parseDouble(dseed);
+						seed_lt = Double.parseDouble(dseed);
 						
 						String turn = node.getAttributes().getNamedItem("diff_turn").getNodeValue();
-						diffTurn  = Integer.parseInt(turn) * 60;
+						diffTurn_lt = Integer.parseInt(turn) * 60;
 
-						strategy = node.getAttributes().getNamedItem("strategy").getNodeValue();
+						strategy_lt = node.getAttributes().getNamedItem("strategy").getNodeValue();
 						
 						String meanLow = node.getAttributes().getNamedItem("mean_act_threshold").getNodeValue();
-						meanLowPanicThreshold  = Double.parseDouble(meanLow);
+						meanLowPanicThreshold_lt = Double.parseDouble(meanLow);
 						
 						//String meanHigh = node.getAttributes().getNamedItem("mean_high_threshold").getNodeValue();
 						//meanHighPanicThreshold  = Double.parseDouble(meanHigh);
-						meanHighPanicThreshold = meanLowPanicThreshold * 2;
+						meanHighPanicThreshold = meanLowPanicThreshold_lt * 2;
 						
 						String type = node.getAttributes().getNamedItem("thresholdType").getNodeValue();
-						diffThresholdType  = type;
+						diffThresholdType_lt = type;
 						
 						String sd = node.getAttributes().getNamedItem("standard_deviation").getNodeValue();
-						standardDev  = Double.parseDouble(sd);
+						standardDev_lt = Double.parseDouble(sd);
 
+						// CLT model parameters
 						String ps = node.getAttributes().getNamedItem("panicSeed").getNodeValue();
 						panicSeed =  Double.parseDouble(ps);
 
@@ -503,9 +528,9 @@ public class SNConfig {
 	
 	public static  void printNetworkConfigs() {
 		
-		logger.info("sn model: network {} | diffusion model {}", getNetworkType(), getDiffusionType());
+		logger.info("sn model: network {} | diffusion model {}", getNetworkType(), getDiffusionModelsList());
 		logger.info("LogFile: path {} | level {}", getLogFilePath(), getLogLevel());
-        logger.info("Dyanmic seed file: path {} ", getDynamicSeedFile());
+        logger.info("Dyanmic seed_lt file: path {} ", getDynamicSeedFile());
 
 		if(networkType.equals(DataTypes.RANDOM)) {
 			logger.info(" RANDOM network configs:");
@@ -531,38 +556,44 @@ public class SNConfig {
 	
 	
 	public static void printDiffusionConfigs() {
-		if(diffusionType.equals(DataTypes.ltModel)) {
-			logger.info(" LT MODEL configs:");
-			logger.info("diffusion seed = {}", getSeed());
-			logger.info("diffusion turn = {}", getDiffturn());
-			logger.info("diffusion strategy = {}", getStrategy());
-			logger.info("mean Low Panic Threshold = {}", getMeanLowPanicThreshold());
-			logger.info("mean High Panic Threshold = {}", getMeanHighPanicThreshold());
-			logger.info(" diffusion threshold generation type = {}", getDiffusionThresholdType());
-			logger.info("standard deviation = {}", getStandardDeviation());
-			logger.info("percept seed = {}", getPerceptSeed());
-			
+
+		for (String model: diffusionModels) {
+
+			if (model.equals(DataTypes.ltModel)) {
+				logger.info(" LT MODEL configs:");
+				logger.info("diffusion seed = {}", getSeed_lt());
+				logger.info("diffusion turn = {}", getDiffTurn_lt());
+				logger.info("diffusion strategy = {}", getStrategy_lt());
+				logger.info("mean Low Panic Threshold = {}", getMeanLowPanicThreshold_lt());
+				logger.info("mean High Panic Threshold = {}", getMeanHighPanicThreshold());
+				logger.info(" diffusion threshold generation type = {}", getDiffusionThresholdType_lt());
+				logger.info("standard deviation = {}", getStandardDeviation_lt());
+				logger.info("percept seed  = {}", getPerceptSeed());
+
+			}
+			if (model.equals(DataTypes.CLTModel)) {
+				logger.info("diffusion turn = {}", getDiffTurn_lt());
+				logger.info("diffusion strategy_lt = {}", getStrategy_lt());
+				logger.info(" diffusion threshold generation type = {}", getDiffusionThresholdType_lt());
+				logger.info("standard deviation = {}", getStandardDeviation_lt());
+				logger.info("wait seed = {}", getWaitSeed());
+				logger.info("panic seed = {}", getPanicSeed());
+				logger.info("wait threshold = {}", getWaitThreshold());
+				logger.info("panic threshold = {}", getPanicThreshold());
+			}
+			if (model.equals(DataTypes.icModel)) {
+				logger.info(" IC MODEL configs:");
+				logger.info("diffusion seed = {}", getSeed_ic());
+				logger.info("diffusion turn = {}", getDiffTurn_ic());
+				logger.info("diffusion strategy = {}", getStrategy_ic());
+				logger.info("diffusion probability = {}", getDiffusionProbability_ic());
+				logger.info("standard deviation = {}", getStandardDeviation_ic());
+			}
+
 		}
-		if (diffusionType.equals(DataTypes.CLTModel)) {
-			logger.info("diffusion turn = {}", getDiffturn());
-			logger.info("diffusion strategy = {}", getStrategy());
-			logger.info(" diffusion threshold generation type = {}", getDiffusionThresholdType());
-			logger.info("standard deviation = {}", getStandardDeviation());
-			logger.info("wait seed = {}", getWaitSeed());
-			logger.info("panic seed = {}", getPanicSeed());
-			logger.info("wait threshold = {}", getWaitThreshold());
-			logger.info("panic threshold = {}", getPanicThreshold());
-		}
-		if(diffusionType.equals(DataTypes.icModel)){
-            logger.info(" IC MODEL configs:");
-            logger.info("diffusion seed = {}", getSeed());
-            logger.info("diffusion turn = {}", getDiffturn());
-            logger.info("diffusion strategy = {}", getStrategy());
-            logger.info("diffusion probability = {}", getDiffProbability());
-            logger.info("standard deviation = {}", getStandardDeviation());
-        }
 
 	}
-	
-	
+
+
+
 }

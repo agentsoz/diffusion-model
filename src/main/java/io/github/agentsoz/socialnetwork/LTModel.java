@@ -12,7 +12,6 @@ import io.github.agentsoz.socialnetwork.datacollection.LTModelDataCollector;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
-import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 /*
  *  
@@ -119,14 +118,14 @@ public class LTModel extends DiffModel{
 	// each of these methods should store selected agents panic levels to the seedmap, as well separatel update their
 	// panic levels and states (which matters for the BDI behaviour)
 	public void initSeedBasedOnStrategy() { 
-		if(SNConfig.getStrategy().equals(DataTypes.RANDOM)) {
+		if(SNConfig.getStrategy_lt().equals(DataTypes.RANDOM)) {
 			initRandomSeed();
 		}
 		
-		else if(SNConfig.getStrategy().equals(DataTypes.NEAR_FIRE)) {
+		else if(SNConfig.getStrategy_lt().equals(DataTypes.NEAR_FIRE)) {
 			initNearFireSeed();
 		}
-		else if(SNConfig.getStrategy().equals(DataTypes.PROBILITY)){
+		else if(SNConfig.getStrategy_lt().equals(DataTypes.PROBILITY)){
 			initProbabilisiticSeed();
 		}
 		else
@@ -174,14 +173,14 @@ public class LTModel extends DiffModel{
 //		return result;
 //	}
 	public void setupDiffConfigs() { 
-		threholdType = SNConfig.getDiffusionThresholdType();
+		threholdType = SNConfig.getDiffusionThresholdType_lt();
 		if(threholdType.equals(DataTypes.GAUSSIAN)) {
-			meanLowThreshold = SNConfig.getMeanLowPanicThreshold();
+			meanLowThreshold = SNConfig.getMeanLowPanicThreshold_lt();
 			meanHighThreshold = SNConfig.getMeanHighPanicThreshold();
-			standardDev = SNConfig.getStandardDeviation();
+			standardDev = SNConfig.getStandardDeviation_lt();
 		}
 		
-		logger.trace("diffusion configs assigned to LTModel..");
+		logger.debug("custom configs assigned to LTModel..");
 	}
 	
 	@Override
@@ -503,10 +502,10 @@ public class LTModel extends DiffModel{
 			int id = (int) entry.getKey();
 			double[] arr = (double[]) entry.getValue();
 			
-			if (SNConfig.getDiffusionType().equals(DataTypes.ltModel)) {
+			if (SNConfig.getDiffusionModelsList().equals(DataTypes.ltModel)) {
 				logger.debug("id  {}: actT {} highT {}", id, arr[0], arr[1]);
 			}
-			else if(SNConfig.getDiffusionType().equals(DataTypes.CLTModel)) {
+			else if(SNConfig.getDiffusionModelsList().equals(DataTypes.CLTModel)) {
 				logger.debug("id  {}: waitT {} panicT {}", id, arr[0], arr[1]);
 			}
 		}

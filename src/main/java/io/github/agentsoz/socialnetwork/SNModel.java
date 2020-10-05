@@ -81,7 +81,7 @@ public class SNModel implements DataSource, DataClient {
 
       //  if (snManager.processDiffusion((long) dataServer.getTime())) {
             this.snManager.diffuseContent();
-            if (SNConfig.getDiffusionType().equals(DataTypes.icModel)) {
+            if (SNConfig.getDiffusionModelsList().equals(DataTypes.icModel)) {
                 ICModel icModel = (ICModel) getSNManager().getDiffModel();
                 HashMap<String, ArrayList<String>> latestUpdate = icModel.getLatestDiffusionUpdates();
 

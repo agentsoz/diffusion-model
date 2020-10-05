@@ -40,7 +40,7 @@ public class TestSNModel {
         // run the diffusion process
         SNUtils.setEndSimTime(36000*8L);
         snModel.getDataServer().setTime(0.0);
-        snModel.getDataServer().setTimeStep(SNConfig.getDiffturn());
+        snModel.getDataServer().setTimeStep(SNConfig.getDiffTurn_ic()); // #FIXME hardcoded to ic model turn?
         while (snModel.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
 
             snModel.getSNManager().diffuseContent();

@@ -1,9 +1,7 @@
 package io.github.agentsoz.socialnetwork;
 
-import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Log;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.github.agentsoz.socialnetwork.util.Global;
 import java.util.HashMap;
 
@@ -32,11 +30,11 @@ public class SocialNetworkManager{
     {
     	int agentID = Integer.parseInt(id);
 
-//		if(SNConfig.getDiffusionType().equals(DataTypes.ltModel)) {
+//		if(SNConfig.getDiffusionModelsList().equals(DataTypes.ltModel)) {
 			this.agentList.put(agentID, new SocialAgent(agentID)); // LT Model constructor.
 			logger.trace(" social agent {} initialized ", id);
 //		}
-//		else if(SNConfig.getDiffusionType().equals(DataTypes.CLTModel)) {
+//		else if(SNConfig.getDiffusionModelsList().equals(DataTypes.CLTModel)) {
 //			this.agentList.put(agentID, new SocialAgent(agentID, DataTypes.MEDIUM)); // CLT Model constructor.
 //		}
     	 
@@ -75,7 +73,7 @@ public class SocialNetworkManager{
 		logger.error("Error in generating network model");
 		return false;
 	}
-	else if(!generateDiffModel()){
+	else if(!generateDiffModels()){
 		logger.error("Error in generating diffusion model");
 		return false;
 	}
@@ -155,22 +153,26 @@ public class SocialNetworkManager{
 
     }
 
-    public boolean generateDiffModel()
+    public boolean generateDiffModels()
     {
     	
     	DiffModelFactory diffFactory =  new DiffModelFactory();
-    	diffModel = diffFactory.getDiffusionModel(SNConfig.getDiffusionType(), this);
-    	if(diffModel == null) {
-        	logger.error("diffusion model generation failed, null diffusion model found");
-        	return false;
-    	}
-    	else {
-    		// now initialise the model
-    		diffModel.initialise(); 
-            logger.info(" {} diffusion model generated", SNConfig.getDiffusionType());
-            return true;
-    	}
+    	for(String modelName:SNConfig.getDiffusionModelsList()){
 
+			diffModel = diffFactory.getDiffusionModel(modelName, this);
+			if(diffModel == null) {
+				logger.error("diffusion model generation failed, null diffusion model found");
+				return false;
+			}
+			else {
+				// now initialise the model
+				diffModel.initialise();
+				logger.info(" generated diffusion models: {} ", SNConfig.getDiffusionModelsList().toString());
+
+			}
+
+		}
+		return true;
 
     }
     

@@ -2,8 +2,6 @@ package io.github.agentsoz.socialnetwork;
 
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 
-import javax.xml.crypto.Data;
-
 public class DiffModelFactory {
 
 	
@@ -12,14 +10,14 @@ public class DiffModelFactory {
 		         return null;
 		      }		
 		      else if(diffType.equals(DataTypes.ltModel)){
-		          return new LTModel(SNConfig.getSeed(), SNConfig.getDiffturn(),snMan);
+		          return new LTModel(SNConfig.getSeed_lt(), SNConfig.getDiffTurn_lt(),snMan);
 		         
 		      }
 		      else if(diffType.equals(DataTypes.CLTModel)){
-		      	return new CLTModel(SNConfig.getWaitSeed(),SNConfig.getPanicSeed(),SNConfig.getDiffturn(),snMan);
+		      	return new CLTModel(SNConfig.getWaitSeed(),SNConfig.getPanicSeed(),SNConfig.getDiffTurn_lt(),snMan);
 			  }
 			  else if(diffType.equals(DataTypes.icModel)) {
-		      	return new ICModel(snMan,SNConfig.getDiffturn(),SNConfig.getDiffProbability());
+		      	return new ICModel(snMan,SNConfig.getDiffTurn_ic(),SNConfig.getDiffusionProbability_ic());
 			  }
 		      
 		      return null;
