@@ -10,6 +10,7 @@
 	log_file="./diffusion.log"
 	log_level="d"
 	out_file="./test/output/diffusion.out"
+	dynamic_seed_file="./test_data/blocked-percept-seed.csv"
 />
 
 <!-- network types-->
