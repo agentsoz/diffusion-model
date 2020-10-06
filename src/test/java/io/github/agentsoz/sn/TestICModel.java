@@ -42,7 +42,7 @@ public class TestICModel {
         SNUtils.randomAgentMap(sn,80,1000);
 
         sn.genNetworkAndDiffModels();
-        ICModel testIC = (ICModel) sn.getDiffModel();
+        ICModel testIC = (ICModel) sn.getDiffModels()[0];
 
         //test IC model configs
         testIC.registerContentIfNotRegistered("testContentX",DataTypes.LOCAL);
@@ -90,7 +90,7 @@ public class TestICModel {
 
         sn.genNetworkAndDiffModels();
 
-        ICModel icModel = (ICModel) sn.getDiffModel();
+        ICModel icModel = (ICModel) sn.getDiffModels()[0];
 
         for(int i = 0;i < 1000; i++) {
             double prob = icModel.getRandomDiffProbability();
@@ -109,7 +109,7 @@ public class TestICModel {
         SNUtils.randomAgentMap(sn, 100, 1000);
         sn.genNetworkAndDiffModels();
 
-        ICModel icModel = (ICModel) sn.getDiffModel();
+        ICModel icModel = (ICModel) sn.getDiffModels()[0];
         icModel.registerContentIfNotRegistered("contentA",DataTypes.LOCAL);
         icModel.initSeedBasedOnStrategy("contentA");
         icModel.icDiffusion();
@@ -134,7 +134,7 @@ public class TestICModel {
         sn.initSNModel();
         SNConfig.setDiffturn_ic(60);
         SNConfig.setSeed_ic(15);
-        ICModel ic = (ICModel) sn.getSNManager().getDiffModel();
+        ICModel ic = (ICModel) sn.getSNManager().getDiffModels()[0];
         ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
         ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
 
@@ -147,7 +147,7 @@ public class TestICModel {
 
         while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
            // sn.stepDiffusionProcess();
-            sn.getSNManager().diffuseContent();
+            sn.getSNManager().getDiffModels()[0].doDiffProcess(); //diffuseContent();
             sn.getDataServer().stepTime();
             ic.recordCurrentStepSpread(sn.getDataServer().getTime());
         }
@@ -177,7 +177,7 @@ public class TestICModel {
         sn.initSNModel();
         SNConfig.setDiffturn_ic(60);
         SNConfig.setSeed_ic(15);
-        ICModel ic = (ICModel) sn.getSNManager().getDiffModel();
+        ICModel ic = (ICModel) sn.getSNManager().getDiffModels()[0];
 
         ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
         ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
@@ -205,7 +205,7 @@ public class TestICModel {
                 ic.updateSocialStatesFromGlobalContent(globalcontents);
             }
 
-            sn.getSNManager().diffuseContent();
+            sn.getSNManager().getDiffModels()[0].doDiffProcess(); //diffuseContent();
             sn.getDataServer().stepTime();
             ic.recordCurrentStepSpread(sn.getDataServer().getTime());
         }

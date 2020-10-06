@@ -67,12 +67,12 @@ public class TestLTModel {
 		
 	//	SNUtils.setMainConfigFile();
 		sn_manager.setupSNConfigsAndLogs();
-		sn_manager.generateDiffModels(); // initialise is already run here
+		sn_manager.generateDiffusionModels(); // initialise is already run here
 
 		
-		sn_manager.getDiffModel().printConfigParams();
-		sn_manager.getDiffModel().printthresholdMap();
-		sn_manager.getDiffModel().printPanicValues();
+		sn_manager.getDiffModels()[0].printConfigParams();
+		sn_manager.getDiffModels()[0].printthresholdMap();
+		sn_manager.getDiffModels()[0].printPanicValues();
 
 	}
 	
@@ -141,9 +141,9 @@ public class TestLTModel {
 	public void testConfigsFromFile() { 
 		//SNUtils.setMainConfigFile();
 		sn_manager.setupSNConfigsAndLogs();
-		sn_manager.generateDiffModels();
-		sn_manager.getDiffModel().initialise();
-		sn_manager.getDiffModel().printConfigParams();
+		sn_manager.generateDiffusionModels();
+		sn_manager.getDiffModels()[0].initialise();
+		sn_manager.getDiffModels()[0].printConfigParams();
 	}
 
 	

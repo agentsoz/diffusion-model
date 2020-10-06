@@ -43,6 +43,9 @@ public abstract class DiffModel {
    }
     public void postDiffProcess(long time) {}
 
+    public void finish(){
+
+    }
 
 	
 }

@@ -18,7 +18,7 @@ public class SocialNetworkManager{
 	public HashMap<Integer, SocialAgent> agentList = new HashMap<Integer, SocialAgent>();
 
     private Network network;
-    private DiffModel diffModel;
+    private DiffModel[] diffModels;
 	private String mainConfigFile;
 
 
@@ -73,7 +73,7 @@ public class SocialNetworkManager{
 		logger.error("Error in generating network model");
 		return false;
 	}
-	else if(!generateDiffModels()){
+	else if(!generateDiffusionModels()){
 		logger.error("Error in generating diffusion model");
 		return false;
 	}
@@ -153,21 +153,27 @@ public class SocialNetworkManager{
 
     }
 
-    public boolean generateDiffModels()
+    public boolean generateDiffusionModels()
     {
-    	
-    	DiffModelFactory diffFactory =  new DiffModelFactory();
+
+    	this.diffModels =  new DiffModel[SNConfig.getDiffusionModelsList().size()];
+
+    	//DiffModelFactory diffFactory =  new DiffModelFactory();
+		int i=0;
+
     	for(String modelName:SNConfig.getDiffusionModelsList()){
 
-			diffModel = diffFactory.getDiffusionModel(modelName, this);
-			if(diffModel == null) {
+			DiffModel model = DiffModelFactory.getDiffusionModel(modelName, this);
+			if(model == null) {
 				logger.error("diffusion model generation failed, null diffusion model found");
 				return false;
 			}
 			else {
 				// now initialise the model
-				diffModel.initialise();
-				logger.info(" generated diffusion models: {} ", modelName);
+				model.initialise();
+				diffModels[i] = model;
+				i++;
+				logger.info(" generated diffusion model: {} ", modelName);
 
 			}
 
@@ -186,21 +192,21 @@ public class SocialNetworkManager{
      *
      * This method includes the constraint of stepsize check before the diffusion model steps. diffuse() method does not have any restrictions
      */
-    public boolean processDiffusion(long time)
-    {
-    	logger.trace("processDiffusion method...");
-    	 if(diffModel.equals(null)) {
-    		 logger.error("Diffusion model not set, aborting");
-    		 return false;
-    	 }
-
-    	else if(diffModel.isDiffTurn(time)) {
-    		logger.debug("SNManger started executing diffusion process at {}..",time);
-//        	diffModel.preDiffProcess(); // e.g. external diffusion
-        	diffModel.doDiffProcess();
-        	diffModel.postDiffProcess(time); // e.g. data collection , send data to BDI side
-
-        	
+//    public boolean processDiffusion(long time)
+//    {
+//    	logger.trace("processDiffusion method...");
+//    	 if(diffModels.equals(null)) {
+//    		 logger.error("Diffusion model not set, aborting");
+//    		 return false;
+//    	 }
+//
+//    	else if(diffModels.isDiffTurn(time)) {
+//    		logger.debug("SNManger started executing diffusion process at {}..",time);
+//        	diffModels.preDiffProcess(); // e.g. external diffusion
+//        	diffModels.doDiffProcess();
+//        	diffModels.postDiffProcess(time); // e.g. data collection , send data to BDI side
+//
+//
         	//SN_BDI execution
 //        	if(this.execType.equals(DataTypes.SN_BDI)) {
 //
@@ -209,36 +215,36 @@ public class SocialNetworkManager{
 //        		publishSNDataUpdate(); // pass the adc to this method
 //
 //        	}
+//
+//        	return true;
+//    	}
+//    	else{
+//    	 	return false;
+//		 }
+//
+//	}
 
-        	return true;
-    	}
-    	else{
-    	 	return false;
-		 }
+//	public void diffuseContent() {
+//		if(diffModels.equals(null)) {
+//			logger.error("Diffusion model not set, aborting");
+//			return ;
+//		}
+//		else{
+//			diffModels.doDiffProcess();
+//		}
+//
+//
+//	}
 
-	}
-
-	public void diffuseContent() {
-		if(diffModel.equals(null)) {
-			logger.error("Diffusion model not set, aborting");
-			return ;
-		}
-		else{
-			diffModel.doDiffProcess();
-		}
-
-
-	}
-
-	public String getAgentState(int id) {
-		SocialAgent agent = agentList.get(id);
-		String s = agent.getState();
-		return s;
-	}
+//	public String getAgentState(int id) {
+//		SocialAgent agent = agentList.get(id);
+//		String s = agent.getState();
+//		return s;
+//	}
 
 
-	public DiffModel getDiffModel() { 
-		return this.diffModel;
+	public DiffModel[] getDiffModels() {
+		return this.diffModels;
 	}
 
 	public Network getNetworkModel() {
@@ -247,19 +253,19 @@ public class SocialNetworkManager{
 
     //hook a specific diffusion model with SN Manager
 	public void setTestDiffModel( DiffModel dModel) {
-		this.diffModel = dModel;
+		this.diffModels[0] = dModel;
 	}
 
 
 	// generate agentmap with starting from a specified id.
-	public void createAgentMapWithSpecifiedId(int startId, int numAgents) {
-
-    	int maxEasting = 10000;
-    	int maxNorthing = 10000;
-    	for(int i=startId; i<=numAgents; i++) {
-    		createSocialAgent(Integer.toString(startId));
-    		setCords(Integer.toString(startId), Global.getRandom().nextInt(maxEasting), Global.getRandom().nextInt(maxNorthing));
-		}
-	}
-	
+//	public void createAgentMapWithSpecifiedId(int startId, int numAgents) {
+//
+//    	int maxEasting = 10000;
+//    	int maxNorthing = 10000;
+//    	for(int i=startId; i<=numAgents; i++) {
+//    		createSocialAgent(Integer.toString(startId));
+//    		setCords(Integer.toString(startId), Global.getRandom().nextInt(maxEasting), Global.getRandom().nextInt(maxNorthing));
+//		}
+//	}
+//
 }

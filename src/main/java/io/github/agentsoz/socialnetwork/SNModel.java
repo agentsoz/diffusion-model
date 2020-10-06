@@ -80,9 +80,9 @@ public class SNModel implements DataSource, DataClient {
     public void stepDiffusionProcess() {
 
       //  if (snManager.processDiffusion((long) dataServer.getTime())) {
-            this.snManager.diffuseContent();
+          //  this.snManager.diffuseContent(); #FIXME
             if (SNConfig.getDiffusionModelsList().contains(DataTypes.icModel)) {
-                ICModel icModel = (ICModel) getSNManager().getDiffModel();
+                ICModel icModel = (ICModel) getSNManager().getDiffModels()[0]; //#FIXME
                 HashMap<String, ArrayList<String>> latestUpdate = icModel.getLatestDiffusionUpdates();
 
                 icModel.recordCurrentStepSpread(this.dataServer.getTime());
@@ -117,7 +117,7 @@ public class SNModel implements DataSource, DataClient {
             case DataTypes.BDI_STATE_UPDATES: { // update social states based on BDI reasoning
 
                 logger.debug("SNModel: received BDI state updates");
-                ICModel icModel = (ICModel) this.snManager.getDiffModel();
+                ICModel icModel = (ICModel) this.snManager.getDiffModels()[0]; // #FIXME
                 icModel.updateSocialStatesFromLocalContent(data);
                 return true;
             }
@@ -150,8 +150,12 @@ public class SNModel implements DataSource, DataClient {
     public void finish() {
 
         //output diffusion outcomes and wrap up
-        ICModel icModel = (ICModel) this.snManager.getDiffModel();
-        icModel.finish();
-        icModel.getDataCollector().writeSpreadDataToFile(); //uses the file path specified in the config
+        for(DiffModel model: this.snManager.getDiffModels()){
+            model.finish();
+            if(model instanceof ICModel){
+                ((ICModel) model).getDataCollector().writeSpreadDataToFile(); //uses the file path specified in the config
+            }
+        }
+
     }
 }

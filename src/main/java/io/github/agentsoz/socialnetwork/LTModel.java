@@ -45,6 +45,7 @@ public class LTModel extends DiffModel{
 	private double meanHighThreshold;
 	private double standardDev;
 	protected int diffTurnCount=1;
+
 	
 	// count variables
 	//protected int lowPanicCount; // inactive agents
@@ -602,6 +603,7 @@ public class LTModel extends DiffModel{
 		return this.diffTurnCount;
 	}
 
+
 	public LTModelDataCollector getDataCollector() {
 		return dc;
 	}
@@ -653,5 +655,9 @@ public class LTModel extends DiffModel{
 		logger.debug("meanLowT {}", this.meanLowThreshold);
 		logger.debug("meanHighT {}", this.meanHighThreshold);
 		logger.debug("standard deviation {}", this.standardDev);
+	}
+
+	public void finish() {
+		logger.info("running empty method finish LT model ");
 	}
 }

@@ -33,7 +33,7 @@ public class TestSNModel {
         snModel.initSNModel();
 
         // more diffusion model inits?
-        ICModel ic = (ICModel) snModel.getSNManager().getDiffModel();
+        ICModel ic = (ICModel) snModel.getSNManager().getDiffModels()[0];
         ic.initRandomSeed("contentX");
         ic.recordCurrentStepSpread(snModel.getDataServer().getTime());
 
@@ -43,9 +43,9 @@ public class TestSNModel {
         snModel.getDataServer().setTimeStep(SNConfig.getDiffTurn_ic()); // #FIXME hardcoded to ic model turn?
         while (snModel.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
 
-            snModel.getSNManager().diffuseContent();
+            snModel.getSNManager().getDiffModels()[0].doDiffProcess();// diffuseContent();
             snModel.getDataServer().stepTime();
-            ICModel icModel = (ICModel) snModel.getSNManager().getDiffModel();
+            ICModel icModel = (ICModel) snModel.getSNManager().getDiffModels()[0];
             icModel.recordCurrentStepSpread(snModel.getDataServer().getTime());
         }
 

@@ -37,7 +37,7 @@ percepts input file, set seeding strategy to dynamic.
 
 
         sn.genNetworkAndDiffModels();
-        ICModel testIC = (ICModel) sn.getDiffModel();
+        ICModel testIC = (ICModel) sn.getDiffModels()[0]; // #FIXME gettig the first diffusion model
 
         //test IC model configs
         testIC.registerContentIfNotRegistered("blockageInfo",DataTypes.LOCAL);
@@ -62,7 +62,7 @@ percepts input file, set seeding strategy to dynamic.
             }
 
 
-            sn.diffuseContent();
+            sn.getDiffModels()[0].doDiffProcess(); //diffuseContent();
             testIC.recordCurrentStepSpread(ds.getTime());
             ds.stepTime();
 
