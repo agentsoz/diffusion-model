@@ -8,6 +8,8 @@ import java.util.HashMap;
 public abstract class DiffModel {
 
     protected  int diffStep;
+
+    protected double timeForNextStep = 0.0;
     protected SocialNetworkModel snManager;
 
     final Logger logger = LoggerFactory.getLogger("");
@@ -47,5 +49,12 @@ public abstract class DiffModel {
 
     }
 
+    public double getTimeForNextStep() {
+        return timeForNextStep;
+    }
+
+    public void setTimeForNextStep(double time) {
+        this.timeForNextStep = time + this.timeForNextStep;
+    }
 	
 }

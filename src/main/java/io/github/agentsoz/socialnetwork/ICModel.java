@@ -72,7 +72,7 @@ public class ICModel extends DiffModel{
             }
 
 
-            logger.info("IC model: registered content {} of type {}",newContent, type);
+            logger.info("IC model: registered {} content type {}", type, newContent);
             return ;
         }
 

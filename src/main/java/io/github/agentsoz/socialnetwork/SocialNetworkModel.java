@@ -214,7 +214,25 @@ public class SocialNetworkModel {
 
     }
 
+public void stepDiffusionModels(double time) {
+        for (DiffModel model: diffModels){
+            if(model.getTimeForNextStep() == time) {
+                model.doDiffProcess();
+                model.setTimeForNextStep(time);
+            }
+        }
+}
 
+public double getNextTimeToRegisterInDataServer(){
+        double time=getDiffModels()[0].getTimeForNextStep();
+        for(DiffModel model:diffModels) {
+            if(time < model.getTimeForNextStep()) {
+                time = model.getTimeForNextStep();
+            }
+        }
+
+        return time;
+}
 
     /*
      * The main method that controls the diffusion process.
