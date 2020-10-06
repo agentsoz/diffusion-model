@@ -15,14 +15,14 @@ import io.github.agentsoz.socialnetwork.LTModel;
 import io.github.agentsoz.socialnetwork.Network;
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
+import io.github.agentsoz.socialnetwork.SocialNetworkModel;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 public class TestLTModel {
 
 	
 
-	SocialNetworkManager sn_manager = new SocialNetworkManager(SNConfig.getDefaultConfigFile()); // init SNMan;
+	SocialNetworkModel sn_manager = new SocialNetworkModel(SNConfig.getDefaultConfigFile()); // init SNMan;
 	HashMap<Integer,SocialAgent> agentmap = sn_manager.agentList;
 	final Logger logger = LoggerFactory.getLogger("");
 	LTModel ltModel;
@@ -34,7 +34,7 @@ public class TestLTModel {
 	@Test
 	//   @Ignore
 	public void testConfigs(){
-		SocialNetworkManager testSN = new SocialNetworkManager(testConfigFile);
+		SocialNetworkModel testSN = new SocialNetworkModel(testConfigFile);
 		testSN.setupSNConfigsAndLogs();
 		testSN.printSNModelconfigs();
 

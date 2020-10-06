@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
+import io.github.agentsoz.socialnetwork.SocialNetworkModel;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,7 +15,6 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SWNetwork;
 import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 import io.github.agentsoz.socialnetwork.util.Log;
 
@@ -34,7 +34,7 @@ public class TestSWNetworkModel {
 	final Logger logger = Log.createLogger("", logFile);
 
 	
-	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
+	SocialNetworkModel snManager = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 
 	double neiDistance = 0.8;
@@ -100,7 +100,7 @@ public class TestSWNetworkModel {
 	public void testUpdatedAgentMap()  
 	{
 
-		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
+		SocialNetworkModel sn = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
 		sn.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
@@ -125,7 +125,7 @@ public class TestSWNetworkModel {
 	//@Ignore
 	@Test
 	public void testNormalisedNetwork() {
-		SocialNetworkManager sn = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
+		SocialNetworkModel sn = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
 		sn.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
@@ -151,7 +151,7 @@ public class TestSWNetworkModel {
 		
 //		snManager.setupSNConfigsAndLogs();
 		
-		//method2 - set configs using setters -  should set after initSNModel as the configs are read again from the file in initSNmodel method
+		//method2 - set configs using setters -  should set after initWithoutSocialAgentsMap as the configs are read again from the file in initSNmodel method
 		SNConfig.setNetworkType(DataTypes.SMALL_WORLD);
 		SNConfig.setSWNetNeiDistance(0.5);
 		SNConfig.setSWNetAvgLinks(6);

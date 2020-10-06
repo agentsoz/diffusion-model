@@ -1,13 +1,9 @@
 package io.github.agentsoz.sn;
 
-import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.util.DataTypes;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
 import io.github.agentsoz.socialnetwork.util.Utils;
-import io.github.agentsoz.socialnetwork.util.Global;
 
 public class TestUtils {
 

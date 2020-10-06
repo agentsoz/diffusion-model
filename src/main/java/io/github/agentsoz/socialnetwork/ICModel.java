@@ -21,7 +21,7 @@ public class ICModel extends DiffModel{
     private ICModelDataCollector dc;
     private HashMap<String, ArrayList<String>> currentStepActiveAgents =  new HashMap<String, ArrayList<String>>();
 
-    public ICModel(SocialNetworkManager sn, int step, double prob) {
+    public ICModel(SocialNetworkModel sn, int step, double prob) {
 
         this.snManager = sn;
         this.diffStep = step;

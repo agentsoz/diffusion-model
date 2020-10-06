@@ -33,7 +33,7 @@ public class CLTModel extends LTModel {
   //  protected int waitCount=0;
   //  protected int panicCount=0;
 
-    public CLTModel(double sw,double sp, int turn, SocialNetworkManager snm){
+    public CLTModel(double sw,double sp, int turn, SocialNetworkModel snm){
         super(0,turn,snm); // init turn and snmanger
         this.seedW =  (int)( sw * 0.01 * snm.getAgentMap().size());
         this.seedP =  (int) (sp * 0.01 * snm.getAgentMap().size());

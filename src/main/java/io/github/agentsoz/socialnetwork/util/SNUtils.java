@@ -1,12 +1,11 @@
 package io.github.agentsoz.socialnetwork.util;
 
 //import bushfire.Config;
+import io.github.agentsoz.socialnetwork.SocialNetworkModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.agentsoz.socialnetwork.Network;
 import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
-import io.github.agentsoz.socialnetwork.SocialAgent;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class SNUtils {
 
 
 	
-//	public static void randomAgentMap(SocialNetworkManager sn_manager, int nodes, int cordRange) {
+//	public static void randomAgentMap(SocialNetworkModel sn_manager, int nodes, int cordRange) {
 //		//Random  random = new Random();
 //
 //		for(int id=0; id < nodes; id++) {
@@ -86,7 +85,7 @@ public class SNUtils {
 //
 //
 //	}
-	public static void randomAgentMap(SocialNetworkManager sn_manager, int nodes, int cordRange) {
+	public static void randomAgentMap(SocialNetworkModel sn_manager, int nodes, int cordRange) {
 
 		for(int id=0; id < nodes; id++) {
 			int x = Global.getRandom().nextInt(cordRange);
@@ -94,7 +93,7 @@ public class SNUtils {
 			sn_manager.createSocialAgent(Integer.toString(id));sn_manager.setCords(Integer.toString(id),x,y);
 		}
 	}
-	public static void createAgentMapUsingActualCoords(SocialNetworkManager snManager, int nodes) { 
+	public static void createAgentMapUsingActualCoords(SocialNetworkModel snManager, int nodes) {
 		int idCount=0; // restricts the number of agent ids extracted from the .txt file
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -261,7 +260,7 @@ public class SNUtils {
 
     }
 
-	public static void createTestNetwork(String networkFile, SocialNetworkManager snman) {
+	public static void createTestNetwork(String networkFile, SocialNetworkModel snman) {
 		Network net =  new Network();
 		File netFile = new File(networkFile);
 		Scanner scan;

@@ -14,14 +14,14 @@ import io.github.agentsoz.socialnetwork.RandomRegularNetwork;
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SWNetwork;
 import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
+import io.github.agentsoz.socialnetwork.SocialNetworkModel;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 public class TestNormaliseWeights {
 
 	final Logger logger = LoggerFactory.getLogger("");
 	
-	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
+	SocialNetworkModel snManager = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	Network net = new Network();
 	int nodes = 5;

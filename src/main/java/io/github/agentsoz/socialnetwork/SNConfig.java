@@ -22,14 +22,10 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 public class SNConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger("");
-	
-	
-	private static String configFile = null;
-	private static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
-
 //	static Random rand =  Global.getRandom();
 	static String networkLinksDir = "../sn_model_data/network_visuals/";
-
+	private static String configFile = null;
+	private static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
 	//logs
 	private static String logFile = "./diffusion.log"; // default logfile, overwritten by the configuration file
 	private static String logLevel = "d"; // default log level
@@ -94,15 +90,16 @@ public class SNConfig {
 		return networkLinksDir;
 	}
 
-	public static void setConfigFile(String string) {
-		configFile = string;
-	}
 	public static String getDefaultConfigFile() {
 		return defaultConfig;
 	}
 
 	public static String getConfigFile() {
 		return configFile;
+	}
+
+	public static void setConfigFile(String string) {
+		configFile = string;
 	}
 	
 	// SN MODEL
@@ -131,12 +128,12 @@ public class SNConfig {
 		return logFile;
 	}
 
-	public static void setLogLevel(String level) {
-		logLevel=level;
-	}
-
 	public  static String getLogLevel() {
 		return logLevel;
+	}
+
+	public static void setLogLevel(String level) {
+		logLevel=level;
 	}
 
 	//output file
@@ -148,13 +145,13 @@ public class SNConfig {
         return outFile;
     }
 
+    public  static String getDynamicSeedFile() {
+        return dynamicSeedFile;
+    }
+
     //dynamic seed_lt file
     public static void setDynamicSeedFile(String filePath) {
         dynamicSeedFile=filePath;
-    }
-
-    public  static String getDynamicSeedFile() {
-        return dynamicSeedFile;
     }
 
 	// RANDOM NETWORK
@@ -208,15 +205,14 @@ public class SNConfig {
 		 swNeiDistance=dist;
 	}
 
-	public static void setAgentCoordFile(String file) {
-		agentCoordFile =  file;
-	}
-
 	public static String getAgentCoordFile(){
 		return agentCoordFile;
 	}
 
-	
+	public static void setAgentCoordFile(String file) {
+		agentCoordFile =  file;
+	}
+
 	// RANDOM REGULAR NETWORK
 	public static int getRandRegNetAvgLinks() {
 		return randRegNetAvgLinks;
@@ -245,12 +241,12 @@ public class SNConfig {
 		 seed_lt =sd;
 	}
 	
-	public static void setDiffTurn_lt(int tn) {
-		 diffTurn_lt =tn * 60; // converting to seconds
-	}
-	
 	public static int getDiffTurn_lt() {
 		return diffTurn_lt;
+	}
+	
+	public static void setDiffTurn_lt(int tn) {
+		 diffTurn_lt =tn * 60; // converting to seconds
 	}
 
 	public static double getMeanLowPanicThreshold_lt() {
@@ -270,24 +266,24 @@ public class SNConfig {
 		 meanHighPanicThreshold = highT;
 	}
 	
-	public static void setDiffusionThresholdType_lt(String type) {
-		 diffThresholdType_lt =type;
-	}
-	
 	public static String getDiffusionThresholdType_lt() {
 		return diffThresholdType_lt;
+	}
+	
+	public static void setDiffusionThresholdType_lt(String type) {
+		 diffThresholdType_lt =type;
 	}
 
 	public static double getStandardDeviation_lt() {
 		return standardDev_lt;
 	}
 	
-	public static void setStrategy_lt(String stra) {
-		strategy_lt = stra ;
-	}
-	
 	public static String getStrategy_lt() {
 		return strategy_lt;
+	}
+	
+	public static void setStrategy_lt(String stra) {
+		strategy_lt = stra ;
 	}
 	
 	//CLT model specifics
@@ -318,15 +314,17 @@ public class SNConfig {
 	public static double getSeed_ic() {
 		return seed_ic;
 	}
-	public static double getStandardDeviation_ic() {
-		return standardDev_ic;
-	}
-	public static void setDiffturn_ic(int i) {
-		diffTurn_ic = i * 60;
-	}
 
 	public static void setSeed_ic(int i) {
 		seed_ic = i ;
+	}
+
+	public static double getStandardDeviation_ic() {
+		return standardDev_ic;
+	}
+
+	public static void setDiffturn_ic(int i) {
+		diffTurn_ic = i * 60;
 	}
 
 	//TestSNBDIModels
@@ -470,9 +468,9 @@ public class SNConfig {
 						catch (Exception e) {
 							System.err.println("SNConfig: ERROR while reading IC config: " + e.getMessage());
 						}
-						return true;
+//						return true;
 					}
-							if (nodeName.equals("lt") && getDiffusionModelsList().contains(DataTypes.ltModel)) {
+					if (nodeName.equals("lt") && getDiffusionModelsList().contains(DataTypes.ltModel)) {
 						try {
 
 						String dseed = node.getAttributes().getNamedItem("diff_seed").getNodeValue();
@@ -511,7 +509,7 @@ public class SNConfig {
 
 						}
 						catch (Exception e) {
-							System.err.println("SNConfig: WARNING: could not read from the node diffModel "	+ e.getMessage());
+							System.err.println("SNConfig: WARNING: could not read from the node lt "	+ e.getMessage());
 						}
 						
 					}

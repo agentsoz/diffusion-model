@@ -8,7 +8,7 @@ import java.util.HashMap;
 public abstract class DiffModel {
 
     protected  int diffStep;
-    protected SocialNetworkManager snManager;
+    protected SocialNetworkModel snManager;
 
     final Logger logger = LoggerFactory.getLogger("");
 	

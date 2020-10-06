@@ -5,7 +5,7 @@ package io.github.agentsoz.socialnetwork.util;
 public class DataTypes {
 
    //SN DATATYPES
-   public static final String BDI_STATE_UPDATES    = "bdi_state_updates";
+   public static final String DIFFUSION_DATA_CONTAINDER_FROM_BDI = "diffusion_data_container_from_bdi";
    public static final String RANDOM			   = "random";
    public static final String  SMALL_WORLD		   = "sw"; 
    public static final String RANDOM_REGULAR	   = "rand-reg";

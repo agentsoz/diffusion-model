@@ -53,7 +53,7 @@ public class LTModel extends DiffModel{
 	//protected int highPanicCount = 0;
 
 
-	public LTModel(double seed, int turn, SocialNetworkManager snMan) { 
+	public LTModel(double seed, int turn, SocialNetworkModel snMan) {
 		this.diffSeed = (int) (seed * 0.01 * snMan.getAgentMap().size()); // divide by 100 for the percentage multiply by the #agents
 		this.diffStep = turn; // already converted to seconds at SNConfig
 		this.snManager = snMan;

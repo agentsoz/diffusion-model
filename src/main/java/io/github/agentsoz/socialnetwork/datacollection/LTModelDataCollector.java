@@ -1,14 +1,14 @@
 package io.github.agentsoz.socialnetwork.datacollection;
 
 import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
+import io.github.agentsoz.socialnetwork.SocialNetworkModel;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 
 public class LTModelDataCollector {
 
     private static int lowCt = 0,medCt=0,highCt=0; // social state counters
 
-    public static void countLowMedHighAgents(SocialNetworkManager sn) {
+    public static void countLowMedHighAgents(SocialNetworkModel sn) {
 
         int l=0,m=0,h=0;
         for(SocialAgent agent:sn.getAgentMap().values()){

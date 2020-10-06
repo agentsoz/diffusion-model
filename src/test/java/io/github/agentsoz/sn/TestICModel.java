@@ -22,7 +22,7 @@ public class TestICModel {
     @Test
  //   @Ignore
     public void testConfigs(){
-        SocialNetworkManager testSN = new SocialNetworkManager(testConfigFile);
+        SocialNetworkModel testSN = new SocialNetworkModel(testConfigFile);
         testSN.setupSNConfigsAndLogs();
         testSN.printSNModelconfigs();
 
@@ -37,7 +37,7 @@ public class TestICModel {
     @Test
     public void testRandomSeed() {
 
-        SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
+        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn,80,1000);
 
@@ -71,7 +71,7 @@ public class TestICModel {
     @Test
     public void testExposureAttmept(){
 
-        SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
+        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
         ICModel icModel = new ICModel(sn, 30, 0.0);
 
         icModel.registerContentIfNotRegistered("contentX",DataTypes.LOCAL);
@@ -84,7 +84,7 @@ public class TestICModel {
     public void testRandomDiffProbabilityRange() {
         // SD = 0.05, p = 0.16
         Global.setRandomSeed(4711);
-        SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
+        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
 
@@ -104,7 +104,7 @@ public class TestICModel {
 
         // SD = 0.05, p = 0.16
         Global.setRandomSeed(4711);
-        SocialNetworkManager sn = new SocialNetworkManager(testConfigFile);
+        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
         sn.genNetworkAndDiffModels();
@@ -127,14 +127,14 @@ public class TestICModel {
         String outFile = "./test/output/diffusion.out";
 
         DataServer ds = DataServer.getServer("test"); //use a different dataserver for each test case, o.w mvn tests fail
-        SNModel sn = new SNModel(testConfigFile,ds);
-        sn.getSNManager().setupSNConfigsAndLogs();
-        SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
+        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile,ds);
+        sn.setupSNConfigsAndLogs();
+        SNUtils.randomAgentMap(sn, 100, 1000);
 
-        sn.initSNModel();
+        sn.initWithoutSocialAgentsMap();
         SNConfig.setDiffturn_ic(60);
         SNConfig.setSeed_ic(15);
-        ICModel ic = (ICModel) sn.getSNManager().getDiffModels()[0];
+        ICModel ic = (ICModel) sn.getDiffModels()[0];
         ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
         ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
 
@@ -147,7 +147,7 @@ public class TestICModel {
 
         while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
            // sn.stepDiffusionProcess();
-            sn.getSNManager().getDiffModels()[0].doDiffProcess(); //diffuseContent();
+            sn.getDiffModels()[0].doDiffProcess(); //diffuseContent();
             sn.getDataServer().stepTime();
             ic.recordCurrentStepSpread(sn.getDataServer().getTime());
         }
@@ -158,7 +158,7 @@ public class TestICModel {
         ic.getDataCollector().writeSpreadDataToFile(outFile);
 
         //testing
-        assertEquals(106, dc.getTotalInactiveAgents(sn.getSNManager()) + dc.getAdoptedAgentCountForContent(sn.getSNManager(),"contentX") + dc.getAdoptedAgentCountForContent(sn.getSNManager(),"contentY"));
+        assertEquals(106, dc.getTotalInactiveAgents(sn) + dc.getAdoptedAgentCountForContent(sn,"contentX") + dc.getAdoptedAgentCountForContent(sn,"contentY"));
 
     }
 
@@ -170,14 +170,14 @@ public class TestICModel {
         String outFile = "./test/output/diffusion.out";
 
         DataServer ds = DataServer.getServer("test1"); // use a different dataserver for each test case, o.w mvn tests fail
-        SNModel sn = new SNModel(testConfigFile,ds);
-        sn.getSNManager().setupSNConfigsAndLogs();
-        SNUtils.randomAgentMap(sn.getSNManager(), 100, 1000);
+        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile,ds);
+        sn.setupSNConfigsAndLogs();
+        SNUtils.randomAgentMap(sn, 100, 1000);
 
-        sn.initSNModel();
+        sn.initWithoutSocialAgentsMap();
         SNConfig.setDiffturn_ic(60);
         SNConfig.setSeed_ic(15);
-        ICModel ic = (ICModel) sn.getSNManager().getDiffModels()[0];
+        ICModel ic = (ICModel) sn.getDiffModels()[0];
 
         ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
         ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
@@ -205,7 +205,7 @@ public class TestICModel {
                 ic.updateSocialStatesFromGlobalContent(globalcontents);
             }
 
-            sn.getSNManager().getDiffModels()[0].doDiffProcess(); //diffuseContent();
+            sn.getDiffModels()[0].doDiffProcess(); //diffuseContent();
             sn.getDataServer().stepTime();
             ic.recordCurrentStepSpread(sn.getDataServer().getTime());
         }
@@ -215,9 +215,9 @@ public class TestICModel {
         ICModelDataCollector dc = new ICModelDataCollector();
         ic.getDataCollector().writeSpreadDataToFile(outFile);
 
-        assertEquals(24, dc.getAdoptedAgentCountForContent(sn.getSNManager(),"contentX"));
-        assertEquals(27, dc.getAdoptedAgentCountForContent(sn.getSNManager(),"contentY"));
-        assertEquals(ic.getAgentMap().size(), dc.getAdoptedAgentCountForContent(sn.getSNManager(),"evac-now"));
+        assertEquals(24, dc.getAdoptedAgentCountForContent(sn,"contentX"));
+        assertEquals(27, dc.getAdoptedAgentCountForContent(sn,"contentY"));
+        assertEquals(ic.getAgentMap().size(), dc.getAdoptedAgentCountForContent(sn,"evac-now"));
     }
 
 }

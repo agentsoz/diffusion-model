@@ -15,7 +15,7 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.RandomNetwork;
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkManager;
+import io.github.agentsoz.socialnetwork.SocialNetworkModel;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 
@@ -23,7 +23,7 @@ public class TestRandomNetworkModel {
 
 	final Logger logger = LoggerFactory.getLogger("");
 	
-	SocialNetworkManager snManager = new SocialNetworkManager(SNConfig.getDefaultConfigFile());
+	SocialNetworkModel snManager = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 
 	@Ignore
