@@ -167,7 +167,7 @@ public class SocialNetworkManager{
 			else {
 				// now initialise the model
 				diffModel.initialise();
-				logger.info(" generated diffusion models: {} ", SNConfig.getDiffusionModelsList().toString());
+				logger.info(" generated diffusion models: {} ", modelName);
 
 			}
 

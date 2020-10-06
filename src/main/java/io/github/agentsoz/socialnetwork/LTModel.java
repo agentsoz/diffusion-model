@@ -502,10 +502,10 @@ public class LTModel extends DiffModel{
 			int id = (int) entry.getKey();
 			double[] arr = (double[]) entry.getValue();
 			
-			if (SNConfig.getDiffusionModelsList().equals(DataTypes.ltModel)) {
+			if (SNConfig.getDiffusionModelsList().contains(DataTypes.ltModel)) {
 				logger.debug("id  {}: actT {} highT {}", id, arr[0], arr[1]);
 			}
-			else if(SNConfig.getDiffusionModelsList().equals(DataTypes.CLTModel)) {
+			else if(SNConfig.getDiffusionModelsList().contains(DataTypes.CLTModel)) {
 				logger.debug("id  {}: waitT {} panicT {}", id, arr[0], arr[1]);
 			}
 		}

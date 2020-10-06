@@ -60,11 +60,10 @@
 	standard_deviation="0.025"
 	strategy="random"
 	thresholdType="guassian"
-
 	diff_seed="5"
 	mean_act_threshold="0.3"
-	mean_high_threshold="0.7"
 
+	mean_high_threshold="0.7"
 	panicSeed="10"
 	waitSeed="30"
 	waitT="0.5"

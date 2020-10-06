@@ -61,8 +61,8 @@
 	thresholdType="guassian"
 	diff_seed="13"
 	mean_act_threshold="0.691"
-	mean_high_threshold="0.7"
 
+	mean_high_threshold="0.7"
 	panicSeed="10"
 	waitSeed="30"
 	waitT="0.5"

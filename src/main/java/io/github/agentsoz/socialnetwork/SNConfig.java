@@ -528,9 +528,9 @@ public class SNConfig {
 	
 	public static  void printNetworkConfigs() {
 		
-		logger.info("sn model: network {} | diffusion model {}", getNetworkType(), getDiffusionModelsList());
+		logger.info("sn model: network {} | diffusion model/s: {}", getNetworkType(), getDiffusionModelsList().toString());
 		logger.info("LogFile: path {} | level {}", getLogFilePath(), getLogLevel());
-        logger.info("Dyanmic seed_lt file: path {} ", getDynamicSeedFile());
+        logger.info("Dyanmic seed file: path {} ", getDynamicSeedFile());
 
 		if(networkType.equals(DataTypes.RANDOM)) {
 			logger.info(" RANDOM network configs:");
@@ -565,7 +565,7 @@ public class SNConfig {
 				logger.info("diffusion turn = {}", getDiffTurn_lt());
 				logger.info("diffusion strategy = {}", getStrategy_lt());
 				logger.info("mean Low Panic Threshold = {}", getMeanLowPanicThreshold_lt());
-				logger.info("mean High Panic Threshold = {}", getMeanHighPanicThreshold());
+//				logger.info("mean High Panic Threshold = {}", getMeanHighPanicThreshold());
 				logger.info(" diffusion threshold generation type = {}", getDiffusionThresholdType_lt());
 				logger.info("standard deviation = {}", getStandardDeviation_lt());
 				logger.info("percept seed  = {}", getPerceptSeed());
