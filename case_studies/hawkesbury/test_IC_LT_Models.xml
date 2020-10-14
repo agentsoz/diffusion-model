@@ -10,7 +10,6 @@
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 	log_file="./test/output/diffusion.log"
 	log_level="i"
-	out_file="./test/output/diffusion_ic_lt.out"
 	dynamic_seed_file="./test_data/blocked-percept-seed.csv"
 />
 
@@ -43,9 +42,12 @@
     <!--seed = percentage of initially active agents (%)-->
     <!--diffusion_probaility: mean diffusion probability that is varied using a standard deviation (sigma) to randomly draw probabilities from a gaussian distribution-->
 <ic>
-    <step_size>30</step_size>
-	<seeding_strategy seed="13">random</seeding_strategy>
-    <diffusion_probability sigma="0.05">0.5</diffusion_probability>
+    <step_size>60</step_size>
+	<seeding_strategy seed="5">random</seeding_strategy>
+    <diffusion_probability sigma="0.05">0.7</diffusion_probability>
+	<out_file>./test/output/multiple_diffusion_testing_ic.out</out_file>
+	<contents>content_mult_x_ic</contents>
+
 </ic>
 
 
@@ -55,12 +57,14 @@
 	<!-- 1st config set: common to all diffusion models, 2nd set: specific for LT diffusion model, 3rd set: specific for CLT diffusion model-->
 
 <lt
-	diff_turn="60"
+	diff_turn="120"
 	standard_deviation="0.025"
 	strategy="random"
 	thresholdType="guassian"
-	diff_seed="30"
-	mean_act_threshold="0.3"
+	diff_seed="20"
+	mean_act_threshold="0.2"
+	out_file="./test/output/multiple_diffusion_testing_lt.out"
+	contents="content_mult_x_lt"
 
 	mean_high_threshold="0.7"
 	panicSeed="10"

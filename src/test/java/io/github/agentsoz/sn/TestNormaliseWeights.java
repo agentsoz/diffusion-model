@@ -20,8 +20,9 @@ import io.github.agentsoz.socialnetwork.util.SNUtils;
 public class TestNormaliseWeights {
 
 	final Logger logger = LoggerFactory.getLogger("");
-	
-	SocialNetworkModel snManager = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
+
+	String testConfigFile="./case_studies/hawkesbury/hawkesbury.xml";
+	SocialNetworkModel snManager = new SocialNetworkModel(testConfigFile);
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	Network net = new Network();
 	int nodes = 5;

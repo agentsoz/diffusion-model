@@ -4,6 +4,7 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
 
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -13,7 +14,12 @@ import java.util.Collections;
 
 public class CLTModel extends LTModel {
 
-
+/*
+Considers two content types, influence to wait and and influence to panic. The difference with the LT model implementation
+(that models spread of multiple instances indpendantly) is that an agent can adopt 1 or more instances there and here the agent
+can either adopt wait or panic influence ( as they are contradicting). so diffusion method will be different, as in only one
+influence instance will adopted, but rest will be the same as the LT model.
+ */
     private int seedW = 0; // #agents
     private int seedP = 0;
 
@@ -55,14 +61,14 @@ public class CLTModel extends LTModel {
 
         setupDiffConfigs(); // 1.set the CLT diffusion configs
 
-        assignThresholds(); // assign the waitT panicT thresholds
+        //add default contents for evacuation:
+        this.contentList.add(DataTypes.WAIT);
+        this.contentList.add(DataTypes.PANIC);
 
-        //3. initially, set the  med panic agents to the agentmap size  - Already initialised at the variable
-//        medPanicCount = getAgentMap().size();
-
-        //4. set initial panic agents based on strategy
-        // seeding methods should be done sequenctial for each process.
-        initSeedBasedOnStrategy();
+        for(String content: this.contentList){ // atleast one content should be registered before running this method
+            assignThresholds(content);
+            initSeedBasedOnStrategy(content);
+        }
 
 //        //5. add count data
 //        ScenarioThreeData.addCountData(
@@ -73,7 +79,7 @@ public class CLTModel extends LTModel {
 
     }
 
-    @Override
+//    @Override
     public void assignThresholds() {
         if(SNConfig.getDiffusionThresholdType_lt().equals(DataTypes.GAUSSIAN)) {
             for(int id: getAgentMap().keySet()) {
@@ -87,7 +93,7 @@ public class CLTModel extends LTModel {
     }
 
     @Override
-    public void doDiffProcess(){
+    public void step(){
 
         logger.debug("competitive diffusion: {} ", diffTurnCount);
         runCompetitiveDiffusion();
@@ -107,33 +113,35 @@ public class CLTModel extends LTModel {
 
 
     }
-    @Override
+//    @Override
     public void assignGaussianDistThresholds(int id, double waitT, double panicT, double sd) {
-        double[] thresholds = new double[2];
+        double[] panicThreshold = new double[1];
+        double[] waitThreshold = new double[1];
 
-        thresholds[0] = Utils.getRandomGaussionWithinThreeSD(standardDev,waitT); // index 0
-        thresholds[1] = Utils.getRandomGaussionWithinThreeSD(standardDev,panicT); //index 1
-        logger.trace("threshold values : {} {}", thresholds[0], thresholds[1]);
+        waitThreshold[0] = Utils.getRandomGaussionWithinThreeSD(standardDev,waitT);
+        panicThreshold[1] = Utils.getRandomGaussionWithinThreeSD(standardDev,panicT);
+        logger.trace("threshold values for contents: panic: {} wait: {}", panicThreshold[0], waitThreshold[0]);
 
-        this.thresholdMap.put(id,thresholds);
+        this.thresholdMap.get(DataTypes.WAIT).put(id,waitThreshold);
+        this.thresholdMap.get(DataTypes.PANIC).put(id,panicThreshold);
     }
 
     @Override
-    public void initRandomSeed() {
+    public void initRandomSeed(String content) {
         logger.error("CLT - random seed method not implemented..");
     }
 
     @Override
-    public void initNearFireSeed(){
+    public void initNearFireSeed(String content){
         logger.error("CLT  - nearfire seed method is not implemented");
     }
 
-    @Override
+
     public void initProbabilisiticSeed(){
         logger.info("CLT - probablistic seeding ");
 
         selectContentBasedSeed(DataTypes.WAIT,seedW);
-     //   selectContentBasedSeed(DataTypes.PANIC,seedP);
+        selectContentBasedSeed(DataTypes.PANIC,seedP);
 
     }
 
@@ -351,31 +359,31 @@ public class CLTModel extends LTModel {
             logger.error("agent {} , content level {} is less than previous {}",id,newVal,agent.getContentlevel(type) );
         }
 
-        if(agent.getState().equals(DataTypes.MEDIUM)) { //1. activation process
+        if(agent.getState(type).equals(DataTypes.MEDIUM)) { //1. activation process
 
             if(newVal > agent.getContentlevel(otherType) && newVal >= getAgentContentTreshold(id,type)) {
 
                 if(type.equals(DataTypes.WAIT)){ // wait activation
 //                    logger.debug("wait activation: agent: {} newVal: {}", id, newVal);
-                    agent.setState(DataTypes.LOW);
+                    agent.setState(DataTypes.WAIT,DataTypes.LOW);
 //                    optCount--;
 //                    waitCount++;
                 }
                 else if(type.equals(DataTypes.PANIC)){ //panic  activation
-                    agent.setState(DataTypes.HIGH);
+                    agent.setState(DataTypes.PANIC,DataTypes.HIGH);
 //                    optCount--;
 //                    panicCount++;
                 }
             }
         }
 
-        if(agent.getState().equals(DataTypes.LOW) && type.equals(DataTypes.PANIC) && newVal >= getAgentContentTreshold(id,type)) { //2.  re-activation (panicked)
+        if(agent.getState(type).equals(DataTypes.LOW) && type.equals(DataTypes.PANIC) && newVal >= getAgentContentTreshold(id,type)) { //2.  re-activation (panicked)
 
             // panic value doesn't matter, even if it is less than the current wait value update state
             // if just modellnig competitive diffusion, then a panic value below threshold can come, then the state should not be changed to H
             // in the fire progression experiment, you should only receive panic values higher than panic threshold.
 
-                agent.setState(DataTypes.HIGH);
+                agent.setState(type,DataTypes.HIGH);
 
         }
 
@@ -406,22 +414,23 @@ public class CLTModel extends LTModel {
 
     public double getAgentContentTreshold(int id, String contentType) {
 
-    double[] agentThresholds = this.thresholdMap.get(id);
-    Double t = null;
-    try {
-        if (contentType.equals(DataTypes.WAIT)) {
-            t = agentThresholds[0];
-        } else if (contentType.equals(DataTypes.PANIC)) {
-            t = agentThresholds[1];
-        }
+    double[] agentThresholds = this.thresholdMap.get(contentType).get(id);
+    return agentThresholds[0];
+//    Double t = null;
+//    try {
+//        if (contentType.equals(DataTypes.WAIT)) {
+//            t = agentThresholds[0];
+//        } else if (contentType.equals(DataTypes.PANIC)) {
+//            t = agentThresholds[1];
+//        }
+//
+//
+//    }
+//    catch(NullPointerException e) {
+//        logger.error("null pointer expection: {}", e.getMessage());
+//    }
 
-
-    }
-    catch(NullPointerException e) {
-        logger.error("null pointer expection: {}", e.getMessage());
-    }
-
-            return t;
+//            return t;
     }
 
 

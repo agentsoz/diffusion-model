@@ -48,11 +48,20 @@ public class ICModel extends DiffModel{
             agent.initAdoptedContentList();
         }
 
+        //register contents
+        for(String newContent: SNConfig.getContentsToRegisterForICModel()){
+            registerContentIfNotRegistered(newContent,DataTypes.LOCAL);
+        }
+
+        // initalise seed
+        for(String content:this.contentList.keySet()){
+            initSeedBasedOnStrategy(content);
+        }
+
     }
 
     public void initRandomSeed(String newContent) {
 
-        registerContentIfNotRegistered(newContent,DataTypes.LOCAL);
         selectRandomSeed(SNConfig.getSeed_ic(), newContent);
     }
 
@@ -118,7 +127,7 @@ public class ICModel extends DiffModel{
             if(!this.diffusedGlobalContent.contains(content)) {
 
                 //register first
-                registerContentIfNotRegistered(content, DataTypes.GLOBAL);
+//                registerContentIfNotRegistered(content, DataTypes.GLOBAL);
 
                 logger.info("diffusing global content: {} ", content);
                 //get ids of all agents to broadcast message
@@ -170,7 +179,7 @@ public class ICModel extends DiffModel{
 
 
     @Override
-    public void doDiffProcess() {
+    public void step() {
 
 
         this.currentStepActiveAgents.clear(); //clear previous step active agents.
@@ -333,12 +342,13 @@ public class ICModel extends DiffModel{
     }
 
     public void finish(){
-        logger.info("total number of inactive agents: {} ", this.dc.getTotalInactiveAgents(snManager));
+        logger.info("finishing IC Model..");
+        logger.info("total number of inactive agents (exposed and unexposed) : {} ", this.dc.getTotalInactiveAgents(snManager));
 
         for(Map.Entry entry : contentList.entrySet()) {
             String content = (String) entry.getKey();
             String type = (String) entry.getValue();
-            logger.info(" Content {} : type: {} active agents= {} | exposed agents {}", content,type, this.dc.getAdoptedAgentCountForContent(snManager,content), this.dc.getExposedAgentCountForContent(content));
+            logger.info(" Content= {}, type: {}, active= {}, exposed= {}", content,type, this.dc.getAdoptedAgentCountForContent(snManager,content), this.dc.getExposedAgentCountForContent(content));
         }
 
     }

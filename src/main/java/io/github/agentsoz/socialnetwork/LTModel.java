@@ -35,8 +35,10 @@ public class LTModel extends DiffModel{
 	private static DecimalFormat df = new DecimalFormat(".##");
 	private LTModelDataCollector dc;
 	
-	protected HashMap<Integer,double[]> thresholdMap = new HashMap<Integer,double[]>();
-	private HashMap<Integer,Double> seedMap = new HashMap<Integer,Double>();
+	protected HashMap<String,HashMap<Integer,double[]>> thresholdMap = new HashMap<String,HashMap<Integer,double[]>>();
+
+	private HashMap<String, HashMap<Integer,Double>> seedMap;
+	protected ArrayList<String> contentList;
 	
 	private int diffSeed;
 //	private int diffStep;
@@ -59,6 +61,9 @@ public class LTModel extends DiffModel{
 		this.snManager = snMan;
 
 		this.dc = new LTModelDataCollector();
+		this.contentList = new ArrayList<String>();
+		this.seedMap = new HashMap<String,HashMap<Integer,Double>>();
+
 	}
 	
 	/*
@@ -72,77 +77,100 @@ public class LTModel extends DiffModel{
 		logger.debug("initialising LT model...");
 		//1. setupConfigs
 		setupDiffConfigs();
-	
+
+		//register content
+		for(String newcontent:SNConfig.getContentsToRegisterForLTModel()){
+			registerContentIfNotRegistered(newcontent,DataTypes.LOCAL);
+		}
+
 		//2. assign Thresholds
-		assignThresholds();
-		
-		//3. initially, set the  low panic agents to the agentmap size
-	//	lowPanicCount = getAgentMap().size();
-		
-		//4. set initial panic agents based on strategy
-		initSeedBasedOnStrategy();
-		
-		//5 write add state counters after iniatialising diffusion seed
-		// The actual time here is at 4secs. but it should be 1sec
-//		ScenarioThreeData.addCountData(
-//				1,
-//				getLowPanicCount(),
-//				getMedPanicCount(),
-//				getHighPanicCount());
-	} 
-	
-	public void initTestLTModel(double low, double high,HashMap<Integer,Double> seed) {
+		for(String content: this.contentList){ // atleast one content should be registered before running this method
+			assignThresholds(content);
+			initSeedBasedOnStrategy(content);
+		}
+
+
+	}
+
+	public void registerContentIfNotRegistered(String newContent,String type){ //needed for all new methods.
+
+		if(!this.contentList.contains(newContent)) { // all these steps should happen once
+			this.contentList.add(newContent);
+			HashMap<Integer,double[]> thresholdMapForNewContent = new HashMap<Integer, double[]>();
+			this.thresholdMap.put(newContent,thresholdMapForNewContent);
+
+			HashMap<Integer,Double> seedValuesForContent = new HashMap<Integer, Double>();
+			this.seedMap.put(newContent,seedValuesForContent);
+
+			//set all agents to inactivea
+			for(SocialAgent agent: this.snManager.getAgentMap().values()){
+				agent.setState(newContent,DataTypes.LOW);
+				agent.setAsPartOfTheSeed(newContent,false); // initiliase to false
+			}
+
+		}
+
+
+
+
+	}
+
+    public void recordCurrentStepSpread(double timestep) {
+
+        dc.countLowMedHighAgents(this.snManager,this.contentList,timestep);
+    }
+	public void initTestLTModel(String content, double low, double high,HashMap<Integer,Double> seed) {
 		
 		//1.  no setupconfigs
 	
 		//2. assign fixed Thresholds
-		assignFixedThresholds(low,high);
+		assignFixedThresholds(content,low,high);
 		
 		//3. initially, set the  low panic agents to the agentmap size
 	//	lowPanicCount = getAgentMap().size();
 		
 		//4. set fixed seed from a hashmap
-		initFixedSeed(seed);
+		initFixedSeed(content,seed);
 
 	} 
 	
-	private void initFixedSeed(HashMap<Integer,Double> seedmap) {
+	private void initFixedSeed(String content, HashMap<Integer,Double> seedmap) {
 		logger.debug("Test SNmodel:  seed size {}", seedmap.size());
 		
 		for (Entry<Integer,Double> seedRow: seedmap.entrySet()) {
-			this.seedMap.put(seedRow.getKey(),seedRow.getValue());
-			updatePanicValue(seedRow.getKey(),seedRow.getValue());
+			this.seedMap.get(content).put(seedRow.getKey(),seedRow.getValue());
+			updateContentValue(content, seedRow.getKey(),seedRow.getValue());
 		}
 		
 	}
 
 	// each of these methods should store selected agents panic levels to the seedmap, as well separatel update their
 	// panic levels and states (which matters for the BDI behaviour)
-	public void initSeedBasedOnStrategy() { 
+	public void initSeedBasedOnStrategy(String content) {
 		if(SNConfig.getStrategy_lt().equals(DataTypes.RANDOM)) {
-			initRandomSeed();
+			initRandomSeed(content);
 		}
 		
 		else if(SNConfig.getStrategy_lt().equals(DataTypes.NEAR_FIRE)) {
-			initNearFireSeed();
+			initNearFireSeed(content);
 		}
 		else if(SNConfig.getStrategy_lt().equals(DataTypes.PROBILITY)){
-			initProbabilisiticSeed();
+			initProbabilisiticSeed(content);
 		}
 		else
 		{
 			logger.error("LT model - Unknown Seeding strategy");
 		}
 	}
-	public void assignThresholds() {
+	public void assignThresholds(String content) {
 		
 		for (int id: getAgentMap().keySet()) {
 			
 			if(threholdType.equals(DataTypes.RANDOM)) { 
-				assignRandomTresholds(id);
+				assignRandomTresholds(content,id);
 			}
 			else if(threholdType.equals(DataTypes.GAUSSIAN)) { 
-				assignGaussianDistThresholds(id,meanLowThreshold,meanHighThreshold,standardDev);
+				assignGaussianDistThresholds(content,id,meanLowThreshold,meanHighThreshold,standardDev);
 			}
 
 		}
@@ -150,7 +178,7 @@ public class LTModel extends DiffModel{
 		logger.info("diffusion threshold assigning complete");
 	}
 	
-	public void assignFixedThresholds(double low, double high) {
+	public void assignFixedThresholds(String content, double low, double high) {
 		
 		for (int id: getAgentMap().keySet()) {
 			
@@ -160,7 +188,7 @@ public class LTModel extends DiffModel{
 			tresholdArr[1] = Double.valueOf(df.format(high));
 			
 			//update the thresholdmap
-			this.thresholdMap.put(id, tresholdArr);
+			this.thresholdMap.get(content).put(id, tresholdArr);
 
 		}
 		
@@ -188,7 +216,7 @@ public class LTModel extends DiffModel{
 	public void preDiffProcess() {}
 
     @Override
-	public void doDiffProcess() {
+	public void step() {
     	logger.trace("diffusion process: turn {}", diffTurnCount);
     	
     	ltDiffuse();
@@ -204,7 +232,7 @@ public class LTModel extends DiffModel{
 	}
 
 
-    public void assignRandomTresholds(int id) {
+    public void assignRandomTresholds(String content, int id) {
 		double highT=0.0,actT;
 		double[] tresholdArr = new double[2];
 		
@@ -217,7 +245,7 @@ public class LTModel extends DiffModel{
 		tresholdArr[1] = Double.valueOf(df.format(highT));
 		
 		//update the thresholdmap
-		this.thresholdMap.put(id, tresholdArr);
+		this.thresholdMap.get(content).put(id, tresholdArr);
 	}
 	
 	
@@ -228,7 +256,7 @@ public class LTModel extends DiffModel{
 	 * highTmean > lowTmean
 	 * same SD for both gaussian distributions
 	 */
-	public void assignGaussianDistThresholds(int id, double lowTmean, double highTmean, double sd) { 
+	public void assignGaussianDistThresholds(String content, int id, double lowTmean, double highTmean, double sd) {
 		double[] tresholdArr = new double[2];
 		
 		double low = Utils.getRandomGaussion(sd, lowTmean); // a value between 0 and 1.
@@ -248,7 +276,7 @@ public class LTModel extends DiffModel{
 		//tresholdArr[1] = Utils.getRandomGaussion(sd, highTmean);
 		
 		//update the thresholdmap
-		this.thresholdMap.put(id, tresholdArr);
+		this.thresholdMap.get(content).put(id, tresholdArr);
 		
 
 	}
@@ -264,7 +292,7 @@ public class LTModel extends DiffModel{
 	 * So ensuring that unique set of agents are selected as only a fraction of agents are selected always. 
 	 * therefore the expected number of agents should be equal to the actual active agents(medium+high) here. 
 	 */
-	public void initRandomSeed() {
+	public void initRandomSeed(String content) {
 
 		int selected = 0 ;
 		List<Integer> selectedAgentIds = new ArrayList<Integer>();
@@ -282,31 +310,31 @@ public class LTModel extends DiffModel{
 			
 			logger.trace("extDiffuse - random Id: {}",randomId);
 			//activation threshold of the random agent
-			double min = getActivationThreshold(randomId);
+			double min = getActivationThreshold(content,randomId);
 			
 			logger.trace("extDiffuse - actT: {}",min);
 			double max = 1.0;
 			double randomPanicVal =  min + ((max - min) * Global.getRandom().nextDouble());
 						
 			//2steps to update panic levels.
-			updatePanicValue(randomId,randomPanicVal);
-			seedMap.put(randomId, randomPanicVal);
-			getAgentMap().get(randomId).setIsSeedTrue(); // agent is part of the seed
+			updateContentValue(content,randomId,randomPanicVal);
+			seedMap.get(content).put(randomId, randomPanicVal);
+			getAgentMap().get(randomId).setAsPartOfTheSeed(content,true); // agent is part of the seed
 			selected++;
 		}
 
 		// counting social states
-		dc.countLowMedHighAgents(this.snManager);
-
-		logger.info("initialise random seed complete-expected active agents: {}", selected);
-		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt());
+//		dc.countLowMedHighAgents(this.snManager);  // counting should be done outside seedng methods.
+//
+//		logger.info("initialise random seed complete-expected active agents: {}", selected);
+		logger.info("random seeeding: selected  {} agents for content {}",selected, content);
 	}
 	
 	/* function: selects the agents near fire 
 	 * 
 	 * 
 	 */
-	public void initNearFireSeed() {
+	public void initNearFireSeed(String content) {
 
 		// total agents in the high risk area = 12511 ~ 32% of the population
 		int nearDistanceEastingRange = 290000;
@@ -350,22 +378,22 @@ public class LTModel extends DiffModel{
 			
 			logger.trace("agentsNearFire  strategy - random Id: {}",randomId);
 			//activation threshold of the random agent
-			double min = getActivationThreshold(randomId);
+			double min = getActivationThreshold(content,randomId);
 			
 			logger.trace("agentsNearFire  strategy - actT: {}",min);
 			double max = 1.0;
 			double randomPanicVal =  min + ((max - min) * Global.getRandom().nextDouble());
 						
-			updatePanicValue(randomId,randomPanicVal);
-			seedMap.put(randomId, randomPanicVal);
-			getAgentMap().get(randomId).setIsSeedTrue(); // agent is part of the seed
+			updateContentValue(content,randomId,randomPanicVal);
+			seedMap.get(content).put(randomId, randomPanicVal);
+			getAgentMap().get(randomId).setAsPartOfTheSeed(content,true); // agent is part of the seed
 			selected++;
 		}
 		
 		logger.info("initialise near fire seed complete- selected agents ({}): {}", this.diffSeed, selected);
 
-		dc.countLowMedHighAgents(this.snManager);
-		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt() );
+//		dc.countLowMedHighAgents(this.snManager); // counting should be done outside seedng methods.
+//		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt() );
 
 
 	}
@@ -375,7 +403,7 @@ public class LTModel extends DiffModel{
 	 * By looking at the homeocations.txt, the agents are stored from 28km -> 30km.
 	 * seed -right number of agents are selected - tested 
 	 */
-	public void initProbabilisiticSeed() {
+	public void initProbabilisiticSeed(String content) {
 		logger.info("LT - initialising probabiistic seeding..");
 		// total agents in the high risk area = 12511 ~ 32% of the population  for distance range 290000
 		//int nearDistanceEastingRange = 10;  
@@ -409,16 +437,16 @@ public class LTModel extends DiffModel{
 				if( Global.getRandom().nextDouble() <= activationProb) {
 					
 					
-					double min = getActivationThreshold(agent.getID());
+					double min = getActivationThreshold(content, agent.getID());
 					
 					logger.trace("probabilistic seed strategy - actT: {} id: {}",min,id);
 					double max = 1.0;
 					double randomPanicVal =  min + ((max - min) * Global.getRandom().nextDouble()); // random panic value
 		//			logger.trace("seed selected agent: {} plevel: {}",agent.getID(),randomPanicVal );
 					//2steps
-					seedMap.put(agent.getID(), randomPanicVal);
-					agent.setIsSeedTrue(); // agent is part of the seed
-					updatePanicValue(agent.getID(),randomPanicVal);
+					seedMap.get(content).put(agent.getID(), randomPanicVal);
+					agent.setAsPartOfTheSeed(content,true); // agent is part of the seed
+					updateContentValue(content,agent.getID(),randomPanicVal);
 					selected++;
 					
 						}
@@ -448,51 +476,59 @@ public class LTModel extends DiffModel{
 	
 	public void ltDiffuse() {
 		logger.trace("linear threshold diffusion process..");
-		HashMap<Integer,Double> panicValsToBeUpadated =  new HashMap<Integer,Double>();
-		for (SocialAgent agent: getAgentMap().values()) {
+		HashMap<String, HashMap<Integer,Double>> panicValsToBeUpadated =  new HashMap<String,HashMap<Integer,Double>>();
 
-			//these conditions are checked to maintain static panic levels/state of agents.
-			//Conceptually, this should happen at the network level changing the linksmap
-			if(agent.isSeed()) {
-				continue;
-			}
-			if(agent.getEvacStatus()) {
-				continue;
-			}
+		for(String content:this.contentList) { // for each content/influence
+			HashMap<Integer,Double> panicValueMap = new HashMap<Integer, Double>();
+			panicValsToBeUpadated.put(content,panicValueMap);
 
-			double pValue = 0.0 ; 
-			HashMap<Integer,Double> neiMap = agent.getLinkMap();
-			for(int neiId:neiMap.keySet()) { 
-				if(isActive(neiId)) {
-					pValue = pValue + agent.getLinkWeight(neiId);
+			for (SocialAgent agent : getAgentMap().values()) { // for each agent
+
+				//these conditions are checked to maintain static panic levels/state of agents.
+				//Conceptually, this should happen at the network level changing the linksmap
+				if (agent.checkIfPartOfTheSeed(content)) {
+					continue;
 				}
+				if (agent.getEvacStatus()) {
+					continue;
+				}
+
+				double pValue = 0.0;
+				HashMap<Integer, Double> neiMap = agent.getLinkMap();
+				for (int neiId : neiMap.keySet()) {
+					if (isActive(content,neiId)) {
+						pValue = pValue + agent.getLinkWeight(neiId);
+					}
+				}
+
+				panicValsToBeUpadated.get(content).put(agent.getId(), pValue);
+
 			}
-			
-			panicValsToBeUpadated.put(agent.getId(), pValue);
-			
-		}
-	//	logger.debug("panic values: {}", panicValsToBeUpadated.toString());
-		for (Map.Entry entry: panicValsToBeUpadated.entrySet()) {
-			
-			int id = (int) entry.getKey();
-			double pNei = (double) entry.getValue();
-			
-			double pSeed = getSeedPanicLevel(id);
-			double pTot = pSeed + pNei;
-			
-			if(pTot > 1.0) { pTot = 1.0;} // tot may exceed 1.0 coz of the seed, eventhough 
-			
-			//finally to all agents update panic value if the calculated panic value is greater than the current. 
-			// if externally activated, then there  might be no active agents.
-			// if there's a change in pvalue, modify it. 
-			// if agent is externally activated with random panic value, and internal panic calcualted should not replace that
-			//value until it exceeds the randomly generated value
-//			if(pTot > getPanicValue(id)){ // NOT VALID IN NON_PROGRESSIVE LT DIFFUSSION
-//				updatePanicValue(id,pTot) ;
+			//	logger.debug("panic values: {}", panicValsToBeUpadated.toString());
+			for (Map.Entry entry : panicValsToBeUpadated.get(content).entrySet()) {
+
+				int id = (int) entry.getKey();
+				double pNei = (double) entry.getValue();
+
+				double pSeed = getSeedContentLevel(content,id);
+				double pTot = pSeed + pNei;
+
+				if (pTot > 1.0) {
+					pTot = 1.0;
+				} // tot may exceed 1.0 coz of the seed, eventhough
+
+				//finally to all agents update panic value if the calculated panic value is greater than the current.
+				// if externally activated, then there  might be no active agents.
+				// if there's a change in pvalue, modify it.
+				// if agent is externally activated with random panic value, and internal panic calcualted should not replace that
+				//value until it exceeds the randomly generated value
+//			if(pTot > getInfluenceValue(id)){ // NOT VALID IN NON_PROGRESSIVE LT DIFFUSSION
+//				updateContentValue(id,pTot) ;
 //			}
-			updatePanicValue(id,pTot); // update panic value without any condition
+				updateContentValue(content,id, pTot); // update panic value without any condition
+			}
 		}
-		//printPanicValues();
+		//printContentValues();
 	}
 	
 	@Override
@@ -500,21 +536,25 @@ public class LTModel extends DiffModel{
 	
 		logger.debug(" agent threshold values: ");
 		for (Map.Entry entry: this.thresholdMap.entrySet()) {
-			int id = (int) entry.getKey();
-			double[] arr = (double[]) entry.getValue();
-			
-			if (SNConfig.getDiffusionModelsList().contains(DataTypes.ltModel)) {
-				logger.debug("id  {}: actT {} highT {}", id, arr[0], arr[1]);
+			String content = (String) entry.getKey();
+			HashMap<Integer,double[]> thresholdMap = (HashMap<Integer,double[]>) entry.getValue();
+
+			for(int agentID: thresholdMap.keySet()){
+				double[] thresholds = thresholdMap.get(agentID);
+				if (SNConfig.getDiffusionModelsList().contains(DataTypes.ltModel)) {
+					logger.debug("id  {}: actT {} highT {}", agentID, thresholds[0], thresholds[1]);
+				}
+				else if(SNConfig.getDiffusionModelsList().contains(DataTypes.CLTModel)) {
+					logger.debug("id  {}: waitT {} panicT {}", agentID, thresholds[0], thresholds[1]);
+				}
 			}
-			else if(SNConfig.getDiffusionModelsList().contains(DataTypes.CLTModel)) {
-				logger.debug("id  {}: waitT {} panicT {}", id, arr[0], arr[1]);
-			}
+
 		}
 	}
 	// the condition that is checked to change the state
-	public boolean checkActivationCondition(double value,  int id) { 
+	public boolean checkActivationCondition(String content, double value,  int id) {
 		boolean result=false;
-		if( value >= getActivationThreshold(id)) {
+		if( value >= getActivationThreshold(content, id)) {
 			result = true;
 		}
 		
@@ -544,7 +584,7 @@ public class LTModel extends DiffModel{
  * 
  * Panic values are not rounded. also they are not checked if less than 1
  */
-	public void updatePanicValue(int id, double pVal) {
+	public void updateContentValue(String content, int id, double pVal) {
 
 		SocialAgent agent = getAgentMap().get(id);
 		//1. firstly, check if agent evacuated already don't change the panic value
@@ -555,45 +595,51 @@ public class LTModel extends DiffModel{
 
 
 		// update the panic level regardless of state
-		agent.setPanicLevel(pVal);
+		agent.setContentLevel(content,pVal);
 
 		//2. update state
 //		if ((pVal >= getHighPanicThreshold(id)) && !agent.getState().equals(DataTypes.HIGH)) {
 //			agent.setState(DataTypes.HIGH);
 //		}
-		if ((pVal >= getActivationThreshold(id) /*&& pVal < getHighPanicThreshold(id)*/ )  && !agent.getState().equals(DataTypes.MEDIUM)) {
-			agent.setState(DataTypes.MEDIUM);
+		if ((pVal >= getActivationThreshold(content,id) /*&& pVal < getHighPanicThreshold(id)*/ )  && !agent.getState(content).equals(DataTypes.MEDIUM)) {
+			agent.setState(content,DataTypes.MEDIUM);
 
 		}
-		else if (pVal < getActivationThreshold(id) && !agent.getState().equals(DataTypes.LOW)) {
-			agent.setState(DataTypes.LOW);
+		else if (pVal < getActivationThreshold(content, id) && !agent.getState(content).equals(DataTypes.LOW)) {
+			agent.setState(content,DataTypes.LOW);
 		}
 
-		logger.trace(" updated state: agent {} panic value {} state: {}", id, pVal,getAgentMap().get(id).getState());
+		logger.trace(" updated state: agent {} panic value {} state: {}", id, pVal,getAgentMap().get(id).getState(content));
 
 	}
 	
 	
-	public double getPanicValue(int id) {
-		SocialAgent agent = getAgentMap().get(id);
-		return agent.getPanicLevel();
-	}
+//	public double getInfluenceValue(String content, int id) {
+//		SocialAgent agent = getAgentMap().get(id);
+//		return agent.getContentLevel(content);
+//	}
 	
-	public double getActivationThreshold(int id) {
-		double[] thresholdArr = this.thresholdMap.get(id);
+	public double getActivationThreshold(String content, int id) {
+		double[] thresholdArr = this.thresholdMap.get(content).get(id);
 		return thresholdArr[0];
 	}
 	
 	
-	public double getHighPanicThreshold(int id) {
-		double[] thresholdArr = this.thresholdMap.get(id);
-		return thresholdArr[1];
-	}
+//	public double getHighPanicThreshold(String content, int id) {
+//		double[] thresholdArr = this.thresholdMap.get(content).get(id);
+//		return thresholdArr[1];
+//	}
 	
-	public double getSeedPanicLevel(int id) {
+	public double getSeedContentLevel(String content, int id) {
 		double panic=0.0;
-		if(seedMap.containsKey(id)) { 
-			panic = this.seedMap.get(id);
+
+		if(!seedMap.containsKey(content)){
+			logger.error("unknown content parsed to get agent seed influence level");
+			return -1000;
+
+		}
+		if (seedMap.get(content).containsKey(id)) {
+			panic = this.seedMap.get(content).get(id);
 		}
 
 		return panic;
@@ -603,15 +649,18 @@ public class LTModel extends DiffModel{
 		return this.diffTurnCount;
 	}
 
+	public HashMap<String, HashMap<Integer, Double>> getSeedMap() {
+		return this.seedMap;
+	}
 
 	public LTModelDataCollector getDataCollector() {
 		return dc;
 	}
 
-	public boolean isActive(int id) {
+	public boolean isActive(String content, int id) {
 		boolean result=false;
 		SocialAgent agent= getAgentMap().get(id);
-		if(agent.getState().equals(DataTypes.MEDIUM) || agent.getState().equals(DataTypes.HIGH) ) { 
+		if(agent.getState(content).equals(DataTypes.MEDIUM) || agent.getState(content).equals(DataTypes.HIGH) ) {
 			result = true;
 		}
 		
@@ -633,17 +682,18 @@ public class LTModel extends DiffModel{
 //	}
 	
 	// prints the panic  levels of the agents
-	@Override
-	public void printPanicValues()
+	public void printContentValues()
 	{
-		HashMap<Integer,SocialAgent> agents = getAgentMap();
-		logger.debug("panic values:");
-		for (SocialAgent agent : getAgentMap().values())
-		{
-			 double panicVal = agent.getPanicLevel();
-			 logger.debug("agent " + agent.getId() + " : "+panicVal + " : "+agent.getState());
-			
+		for(String content:this.contentList) {
+			logger.debug("panic values for content {}:", content);
+			for (SocialAgent agent : getAgentMap().values())
+			{
+				double panicVal = agent.getContentLevel(content);
+				logger.debug("agent " + agent.getId() + " : "+panicVal + " : "+agent.getState(content));
+
+			}
 		}
+
 	}
 	
 	@Override
@@ -658,6 +708,11 @@ public class LTModel extends DiffModel{
 	}
 
 	public void finish() {
-		logger.info("running empty method finish LT model ");
+		logger.info("finishing LT model ");
+		for(String content: this.contentList){
+			logger.info(" content= {}: active {}, inactive {}", content, getDataCollector().getFinalActiveAgents(content),
+					getDataCollector().getFinalInactiveAgents(content));
+
+		}
 	}
 }

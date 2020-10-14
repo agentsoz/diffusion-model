@@ -1,12 +1,11 @@
 package io.github.agentsoz.socialnetwork;
 
 import io.github.agentsoz.dataInterface.DataServer;
-import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Log;
 import org.slf4j.Logger;
-import io.github.agentsoz.socialnetwork.util.Global;
 
-import javax.xml.crypto.Data;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -202,7 +201,9 @@ public class SocialNetworkModel {
                 return false;
             } else {
                 // now initialise the model
+               // model.registerContentIfNotRegistered("default", DataTypes.LOCAL);
                 model.initialise();
+//                model.recordCurrentStepSpread(dataServer.getTime());
                 diffModels[i] = model;
                 i++;
                 logger.info(" {} diffusion model generation complete ", modelName);
@@ -217,21 +218,21 @@ public class SocialNetworkModel {
 public void stepDiffusionModels(double time) {
         for (DiffModel model: diffModels){
             if(model.getTimeForNextStep() == time) {
-                model.doDiffProcess();
-                model.setTimeForNextStep(time);
+                model.step();
+                model.recordCurrentStepSpread(time);
+                model.setTimeForNextStep();
             }
         }
 }
 
-public double getNextTimeToRegisterInDataServer(){
-        double time=getDiffModels()[0].getTimeForNextStep();
+public double getShortestTimeOfAllDiffusionModels(){
+        List<Integer> timeSteps = new ArrayList<Integer>();
         for(DiffModel model:diffModels) {
-            if(time < model.getTimeForNextStep()) {
-                time = model.getTimeForNextStep();
+                timeSteps.add(model.getDiffStep());
             }
-        }
 
-        return time;
+
+        return (double) Collections.min(timeSteps);
 }
 
     /*
@@ -253,7 +254,7 @@ public double getNextTimeToRegisterInDataServer(){
 //    	else if(diffModels.isDiffTurn(time)) {
 //    		logger.debug("SNManger started executing diffusion process at {}..",time);
 //        	diffModels.preDiffProcess(); // e.g. external diffusion
-//        	diffModels.doDiffProcess();
+//        	diffModels.step();
 //        	diffModels.postDiffProcess(time); // e.g. data collection , send data to BDI side
 //
 //
@@ -280,7 +281,7 @@ public double getNextTimeToRegisterInDataServer(){
 //			return ;
 //		}
 //		else{
-//			diffModels.doDiffProcess();
+//			diffModels.step();
 //		}
 //
 //
@@ -298,14 +299,15 @@ public double getNextTimeToRegisterInDataServer(){
         if (this == null) { // return if the diffusion model is not executed
             return;
         }
-        for (DiffModel model : diffModels)
-            if (model instanceof ICModel) {
+        for (DiffModel model : diffModels) {
+//            if (model instanceof ICModel) {
 
-                //terminate diffusion model and output diffusion data
-                ICModel icModel = (ICModel) model;
-                icModel.finish();
-                icModel.getDataCollector().writeSpreadDataToFile();
-            }
+            //terminate diffusion model and output diffusion data
+
+            model.finish();
+            model.getDataCollector().writeSpreadDataToFile();
+//            }
+        }
     }
 
     public DiffModel[] getDiffModels() {

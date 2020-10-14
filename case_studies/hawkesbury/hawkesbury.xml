@@ -10,7 +10,6 @@
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 	log_file="./diffusion.log"
 	log_level="i"
-	out_file="./diffusion.out"
 	dynamic_seed_file="./test_data/blocked-percept-seed.csv"
 />
 
@@ -46,7 +45,10 @@
         <step_size>600</step_size>
         <seeding_strategy seed="53">random</seeding_strategy>
         <diffusion_probability sigma="0.05">0.16</diffusion_probability>
-    </ic>
+		<out_file>./diffusion_ic.out</out_file>
+		<contents>test_ic_content</contents>
+
+	</ic>
 
 
     <!-- stratgey = random or nearfire or prob-->
@@ -62,6 +64,8 @@
 	thresholdType="guassian"
 	diff_seed="5"
 	mean_act_threshold="0.3"
+	out_file="./diffusion_lt.out"
+	contents="test_lt_content"
 
 	mean_high_threshold="0.7"
 	panicSeed="10"

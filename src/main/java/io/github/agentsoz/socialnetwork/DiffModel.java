@@ -1,5 +1,7 @@
 package io.github.agentsoz.socialnetwork;
 
+import io.github.agentsoz.socialnetwork.datacollection.DataCollector;
+import io.github.agentsoz.socialnetwork.datacollection.ICModelDataCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +11,7 @@ public abstract class DiffModel {
 
     protected  int diffStep;
 
-    protected double timeForNextStep = 0.0;
+    protected double timeForNextStep = diffStep;
     protected SocialNetworkModel snManager;
 
     final Logger logger = LoggerFactory.getLogger("");
@@ -26,7 +28,7 @@ public abstract class DiffModel {
 
     public void preDiffProcess() {}
 
-    public void doDiffProcess() {}
+    public void step() {}
 
     public void postDiffProcess() {}
 
@@ -34,7 +36,7 @@ public abstract class DiffModel {
 
     public void printthresholdMap() {}
 
-    public void printPanicValues() {}
+   // public void printContentValues() {}
 
    // public boolean isDiffTurn(long time) {return false;}
    public boolean isDiffTurn(long simTime) {
@@ -49,12 +51,22 @@ public abstract class DiffModel {
 
     }
 
+    public void recordCurrentStepSpread(double timestep) {
+
+    }
+
+    public int getDiffStep(){
+	    return this.diffStep;
+    }
+    public void registerContentIfNotRegistered(String newContent,String type) {};
     public double getTimeForNextStep() {
         return timeForNextStep;
     }
 
-    public void setTimeForNextStep(double time) {
-        this.timeForNextStep = time + this.timeForNextStep;
+    public void setTimeForNextStep() {
+        this.timeForNextStep = timeForNextStep + this.diffStep;
     }
-	
+
+
+    public abstract DataCollector getDataCollector();
 }

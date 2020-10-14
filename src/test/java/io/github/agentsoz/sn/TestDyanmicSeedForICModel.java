@@ -62,7 +62,7 @@ percepts input file, set seeding strategy to dynamic.
             }
 
 
-            sn.getDiffModels()[0].doDiffProcess(); //diffuseContent();
+            sn.getDiffModels()[0].step(); //diffuseContent();
             testIC.recordCurrentStepSpread(ds.getTime());
             ds.stepTime();
 

@@ -31,6 +31,8 @@ public class TestICModel {
         assertEquals("random",SNConfig.getStrategy_ic());
         assertEquals(0.16,SNConfig.getDiffusionProbability_ic(),0);
         assertEquals(0.05,SNConfig.getStandardDeviation_ic(),0);
+        assertEquals(SNConfig.getOutputFilePathOfTheICModel(),"./test/output/diffusion_testing_ic.out");
+
 
     }
 
@@ -124,17 +126,21 @@ public class TestICModel {
     public void testWriteFile(){
 
         Global.setRandomSeed(4711); // deterministic results for testing
-        String outFile = "./test/output/diffusion.out";
+      //  String outFile = "./test/output/diffusion.out";
 
         DataServer ds = DataServer.getServer("test"); //use a different dataserver for each test case, o.w mvn tests fail
         SocialNetworkModel sn = new SocialNetworkModel(testConfigFile,ds);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
 
+
         sn.initWithoutSocialAgentsMap();
         SNConfig.setDiffturn_ic(60);
         SNConfig.setSeed_ic(15);
+
         ICModel ic = (ICModel) sn.getDiffModels()[0];
+        ic.registerContentIfNotRegistered("contentX",DataTypes.LOCAL);
+        ic.registerContentIfNotRegistered("contentY",DataTypes.LOCAL);
         ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
         ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
 
@@ -147,7 +153,7 @@ public class TestICModel {
 
         while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
            // sn.stepDiffusionProcess();
-            sn.getDiffModels()[0].doDiffProcess(); //diffuseContent();
+            sn.getDiffModels()[0].step(); //diffuseContent();
             sn.getDataServer().stepTime();
             ic.recordCurrentStepSpread(sn.getDataServer().getTime());
         }
@@ -155,10 +161,12 @@ public class TestICModel {
         //end of simulation, now print to file
         ic.finish();
         ICModelDataCollector dc = new ICModelDataCollector();
-        ic.getDataCollector().writeSpreadDataToFile(outFile);
+        ic.getDataCollector().writeSpreadDataToFile();
 
-        //testing
+        //verify total agent count, then specific active agent count for each content
         assertEquals(106, dc.getTotalInactiveAgents(sn) + dc.getAdoptedAgentCountForContent(sn,"contentX") + dc.getAdoptedAgentCountForContent(sn,"contentY"));
+        assertEquals(24,  dc.getAdoptedAgentCountForContent(sn,"contentX"));
+        assertEquals(27, dc.getAdoptedAgentCountForContent(sn,"contentY"));
 
     }
 
@@ -167,7 +175,7 @@ public class TestICModel {
     public void testConentBroadcast(){
 
         Global.setRandomSeed(4711); // deterministic results for testing
-        String outFile = "./test/output/diffusion.out";
+     //   String outFile = "./test/output/diffusion.out";
 
         DataServer ds = DataServer.getServer("test1"); // use a different dataserver for each test case, o.w mvn tests fail
         SocialNetworkModel sn = new SocialNetworkModel(testConfigFile,ds);
@@ -179,6 +187,8 @@ public class TestICModel {
         SNConfig.setSeed_ic(15);
         ICModel ic = (ICModel) sn.getDiffModels()[0];
 
+        ic.registerContentIfNotRegistered("contentX",DataTypes.LOCAL);
+        ic.registerContentIfNotRegistered("contentY",DataTypes.LOCAL);
         ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
         ic.initRandomSeed("contentY"); // initialise a random seed for a specific content
 
@@ -205,7 +215,7 @@ public class TestICModel {
                 ic.updateSocialStatesFromGlobalContent(globalcontents);
             }
 
-            sn.getDiffModels()[0].doDiffProcess(); //diffuseContent();
+            sn.getDiffModels()[0].step(); //diffuseContent();
             sn.getDataServer().stepTime();
             ic.recordCurrentStepSpread(sn.getDataServer().getTime());
         }
@@ -213,7 +223,7 @@ public class TestICModel {
         //end of simulation, now print to file
         ic.finish();
         ICModelDataCollector dc = new ICModelDataCollector();
-        ic.getDataCollector().writeSpreadDataToFile(outFile);
+        ic.getDataCollector().writeSpreadDataToFile();
 
         assertEquals(24, dc.getAdoptedAgentCountForContent(sn,"contentX"));
         assertEquals(27, dc.getAdoptedAgentCountForContent(sn,"contentY"));

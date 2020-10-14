@@ -21,13 +21,16 @@ public class SocialAgent extends Node{
 //private int ID;
 private double Xcord;
 private double Ycord;
-private String diffState;
-private boolean isSeed=false; // identfy weather the agent is part of a seed or not. If so the agent panic level remains static
+private HashMap<String,String> diffStates =  new HashMap<String,String>();
+//// identfy weather the agent is part of a seed or not. If so the agent panic level remains static. Now uses isSeedMap
+//private boolean isSeed=false;
 private boolean evacStatus = false;
 
-private double panicLevel=0.0;
+//private double panicLevel=0.0;
 private HashMap<Integer,Double> linkMap;
-private HashMap<String,Double> contentValuesMap =  new HashMap<String, Double>();
+private HashMap<String,Double> contentValuesMap =  new HashMap<String, Double>(); // used for the CLT Model, so created a new one
+	private HashMap<String,Double> contentLevelsMap =  new HashMap<String, Double>(); //generic one for LT model, multiple contents
+private HashMap<String,Boolean> isSeedMap = new HashMap<String, Boolean>();
 
 //LT/probabilistic models
 private ArrayList<String> adoptedContentList;
@@ -39,7 +42,7 @@ private static DecimalFormat df = new DecimalFormat(".##");
 	public SocialAgent(int id, double x_cord, double y_cord)
 	{
 		super.id=id;	
-		this.diffState=DataTypes.LOW;
+//		this.diffStates =DataTypes.LOW;
 		this.Xcord=x_cord;
 		this.Ycord=y_cord;
 		this.links= new HashMap<Integer,SocialLink>();
@@ -48,16 +51,16 @@ private static DecimalFormat df = new DecimalFormat(".##");
 	public SocialAgent(int id) // For LT model
 	{
 		super.id=id;
-		this.diffState=DataTypes.LOW; // inactive
+//		this.diffStates =DataTypes.LOW; // inactive
 		this.linkMap= new HashMap<Integer,Double>();
 		
 		
 	}
 
-	public SocialAgent(int id, String initState) // For CLT model and a generic
+	public SocialAgent(int id, String content, String initState) // For CLT model and a generic
 	{
 		super.id=id;
-		this.diffState=initState;
+		this.diffStates.put(content,initState);
 		this.linkMap= new HashMap<Integer,Double>();
 
 		this.contentValuesMap.put(DataTypes.WAIT, 0.0);
@@ -128,20 +131,21 @@ private static DecimalFormat df = new DecimalFormat(".##");
 		Ycord = ycord;
 	}
 	
-	public void setState(String newState)
+	public void setState(String content, String newState)
 	{
-		this.diffState=newState;
+		this.diffStates.put(content,newState) ;
 	}	
 	
 	
-	public String getState()
+	public String getState(String content)
 	{
-		return this.diffState;
+		return this.diffStates.get(content);
 	}	
 	
-	public boolean isActive(){
+	public boolean isActive(String content){
 		boolean result=false;
-		if(this.diffState.equals(DataTypes.MEDIUM) || this.diffState.equals(DataTypes.HIGH) ) { 
+		String state = this.diffStates.get(content);
+		if(state.equals(DataTypes.MEDIUM) || state.equals(DataTypes.HIGH) ) {
 			result = true;
 		}
 		
@@ -160,31 +164,39 @@ private static DecimalFormat df = new DecimalFormat(".##");
 		
 		return sum;
 	}
-	public double getPanicLevel()
+	public double getContentLevel(String content)
 	{
-		return this.panicLevel;
+		return this.contentLevelsMap.get(content);
 		
 	}
 
-	public String getActivatedContentType() {
-		if(this.diffState.equals(DataTypes.LOW)) {
+	public boolean checkIfPartOfTheSeed(String content) {
+		return isSeedMap.get(content);
+	}
+
+	public void setAsPartOfTheSeed(String content, boolean status) {
+		this.isSeedMap.put(content,status);
+	}
+
+	public String getActivatedContentType() { // only used in CLT Model
+		if(this.diffStates.get(DataTypes.WAIT).equals(DataTypes.LOW)) {
 			return DataTypes.WAIT;
 		}
-		else if(this.diffState.equals(DataTypes.HIGH)){
+		else if(this.diffStates.get(DataTypes.PANIC).equals(DataTypes.HIGH)){
 			return DataTypes.PANIC;
 		}
 		else{
 			return DataTypes.INACTIVE; //inactive
 		}
 	}
-	public void setPanicLevel(double newPanicLevel)
+	public void setContentLevel(String content, double newPanicLevel)
 	{
 		//newly added rounding utility
 //		double roundedPanic = Double.valueOf(df.format(newPanicLevel));
 //		this.panicLevel=roundedPanic;
 		
-		this.panicLevel=newPanicLevel;
-		logger.trace(" agent {} updated panic value: {}", this.getId(), newPanicLevel);
+		this.contentLevelsMap.put(content,newPanicLevel);
+		logger.trace(" agent {} updated panic value: {} for content {}", this.getId(), newPanicLevel,content);
 	}
 	
 	public boolean alreadyLinked(int neiID) { 
@@ -253,15 +265,15 @@ private static DecimalFormat df = new DecimalFormat(".##");
 		return this.linkMap.keySet().toString();
 	}
 	
-	public boolean  isSeed()
-	{
-		return this.isSeed;
-	}
-
-	public void  setIsSeedTrue()
-	{
-		 this.isSeed =  true;
-	}
+//	public boolean  isSeed()
+//	{
+//		return this.isSeed;
+//	}
+//
+//	public void  setIsSeedTrue(String content)
+//	{
+//		 this.isSeed =  true;
+//	}
 
 	public boolean  getEvacStatus()
 	{

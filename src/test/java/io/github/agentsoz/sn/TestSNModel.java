@@ -17,6 +17,7 @@ public class TestSNModel {
 
 //    String logFile = "./testSNModel.log";
 //    final Logger logger = Log.createLogger("", logFile);
+String testConfigFile="./case_studies/hawkesbury/test_ICModel.xml";
 
     @Test
     public void testSNModel() {
@@ -26,30 +27,39 @@ public class TestSNModel {
         DataServer ds1 = DataServer.getServer("TestServer1");
 
 
-
         SocialNetworkModel snModel = new SocialNetworkModel(testConfigFile,ds1);
+
         snModel.setupSNConfigsAndLogs();
+        SNConfig.getContentsToRegisterForICModel().clear();
+        SNConfig.getContentsToRegisterForICModel().add("contentX");
+        SNConfig.printNetworkConfigs();
+        SNConfig.printDiffusionConfigs();
+
         SNUtils.randomAgentMap(snModel, 1000, 1000);
-        snModel.initWithoutSocialAgentsMap();
+        //snModel.initWithoutSocialAgentsMap();
+        snModel.generateSocialNetwork();
+        snModel.generateDiffusionModels();
+       // snModel.getDiffModels()[0]. initialise();
 
         // more diffusion model inits?
         ICModel ic = (ICModel) snModel.getDiffModels()[0];
-        ic.initRandomSeed("contentX");
+       // ic.initRandomSeed("contentX");
         ic.recordCurrentStepSpread(snModel.getDataServer().getTime());
 
         // run the diffusion process
         SNUtils.setEndSimTime(36000*8L);
         snModel.getDataServer().setTime(0.0);
-        snModel.getDataServer().setTimeStep(SNConfig.getDiffTurn_ic()); // #FIXME hardcoded to ic model turn?
+        snModel.getDataServer().setTimeStep(SNConfig.getDiffTurn_ic());
         while (snModel.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
 
-            snModel.getDiffModels()[0].doDiffProcess();// diffuseContent();
+            ic.step();// diffuseContent();
             snModel.getDataServer().stepTime();
-            ICModel icModel = (ICModel) snModel.getDiffModels()[0];
-            icModel.recordCurrentStepSpread(snModel.getDataServer().getTime());
+            ic.recordCurrentStepSpread(snModel.getDataServer().getTime());
         }
 
         snModel.finish();
+        Assert.assertEquals(666, ic.getDataCollector().getAdoptedAgentCountForContent(snModel,"contentX"));
+        Assert.assertEquals(641, ic.getDataCollector().getExposedAgentCountForContent("contentX"));
 
     }
 
@@ -61,7 +71,7 @@ public class TestSNModel {
         List<String> ids = Arrays.asList("1", "2", "3");
 
 
-        SocialNetworkModel snModel = new SocialNetworkModel(SNConfig.getDefaultConfigFile(), ds1,ids);
+        SocialNetworkModel snModel = new SocialNetworkModel(testConfigFile, ds1,ids);
         snModel.initSNModel();
         System.out.println(snModel.getAgentMap().keySet().toString());
         Assert.assertEquals(ids.size(), snModel.getAgentMap().size());
@@ -75,7 +85,7 @@ public class TestSNModel {
         DataServer ds2 = DataServer.getServer("TestServer2");
         List<String> ids = Arrays.asList("1", "2", "3");
 
-        SocialNetworkModel snModel = new SocialNetworkModel(SNConfig.getDefaultConfigFile(), ds2,ids);
+        SocialNetworkModel snModel = new SocialNetworkModel(testConfigFile, ds2,ids);
         snModel.initSNModel();
 
         SNUtils.setEndSimTime(7200L);

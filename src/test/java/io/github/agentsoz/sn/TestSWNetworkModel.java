@@ -32,9 +32,10 @@ public class TestSWNetworkModel {
 	
 	String logFile =  SNConfig.getNetworkLinksDir() + "/" + "network-vis.log";
 	final Logger logger = Log.createLogger("", logFile);
+	String testConfigFile="./case_studies/hawkesbury/hawkesbury.xml";
 
 	
-	SocialNetworkModel snManager = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
+	SocialNetworkModel snManager = new SocialNetworkModel(testConfigFile);
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 
 	double neiDistance = 0.8;
@@ -100,7 +101,7 @@ public class TestSWNetworkModel {
 	public void testUpdatedAgentMap()  
 	{
 
-		SocialNetworkModel sn = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
+		SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
 		sn.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
@@ -125,7 +126,7 @@ public class TestSWNetworkModel {
 	//@Ignore
 	@Test
 	public void testNormalisedNetwork() {
-		SocialNetworkModel sn = new SocialNetworkModel(SNConfig.getDefaultConfigFile());
+		SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
 		sn.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 

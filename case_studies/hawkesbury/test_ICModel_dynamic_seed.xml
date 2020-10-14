@@ -10,7 +10,6 @@
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 	log_file="./test/output/diffusion.log"
 	log_level="d"
-	out_file="./test/output/diffusion-dynamic-seed.out"
 	dynamic_seed_file="./test_data/blocked-percept-seed.csv"
 />
 
@@ -46,6 +45,7 @@
     <step_size>100</step_size>
 	<seeding_strategy seed="0">dynamic</seeding_strategy>
     <diffusion_probability sigma="0.0">0.0</diffusion_probability>
+	<out_file>./test/output/diffusion-dynamic-seed_ic.out</out_file>
 </ic>
 
 
@@ -61,10 +61,10 @@
 	standard_deviation="0.025"
 	strategy="random"
 	thresholdType="guassian"
-
 	diff_seed="5"
 	mean_act_threshold="0.3"
 	mean_high_threshold="0.7"
+	out_file="./test/output/diffusion-dynamic-seed_lt.out"
 
 	panicSeed="10"
 	waitSeed="30"

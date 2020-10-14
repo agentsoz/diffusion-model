@@ -53,13 +53,13 @@ public class SNUtils {
 		simTime = 0L;
 	}
 
-	
-	public static void readAndSetSNMainConfigs() { 
-		//Config.setConfigFile(mainConfig);
-		SNConfig.setConfigFile(SNConfig.getDefaultConfigFile());
-		SNConfig.readConfig();
-		logger.trace("setting SN main configs complete");
-	}
+//
+//	public static void readAndSetSNMainConfigs() {
+//		//Config.setConfigFile(mainConfig);
+//		SNConfig.setConfigFile(SNConfig.getDefaultConfigFile());
+//		SNConfig.readConfig();
+//		logger.trace("setting SN main configs complete");
+//	}
 
 	public static void readAndSetGivenSNMainConfig(String config) {
 		//Config.setConfigFile(mainConfig);

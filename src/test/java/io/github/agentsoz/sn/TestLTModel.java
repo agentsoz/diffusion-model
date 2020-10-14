@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 
+import io.github.agentsoz.dataInterface.DataServer;
+import io.github.agentsoz.socialnetwork.*;
+import io.github.agentsoz.socialnetwork.util.Global;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -11,24 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.agentsoz.socialnetwork.util.DataTypes;
-import io.github.agentsoz.socialnetwork.LTModel;
-import io.github.agentsoz.socialnetwork.Network;
-import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 public class TestLTModel {
 
-	
 
-	SocialNetworkModel sn_manager = new SocialNetworkModel(SNConfig.getDefaultConfigFile()); // init SNMan;
+	public static String testConfigFile = "case_studies/hawkesbury/test_LTModel.xml";
+	SocialNetworkModel sn_manager = new SocialNetworkModel(testConfigFile); // init SNMan;
 	HashMap<Integer,SocialAgent> agentmap = sn_manager.agentList;
 	final Logger logger = LoggerFactory.getLogger("");
 	LTModel ltModel;
 
 
-	public static String testConfigFile = "case_studies/hawkesbury/test_LTModel.xml";
+
 
 
 	@Test
@@ -38,13 +36,14 @@ public class TestLTModel {
 		testSN.setupSNConfigsAndLogs();
 		testSN.printSNModelconfigs();
 
-		assertEquals(13.0, SNConfig.getSeed_lt(),0);
-		assertEquals(3000,SNConfig.getDiffTurn_lt(),0);
-		assertEquals("custom",SNConfig.getStrategy_lt());
+		assertEquals(20.0, SNConfig.getSeed_lt(),0);
+		assertEquals(3600,SNConfig.getDiffTurn_lt(),0);
+		assertEquals("random",SNConfig.getStrategy_lt());
 		assertEquals("guassian",SNConfig.getDiffusionThresholdType_lt());
 //		assertEquals(0.16,SNConfig.getDiffusionProbability_ic(),0);
 		assertEquals(0.089,SNConfig.getStandardDeviation_lt(),0);
-		assertEquals(0.691,SNConfig.getMeanLowPanicThreshold_lt(),0.0);
+		assertEquals(0.391,SNConfig.getMeanLowPanicThreshold_lt(),0.0);
+		assertEquals(SNConfig.getOutputFilePathOFLTModel(),"./test/output/diffusion_testing_lt.out");
 
 	}
 
@@ -66,13 +65,15 @@ public class TestLTModel {
 	public void testInitialise() { 
 		
 	//	SNUtils.setMainConfigFile();
-		sn_manager.setupSNConfigsAndLogs();
-		sn_manager.generateDiffusionModels(); // initialise is already run here
+		SocialNetworkModel snModel = new SocialNetworkModel(testConfigFile);
+		snModel.setupSNConfigsAndLogs();
+		snModel.generateDiffusionModels(); // initialise is already run here
 
-		
-		sn_manager.getDiffModels()[0].printConfigParams();
-		sn_manager.getDiffModels()[0].printthresholdMap();
-		sn_manager.getDiffModels()[0].printPanicValues();
+
+		LTModel model = (LTModel) snModel.getDiffModels()[0];
+		model.printConfigParams();
+		model.printthresholdMap();
+		model.printContentValues();
 
 	}
 	
@@ -91,17 +92,17 @@ public class TestLTModel {
 		net.createLinkWithGivenWeight(3, 4, 1.0, agentmap);
 		
 		
-//		agentmap.get(0).setState(DataTypes.HIGH);
-//		agentmap.get(0).setPanicLevel(1.0);
 
-		
-		// set conifgs
-	//	SNUtils.setMainConfigFile();
 		SNConfig.setDiffusionThresholdType_lt("random");
-		
+
+
+		SNConfig.getContentsToRegisterForLTModel().clear(); // clear contents in config file
+		SNConfig.getContentsToRegisterForLTModel().add("test");
 		ltModel.initialise(); // no diffusion seed, so initActiveAgents do not run
-        sn_manager.getAgentMap().get(0).setIsSeedTrue();
-		ltModel.updatePanicValue(0, 1.0); // call after initialise as threhoslds are not mapped earlier
+
+       	sn_manager.getAgentMap().get(0).setAsPartOfTheSeed("test",true);
+		ltModel.updateContentValue("test",0, 1.0); // call after initialise as threhoslds are not mapped earlier
+		ltModel.getSeedMap().get("test").put(0,1.0);
 
 		ltModel.printthresholdMap();
 
@@ -109,14 +110,15 @@ public class TestLTModel {
 		while (turn < 4) {
 			logger.debug("turn: {}",turn);
 			ltModel.ltDiffuse();
-			ltModel.printPanicValues();
+			ltModel.printContentValues();
 
 			
 			//logger.debug(" low: {} med: {} high: {}", ltModel.getLowPanicCount(),ltModel.getMedPanicCount(),ltModel.getHighPanicCount());
 			if(turn == 3) {
-				ltModel.getDataCollector().countLowMedHighAgents(sn_manager);
-				assertEquals(1,ltModel.getDataCollector().getLowCt(),1);
-				assertEquals(4,ltModel.getDataCollector().getMedCt(),1);
+				//ltModel.getDataCollector().countLowMedHighAgents(sn_manager,turn);
+				ltModel.recordCurrentStepSpread(turn);
+				assertEquals(1,ltModel.getDataCollector().getInactiveCount(3,"test"),1);
+				assertEquals(4,ltModel.getDataCollector().getActiveCount(3,"test"),1);
 			}
 			turn++;
 		}
@@ -131,8 +133,8 @@ public class TestLTModel {
 	@Test
 	public void testIsActive() { 
 		SocialAgent testAgent = agentmap.get(0);
-		testAgent.setState(DataTypes.MEDIUM);
-		assertEquals(true,ltModel.isActive(0)); 
+		testAgent.setState("test",DataTypes.MEDIUM);
+		assertEquals(true,ltModel.isActive("test",0));
 	}
 	
 	//tested
@@ -150,7 +152,56 @@ public class TestLTModel {
 	@Ignore
 	@Test
 	public void testLowHighThresholds() {
-		ltModel.assignGaussianDistThresholds(0, 0.2, 0, 0.1);
+		ltModel.registerContentIfNotRegistered("test2",DataTypes.LOCAL);
+		ltModel.assignGaussianDistThresholds("test2",0, 0.2, 0, 0.1);
 		ltModel.printthresholdMap();
+	}
+
+	@Test
+	public void testWriteFile(){ // for multiple infleunces
+
+		Global.setRandomSeed(4711); // deterministic results for testing
+		//  String outFile = "./test/output/diffusion.out";
+
+		DataServer ds = DataServer.getServer("test4"); //use a different dataserver for each test case, o.w mvn tests fail
+		SocialNetworkModel sn = new SocialNetworkModel(testConfigFile,ds);
+		sn.setupSNConfigsAndLogs();
+		SNUtils.randomAgentMap(sn, 100, 1000);
+
+		sn.initWithoutSocialAgentsMap();
+		//SNConfig.setDiffTurn_lt(60);
+		//SNConfig.setSeed_lt(20);
+		//SNConfig.printDiffusionConfigs();
+		LTModel lt = (LTModel) sn.getDiffModels()[0];
+		//lt.initRandomSeed("default");
+		//lt.initRandomSeed("contentX"); // initialise a random seed for a specific content
+		//lt.initRandomSeed("contentY"); // initialise a random seed for a specific content
+
+		lt.recordCurrentStepSpread(0.0); //record seed spread
+
+		//setup sim configs
+		SNUtils.setEndSimTime(3600*8);
+		sn.getDataServer().setTime(0.0);
+		sn.getDataServer().setTimeStep(SNConfig.getDiffTurn_lt());
+
+		while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
+			// sn.stepDiffusionProcess();
+			lt.step(); //diffuseContent();
+			sn.getDataServer().stepTime();
+			lt.recordCurrentStepSpread(sn.getDataServer().getTime());
+
+		}
+
+		//end of simulation, now print to file
+		lt.finish();
+		//ICModelDataCollector dc = new ICModelDataCollector();
+		lt.getDataCollector().writeSpreadDataToFile();
+
+		//verify total agent count, then specific active agent count for each content
+		//assertEquals(106, dc.getTotalInactiveAgents(sn) + dc.getAdoptedAgentCountForContent(sn,"contentX") + lt.getDataCollector().getAdoptedAgentCountForContent(sn,"contentY"));
+		assertEquals(66,  lt.getDataCollector().getActiveCount(sn.getDataServer().getTime(),"contentX"),0);
+		assertEquals(67,  lt.getDataCollector().getActiveCount(sn.getDataServer().getTime(),"contentY"),0);
+		assertEquals(33, lt.getDataCollector().getInactiveCount(sn.getDataServer().getTime(),"contentY"),0);
+
 	}
 }

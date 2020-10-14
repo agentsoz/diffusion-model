@@ -4,12 +4,11 @@
 <!-- Social Network Model Configurations -->
 <!-- specify the network strucuture ( random(ER MODEL) /sw/rand-reg)and the diffusion model for the sn model-->
 <snModel
-	diffusionModels="lt"
+	diffusionModels="clt"
 	networkType="sw"
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 	log_file="./diffusion.log"
 	log_level="d"
-	out_file="./test/output/diffusion.out"
 	dynamic_seed_file="./test_data/blocked-percept-seed.csv"
 />
 
@@ -39,17 +38,18 @@
 <!-- stratgey = random or nearfire or prob- STANDARD IS PROB-->
 <!--  Thigh is replaced in SNConfig as Thigh = 2 * Tlow -->
 <!-- separated as common lt clt-->
-<lt
+<clt
 
 	diff_turn="120"
 	standard_deviation="0.01"
 	strategy="prob"
 	thresholdType="guassian"
-
 	diff_seed="13.12"
 	mean_act_threshold="0.353"
-	mean_high_threshold="0.751"
+	out_file="./test/output/diffusion_clt.out"
+	contents="test_clt_content"
 
+	mean_high_threshold="0.751"
 	panicSeed="25.32"
 	waitSeed="50.45"
 	waitT="0.244"

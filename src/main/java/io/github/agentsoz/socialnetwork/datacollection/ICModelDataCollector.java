@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.*;
 
-public class ICModelDataCollector {
+public class ICModelDataCollector extends DataCollector{
 
     final static Logger logger = LoggerFactory.getLogger("");
     TreeMap<Double, HashMap<String, Integer>> icDiffSpread;
@@ -19,6 +19,7 @@ public class ICModelDataCollector {
         this.exposedCountMap = new HashMap<String, Integer>();
         this.icDiffSpread = new TreeMap<Double, HashMap<String, Integer>>();
     }
+
 
     public void collectCurrentStepSpreadData(SocialNetworkModel sn, Collection<String> currentContentList, double time) {
 
@@ -152,7 +153,7 @@ public class ICModelDataCollector {
     // version2: use the output file specified in the SNConfig.
     public  void writeSpreadDataToFile() {
 
-        String fileName = SNConfig.getOutputFilePath();
+        String fileName = SNConfig.getOutputFilePathOfTheICModel();
 
         File file = new File(fileName); // create output directory if not exists
         if (!file.exists()) {
@@ -161,7 +162,7 @@ public class ICModelDataCollector {
             }
         }
 
-        logger.info("creating diffusion output file: {} ", fileName);
+        logger.info("IC Model: creating diffusion output file: {} ", fileName);
 
         PrintWriter  dataFile=null;
         try {

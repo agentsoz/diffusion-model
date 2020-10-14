@@ -10,7 +10,6 @@
 	coord_file="./case_studies/hawkesbury/homeLocations.txt"
 	log_file="./test/output/diffusion.log"
 	log_level="i"
-	out_file="./test/output/diffusion.out"
 	dynamic_seed_file="./test_data/blocked-percept-seed.csv"
 />
 
@@ -46,6 +45,7 @@
     <step_size>600</step_size>
 	<seeding_strategy seed="53">random</seeding_strategy>
     <diffusion_probability sigma="0.05">0.16</diffusion_probability>
+	<out_file>./test/output/diffusion_testing_ic.out</out_file>
 </ic>
 
 
@@ -55,12 +55,14 @@
 	<!-- 1st set: specific for LT diffusion model, 2nd set:specific for CLT diffusion model(panic/wait seed and T)-->
 
 <lt
-	diff_turn="50"
+	diff_turn="60"
 	standard_deviation="0.089"
-	strategy="custom"
+	strategy="random"
 	thresholdType="guassian"
-	diff_seed="13"
-	mean_act_threshold="0.691"
+	diff_seed="20"
+	mean_act_threshold="0.391"
+	out_file="./test/output/diffusion_testing_lt.out"
+	contents="contentX,contentY"
 
 	mean_high_threshold="0.7"
 	panicSeed="10"
