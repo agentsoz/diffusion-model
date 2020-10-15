@@ -181,26 +181,26 @@ public class TestCLTModel {
     }
 
     public void checkSeedValues(CLTModel testModel) {
-        Assert.assertEquals(0.8, testModel.getAgentMap().get(2).getContentlevel(DataTypes.WAIT), 0.00);
-        Assert.assertEquals(0.7, testModel.getAgentMap().get(6).getContentlevel(DataTypes.PANIC), 0.00); //seed  values same
+        Assert.assertEquals(0.8, testModel.getAgentMap().get(2).getContentLevel(DataTypes.WAIT), 0.00);
+        Assert.assertEquals(0.7, testModel.getAgentMap().get(6).getContentLevel(DataTypes.PANIC), 0.00); //seed  values same
 
 //        logger.info("optCount: {} waitCount: {} panicCount: {}",testModel.getOptCount(),testModel.getWaitCount(),testModel.getPanicCount());
     }
 
     public void checkTurn1ContentValues(CLTModel testModel) {
 
-        Assert.assertEquals(0.2, testModel.getAgentMap().get(1).getContentlevel(DataTypes.WAIT), 0.00); // agent 1
+        Assert.assertEquals(0.2, testModel.getAgentMap().get(1).getContentLevel(DataTypes.WAIT), 0.00); // agent 1
 
-        Assert.assertEquals(0.3, testModel.getAgentMap().get(3).getContentlevel(DataTypes.WAIT), 0.00); // agent 3
+        Assert.assertEquals(0.3, testModel.getAgentMap().get(3).getContentLevel(DataTypes.WAIT), 0.00); // agent 3
         Assert.assertEquals(DataTypes.WAIT, testModel.getAgentMap().get(3).getActivatedContentType());
 
-        Assert.assertEquals(0.3, testModel.getAgentMap().get(4).getContentlevel(DataTypes.PANIC), 0.00); //agent 4
+        Assert.assertEquals(0.3, testModel.getAgentMap().get(4).getContentLevel(DataTypes.PANIC), 0.00); //agent 4
         Assert.assertEquals(DataTypes.PANIC, testModel.getAgentMap().get(4).getActivatedContentType());
 
-        Assert.assertEquals(0.1, testModel.getAgentMap().get(5).getContentlevel(DataTypes.PANIC), 0.00); //agent 4
+        Assert.assertEquals(0.1, testModel.getAgentMap().get(5).getContentLevel(DataTypes.PANIC), 0.00); //agent 4
         //agent 7 -  random activation to wait, equal content levels
-        Assert.assertEquals(0.3, testModel.getAgentMap().get(7).getContentlevel(DataTypes.WAIT), 0.00); //agent7
-        Assert.assertEquals(0.3, testModel.getAgentMap().get(7).getContentlevel(DataTypes.PANIC), 0.00);
+        Assert.assertEquals(0.3, testModel.getAgentMap().get(7).getContentLevel(DataTypes.WAIT), 0.00); //agent7
+        Assert.assertEquals(0.3, testModel.getAgentMap().get(7).getContentLevel(DataTypes.PANIC), 0.00);
         Assert.assertEquals(DataTypes.PANIC, testModel.getAgentMap().get(7).getActivatedContentType());
 
         //       logger.info("optCount: {} waitCount: {} panicCount: {}",testModel.getOptCount(),testModel.getWaitCount(),testModel.getPanicCount());
@@ -208,48 +208,48 @@ public class TestCLTModel {
 
     public void checkTurn2ContentValues(CLTModel testModel) {
 
-        Assert.assertEquals(0.0, testModel.getAgentMap().get(0).getContentlevel(DataTypes.PANIC), 0.00); //agent 0
-        Assert.assertEquals(0.0, testModel.getAgentMap().get(0).getContentlevel(DataTypes.PANIC), 0.00);
+        Assert.assertEquals(0.0, testModel.getAgentMap().get(0).getContentLevel(DataTypes.PANIC), 0.00); //agent 0
+        Assert.assertEquals(0.0, testModel.getAgentMap().get(0).getContentLevel(DataTypes.PANIC), 0.00);
 
-        Assert.assertEquals(0.3, testModel.getAgentMap().get(1).getContentlevel(DataTypes.WAIT), 0.01); // agent 1
-        Assert.assertEquals(0.2, testModel.getAgentMap().get(1).getContentlevel(DataTypes.PANIC), 0.00);
+        Assert.assertEquals(0.3, testModel.getAgentMap().get(1).getContentLevel(DataTypes.WAIT), 0.01); // agent 1
+        Assert.assertEquals(0.2, testModel.getAgentMap().get(1).getContentLevel(DataTypes.PANIC), 0.00);
         Assert.assertEquals(DataTypes.WAIT, testModel.getAgentMap().get(1).getActivatedContentType());
 
-        Assert.assertEquals(1.0, testModel.getAgentMap().get(2).getContentlevel(DataTypes.WAIT), 0.00); //agent 2
-        Assert.assertEquals(0.3, testModel.getAgentMap().get(2).getContentlevel(DataTypes.PANIC), 0.00); //agent 2
+        Assert.assertEquals(1.0, testModel.getAgentMap().get(2).getContentLevel(DataTypes.WAIT), 0.00); //agent 2
+        Assert.assertEquals(0.3, testModel.getAgentMap().get(2).getContentLevel(DataTypes.PANIC), 0.00); //agent 2
         Assert.assertEquals(DataTypes.PANIC, testModel.getAgentMap().get(2).getActivatedContentType()); // agent converted to panic
 
-        Assert.assertEquals(0.3, testModel.getAgentMap().get(3).getContentlevel(DataTypes.WAIT), 0.00); // agent 3
-        Assert.assertEquals(0.5, testModel.getAgentMap().get(3).getContentlevel(DataTypes.PANIC), 0.00);
+        Assert.assertEquals(0.3, testModel.getAgentMap().get(3).getContentLevel(DataTypes.WAIT), 0.00); // agent 3
+        Assert.assertEquals(0.5, testModel.getAgentMap().get(3).getContentLevel(DataTypes.PANIC), 0.00);
 
-        Assert.assertEquals(0.5, testModel.getAgentMap().get(4).getContentlevel(DataTypes.WAIT), 0.00); // agent 4
-        Assert.assertEquals(0.3, testModel.getAgentMap().get(4).getContentlevel(DataTypes.PANIC), 0.00);
+        Assert.assertEquals(0.5, testModel.getAgentMap().get(4).getContentLevel(DataTypes.WAIT), 0.00); // agent 4
+        Assert.assertEquals(0.3, testModel.getAgentMap().get(4).getContentLevel(DataTypes.PANIC), 0.00);
 
-        Assert.assertEquals(0.1, testModel.getAgentMap().get(5).getContentlevel(DataTypes.PANIC), 0.00); //agent 5
-        Assert.assertEquals(0.1, testModel.getAgentMap().get(5).getContentlevel(DataTypes.WAIT), 0.00);
+        Assert.assertEquals(0.1, testModel.getAgentMap().get(5).getContentLevel(DataTypes.PANIC), 0.00); //agent 5
+        Assert.assertEquals(0.1, testModel.getAgentMap().get(5).getContentLevel(DataTypes.WAIT), 0.00);
 
-        Assert.assertEquals(1.0, testModel.getAgentMap().get(6).getContentlevel(DataTypes.PANIC), 0.00); //agent 6
-        Assert.assertEquals(0.0, testModel.getAgentMap().get(6).getContentlevel(DataTypes.WAIT), 0.00);
+        Assert.assertEquals(1.0, testModel.getAgentMap().get(6).getContentLevel(DataTypes.PANIC), 0.00); //agent 6
+        Assert.assertEquals(0.0, testModel.getAgentMap().get(6).getContentLevel(DataTypes.WAIT), 0.00);
 
         //agent 7 -  no difference - same as turn 1
 
-        Assert.assertEquals(0.5, testModel.getAgentMap().get(8).getContentlevel(DataTypes.PANIC), 0.00); //agent 8
+        Assert.assertEquals(0.5, testModel.getAgentMap().get(8).getContentLevel(DataTypes.PANIC), 0.00); //agent 8
         Assert.assertEquals(DataTypes.PANIC, testModel.getAgentMap().get(8).getActivatedContentType());
 
 //        logger.info("optCount: {} waitCount: {} panicCount: {}",testModel.getOptCount(),testModel.getWaitCount(),testModel.getPanicCount());
     }
 
     public void checkTurn3ContentValues(CLTModel testModel) {
-        Assert.assertEquals(0.5, testModel.getAgentMap().get(0).getContentlevel(DataTypes.PANIC), 0.00); //agent 0
-        Assert.assertEquals(0.2, testModel.getAgentMap().get(0).getContentlevel(DataTypes.WAIT), 0.00);
+        Assert.assertEquals(0.5, testModel.getAgentMap().get(0).getContentLevel(DataTypes.PANIC), 0.00); //agent 0
+        Assert.assertEquals(0.2, testModel.getAgentMap().get(0).getContentLevel(DataTypes.WAIT), 0.00);
         Assert.assertEquals(DataTypes.PANIC, testModel.getAgentMap().get(0).getActivatedContentType());
 
-        Assert.assertEquals(0.8, testModel.getAgentMap().get(3).getContentlevel(DataTypes.PANIC), 0.00); //agent 3
-        Assert.assertEquals(0.1, testModel.getAgentMap().get(3).getContentlevel(DataTypes.WAIT), 0.00);
+        Assert.assertEquals(0.8, testModel.getAgentMap().get(3).getContentLevel(DataTypes.PANIC), 0.00); //agent 3
+        Assert.assertEquals(0.1, testModel.getAgentMap().get(3).getContentLevel(DataTypes.WAIT), 0.00);
         Assert.assertEquals(DataTypes.PANIC, testModel.getAgentMap().get(3).getActivatedContentType());
 
-        Assert.assertEquals(0.2, testModel.getAgentMap().get(4).getContentlevel(DataTypes.WAIT), 0.00); //agent 4
-        Assert.assertEquals(1.0, testModel.getAgentMap().get(4).getContentlevel(DataTypes.PANIC), 0.00);
+        Assert.assertEquals(0.2, testModel.getAgentMap().get(4).getContentLevel(DataTypes.WAIT), 0.00); //agent 4
+        Assert.assertEquals(1.0, testModel.getAgentMap().get(4).getContentLevel(DataTypes.PANIC), 0.00);
 
 
         Assert.assertEquals(DataTypes.INACTIVE, testModel.getAgentMap().get(5).getActivatedContentType()); //agent 5

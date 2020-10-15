@@ -104,9 +104,9 @@ private static DecimalFormat df = new DecimalFormat(".##");
 		}
 
 	}
-	public double getContentlevel(String type) {
-		return this.contentValuesMap.get(type);
-	}
+//	public double getContentlevel(String type) {
+//		return this.contentValuesMap.get(type);
+//	}
 
 	public HashMap<String, Double> getContentValuesMap() {
 		return contentValuesMap;

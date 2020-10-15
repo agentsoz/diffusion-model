@@ -18,6 +18,8 @@ public class DataTypes {
    public static final String GLOBAL               = "global";
    public static final String LOCAL                = "local";
    public static final String TIME                 = "time";
+   public static final String INFORMATION		       = "information";
+   public static final String INFLUENCE		       = "influence";
    
    //seeding strategies
    public static final String NEAR_FIRE		   = "nearfire";

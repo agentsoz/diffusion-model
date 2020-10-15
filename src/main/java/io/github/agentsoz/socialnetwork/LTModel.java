@@ -119,20 +119,40 @@ public class LTModel extends DiffModel{
 
         dc.countLowMedHighAgents(this.snManager,this.contentList,timestep);
     }
-	public void initTestLTModel(String content, double low, double high,HashMap<Integer,Double> seed) {
-		
-		//1.  no setupconfigs
-	
-		//2. assign fixed Thresholds
-		assignFixedThresholds(content,low,high);
-		
-		//3. initially, set the  low panic agents to the agentmap size
-	//	lowPanicCount = getAgentMap().size();
-		
-		//4. set fixed seed from a hashmap
-		initFixedSeed(content,seed);
 
-	} 
+    public Map<String,HashMap<String,Double>> getLatestDiffusionUpdates(){
+		//#FIXME all agent contet values are sent to the BDI side and not the ones that
+		// are updated in the current step
+		Map<String,HashMap<String,Double>> dataUpdates =  new HashMap<String,HashMap<String,Double>>();
+
+		for (String content: this.contentList){
+			HashMap<String,Double> levelsForContent = new HashMap<String,Double>();
+			for(SocialAgent agent: getAgentMap().values()) { //iterate through all agents
+				if(agent.getContentValuesMap().containsKey(content)) { //agent is aware about the content
+					double conentLevel = agent.getContentLevel(content);
+					levelsForContent.put(String.valueOf(agent.getID()),conentLevel);
+				}
+			}
+
+			dataUpdates.put(content,levelsForContent);
+		}
+			return dataUpdates;
+	}
+
+//	public void initTestLTModel(String content, double low, double high,HashMap<Integer,Double> seed) {
+//
+//		//1.  no setupconfigs
+//
+//		//2. assign fixed Thresholds
+//		assignFixedThresholds(content,low,high);
+//
+//		//3. initially, set the  low panic agents to the agentmap size
+//	//	lowPanicCount = getAgentMap().size();
+//
+//		//4. set fixed seed from a hashmap
+//		initFixedSeed(content,seed);
+//
+//	}
 	
 	private void initFixedSeed(String content, HashMap<Integer,Double> seedmap) {
 		logger.debug("Test SNmodel:  seed size {}", seedmap.size());
@@ -232,6 +252,28 @@ public class LTModel extends DiffModel{
 		
 	}
 
+public void updateSocialStatesFromLocalContent(Map<String,HashMap<String,Double>> contentMap) {
+		logger.info("not implemented yet");
+		for(String content: contentMap.keySet()){
+
+			HashMap<String,Double> valueMap = contentMap.get(content);
+			for(String id: valueMap.keySet()){
+				updateContentValue(content,Integer.parseInt(id),valueMap.get(id));
+
+			}
+		}
+}
+
+	public void updateSocialStatesFromGlobalContent(Object data) {  //String contents, id, content value
+
+
+		String[] contents = (String[]) data;
+		logger.info("LTModel: broadcasting method NOT IMPLEMENTED");
+
+//		logger.info("LTModel: broadcasting global contents: {}", contents.toString());
+
+
+	}
 
     public void assignRandomTresholds(String content, int id) {
 		double highT=0.0,actT;

@@ -120,7 +120,7 @@ public class ICModel extends DiffModel{
     public void updateSocialStatesFromGlobalContent(Object data) {
 
         logger.info("ICModel: broadcasting global messages to social agents");
-        ArrayList<String> contents = (ArrayList<String>) data ;
+        String[] contents = (String[]) data ;
 
         for( String content: contents) {
 
@@ -141,6 +141,7 @@ public class ICModel extends DiffModel{
         }
 
     }
+
 
 
     // set seed/state from external model, use only for local content types

@@ -204,15 +204,13 @@ public class TestICModel {
 
             if( sn.getDataServer().getTime() == 3600*4) {
                 ic.registerContentIfNotRegistered("evac-now",DataTypes.GLOBAL);
-                ArrayList<String> globalcontentArr = new ArrayList<String>();
-                globalcontentArr.add("evac-now");
+                String[] globalcontentArr = {"evac-now"};
                 ic.updateSocialStatesFromGlobalContent(globalcontentArr);
             }
             if( sn.getDataServer().getTime() == 3600*6) { // checking if sent again from BDI side, what will happen
                 ic.registerContentIfNotRegistered("evac-now",DataTypes.GLOBAL);
-                ArrayList<String> globalcontents = new ArrayList<String>();
-                globalcontents.add("evac-now");
-                ic.updateSocialStatesFromGlobalContent(globalcontents);
+                String[] globalcontentArr = {"evac-now"};
+                ic.updateSocialStatesFromGlobalContent(globalcontentArr);
             }
 
             sn.getDiffModels()[0].step(); //diffuseContent();

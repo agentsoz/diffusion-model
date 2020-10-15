@@ -355,13 +355,13 @@ influence instance will adopted, but rest will be the same as the LT model.
 //            socialNetworkDiffusionLogger.trace(" agent {} value to update: {}",id, newVal);
             agent.setContentlevel(type,newVal);
 //        }
-       /* else*/ if(newVal < agent.getContentlevel(type)) {
-            logger.error("agent {} , content level {} is less than previous {}",id,newVal,agent.getContentlevel(type) );
+       /* else*/ if(newVal < agent.getContentLevel(type)) {
+            logger.error("agent {} , content level {} is less than previous {}",id,newVal,agent.getContentLevel(type) );
         }
 
         if(agent.getState(type).equals(DataTypes.MEDIUM)) { //1. activation process
 
-            if(newVal > agent.getContentlevel(otherType) && newVal >= getAgentContentTreshold(id,type)) {
+            if(newVal > agent.getContentLevel(otherType) && newVal >= getAgentContentTreshold(id,type)) {
 
                 if(type.equals(DataTypes.WAIT)){ // wait activation
 //                    socialNetworkDiffusionLogger.debug("wait activation: agent: {} newVal: {}", id, newVal);
@@ -451,7 +451,7 @@ influence instance will adopted, but rest will be the same as the LT model.
         for (SocialAgent agent : getAgentMap().values())
         {
             logger.debug("id: {} adopted content:{} waitVal: {} panicVal {}",
-                    agent.getID(), agent.getActivatedContentType(),agent.getContentlevel(DataTypes.WAIT),agent.getContentlevel(DataTypes.PANIC));
+                    agent.getID(), agent.getActivatedContentType(),agent.getContentLevel(DataTypes.WAIT),agent.getContentLevel(DataTypes.PANIC));
         }
     }
 
