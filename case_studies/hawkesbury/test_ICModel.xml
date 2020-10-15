@@ -46,7 +46,7 @@
 		<seeding_strategy seed="53">random</seeding_strategy>
 		<diffusion_probability sigma="0.05">0.16</diffusion_probability>
 		<out_file>./test/output/diffusion_testing_ic.out</out_file>
-		<contents></contents>
+		<contents type="information"></contents>
 	</ic>
 
 
@@ -68,6 +68,7 @@
 	mean_high_threshold="0.7"
 	out_file="./test/output/diffusion_lt.out"
     contents="test_lt_content"
+	content_type="influence"
 
 	panicSeed="10"
 	waitSeed="30"

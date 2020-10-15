@@ -230,4 +230,49 @@ public class TestICModel {
         assertEquals(ic.getAgentMap().size(), dc.getAdoptedAgentCountForContent(sn,"evac-now"));
     }
 
+
+    @Test
+    public void testSNModel() {
+
+        Global.setRandomSeed(4711); // deterministic results for testing
+        String testConfigFile="./case_studies/hawkesbury/test_ICModel.xml";
+        DataServer ds1 = DataServer.getInstance("TestServer1");
+
+
+        SocialNetworkDiffusionModel snModel = new SocialNetworkDiffusionModel(testConfigFile,ds1);
+
+        snModel.setupSNConfigsAndLogs();
+        SNConfig.getContentsToRegisterForICModel().clear();
+        SNConfig.getContentsToRegisterForICModel().add("contentX");
+        SNConfig.printNetworkConfigs();
+        SNConfig.printDiffusionConfigs();
+
+        SNUtils.randomAgentMap(snModel, 1000, 1000);
+        //snModel.initWithoutSocialAgentsMap();
+        snModel.generateSocialNetwork();
+        snModel.generateDiffusionModels();
+        // snModel.getDiffModels()[0]. initialise();
+
+        // more diffusion model inits?
+        ICModel ic = (ICModel) snModel.getDiffModels()[0];
+        // ic.initRandomSeed("contentX");
+        ic.recordCurrentStepSpread(snModel.getDataServer().getTime());
+
+        // run the diffusion process
+        SNUtils.setEndSimTime(36000*8L);
+        snModel.getDataServer().setTime(0.0);
+        snModel.getDataServer().setTimeStep(SNConfig.getDiffTurn_ic());
+        while (snModel.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
+
+            ic.step();// diffuseContent();
+            snModel.getDataServer().stepTime();
+            ic.recordCurrentStepSpread(snModel.getDataServer().getTime());
+        }
+
+        snModel.finish();
+        Assert.assertEquals(666, ic.getDataCollector().getAdoptedAgentCountForContent(snModel,"contentX"));
+        Assert.assertEquals(641, ic.getDataCollector().getExposedAgentCountForContent("contentX"));
+
+    }
+
 }

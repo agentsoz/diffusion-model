@@ -207,6 +207,7 @@ public class LTModel extends DiffModel{
 			meanLowThreshold = SNConfig.getMeanLowPanicThreshold_lt();
 			meanHighThreshold = SNConfig.getMeanHighPanicThreshold();
 			standardDev = SNConfig.getStandardDeviation_lt();
+			contentType = SNConfig.getContentType_lt();
 		}
 		
 		logger.debug("custom configs assigned to LTModel..");

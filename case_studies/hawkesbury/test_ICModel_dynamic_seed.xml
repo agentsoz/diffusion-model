@@ -46,6 +46,8 @@
 	<seeding_strategy seed="0">dynamic</seeding_strategy>
     <diffusion_probability sigma="0.0">0.0</diffusion_probability>
 	<out_file>./test/output/diffusion-dynamic-seed_ic.out</out_file>
+	<contents type="information"></contents>
+
 </ic>
 
 

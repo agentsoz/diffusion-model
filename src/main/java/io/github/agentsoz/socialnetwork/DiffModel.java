@@ -9,6 +9,7 @@ import java.util.HashMap;
 public abstract class DiffModel {
 
     protected  int diffStep;
+    protected String contentType;
 
     protected double timeForNextStep = diffStep;
     protected SocialNetworkDiffusionModel snManager;

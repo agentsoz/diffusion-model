@@ -24,7 +24,7 @@ public class SNConfig {
     //	static Random rand =  Global.getRandom();
     static String networkLinksDir = "../sn_model_data/network_visuals/";
     private static String configFile = null;
-//    private static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
+    //    private static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
     //logs
     private static String logFile = "./diffusion.log"; // default logfile, overwritten by the configuration file
     private static String logLevel = "d"; // default log level
@@ -62,6 +62,7 @@ public class SNConfig {
     private static String diffThresholdType_lt = " ";
     private static double standardDev_lt = 0.0;
     private static ArrayList<String> contentsToRegisterForLTModel;
+    private static String contentType_lt;
 
     //CLTmodel
     private static double waitSeed = 0;
@@ -69,7 +70,7 @@ public class SNConfig {
     private static double waitThreshold = 0.0;
     private static double panicThreshold = 0.0;
     private static ArrayList<String> contentsToRegisterForCLTModel;
-
+    private static String contentType_clt;
 
     //ICModel
     private static double diffusionProbability_ic = 0.0;
@@ -78,7 +79,7 @@ public class SNConfig {
     private static double seed_ic = 0;
     private static double standardDev_ic = 0.0;
     private static ArrayList<String> contentsToRegisterForICModel;
-
+    private static String contentType_ic;
 
     // TestSNBDIModels
     private static double perSeed = 15;
@@ -158,6 +159,10 @@ public class SNConfig {
 
     public static String getDynamicSeedFile() {
         return dynamicSeedFile;
+    }
+
+    public static String getContentType_lt() {
+        return contentType_lt;
     }
 
     //dynamic seed_lt file
@@ -321,6 +326,7 @@ public class SNConfig {
     public static double getPanicThreshold() {
         return panicThreshold;
     }
+
     public static ArrayList<String> getContentsToRegisterForCLTModel() {
         return contentsToRegisterForCLTModel;
     }
@@ -328,6 +334,11 @@ public class SNConfig {
     public static void addContentsToRegisterForCLTModel(String content) {
         contentsToRegisterForCLTModel.add(content);
     }
+
+    public static String getContentType_clt() {
+        return contentType_clt;
+    }
+
 
     //IC model getters and setters
 
@@ -365,6 +376,10 @@ public class SNConfig {
 
     public static void addContentsToRegisterForICModel(String content) {
         contentsToRegisterForICModel.add(content);
+    }
+
+    public static String getContentType_ic() {
+        return contentType_ic;
     }
 
     //TestSNBDIModels
@@ -498,14 +513,16 @@ public class SNConfig {
                             String sd = eElement.getElementsByTagName("diffusion_probability").item(0).getAttributes().getNamedItem("sigma").getNodeValue();
                             standardDev_ic = Double.parseDouble(sd);
 
-                            String oFile =  eElement.getElementsByTagName("out_file").item(0).getTextContent();
+                            String oFile = eElement.getElementsByTagName("out_file").item(0).getTextContent();
                             setOutputFileOfTheICModel(oFile);
 
-                            String icContents =  eElement.getElementsByTagName("contents").item(0).getTextContent();
+                            String icContents = eElement.getElementsByTagName("contents").item(0).getTextContent();
 
-                                //if string is empty,  insntantiate empty list
-                                contentsToRegisterForICModel = (icContents.isEmpty()) ? new ArrayList<String>() : new ArrayList(Arrays.asList(icContents.split(",")));
+                            //if string is empty,  insntantiate empty list
+                            contentsToRegisterForICModel = (icContents.isEmpty()) ? new ArrayList<String>() : new ArrayList(Arrays.asList(icContents.split(",")));
 
+                            String icContentType = eElement.getElementsByTagName("contents").item(0).getAttributes().getNamedItem("type").getNodeValue();
+                            contentType_ic = icContentType;
 
                         } catch (Exception e) {
                             System.err.println("SNConfig: ERROR while reading IC config: " + e.getMessage());
@@ -543,6 +560,8 @@ public class SNConfig {
                             //if string is empty,  insntantiate empty list
                             contentsToRegisterForLTModel = (contents.isEmpty()) ? new ArrayList<String>() : new ArrayList(Arrays.asList(contents.split(",")));
 
+                            String contentType = node.getAttributes().getNamedItem("content_type").getNodeValue();
+                            contentType_lt = contentType;
 
                             // CLT model parameters
 //                            String ps = node.getAttributes().getNamedItem("panicSeed").getNodeValue();
@@ -557,58 +576,58 @@ public class SNConfig {
 //                            String pt = node.getAttributes().getNamedItem("panicT").getNodeValue();
 //                            panicThreshold = Double.parseDouble(pt);
 
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             System.err.println("SNConfig: WARNING: could not read from the node lt " + e.getMessage());
                         }
                     }
-                        if (nodeName.equals("clt") && getDiffusionModelsList().contains(DataTypes.CLTModel)) {
-                            try {
+                    if (nodeName.equals("clt") && getDiffusionModelsList().contains(DataTypes.CLTModel)) {
+                        try {
 
-                                String dseed = node.getAttributes().getNamedItem("diff_seed").getNodeValue();
-                                seed_lt = Double.parseDouble(dseed);
+                            String dseed = node.getAttributes().getNamedItem("diff_seed").getNodeValue();
+                            seed_lt = Double.parseDouble(dseed);
 
-                                String turn = node.getAttributes().getNamedItem("diff_turn").getNodeValue();
-                                diffTurn_lt = Integer.parseInt(turn) * 60;
+                            String turn = node.getAttributes().getNamedItem("diff_turn").getNodeValue();
+                            diffTurn_lt = Integer.parseInt(turn) * 60;
 
-                                strategy_lt = node.getAttributes().getNamedItem("strategy").getNodeValue();
+                            strategy_lt = node.getAttributes().getNamedItem("strategy").getNodeValue();
 
-                                String meanLow = node.getAttributes().getNamedItem("mean_act_threshold").getNodeValue();
-                                meanLowPanicThreshold_lt = Double.parseDouble(meanLow);
+                            String meanLow = node.getAttributes().getNamedItem("mean_act_threshold").getNodeValue();
+                            meanLowPanicThreshold_lt = Double.parseDouble(meanLow);
 
-                                //String meanHigh = node.getAttributes().getNamedItem("mean_high_threshold").getNodeValue();
-                                //meanHighPanicThreshold  = Double.parseDouble(meanHigh);
-                                meanHighPanicThreshold = meanLowPanicThreshold_lt * 2;
+                            //String meanHigh = node.getAttributes().getNamedItem("mean_high_threshold").getNodeValue();
+                            //meanHighPanicThreshold  = Double.parseDouble(meanHigh);
+                            meanHighPanicThreshold = meanLowPanicThreshold_lt * 2;
 
-                                String type = node.getAttributes().getNamedItem("thresholdType").getNodeValue();
-                                diffThresholdType_lt = type;
+                            String type = node.getAttributes().getNamedItem("thresholdType").getNodeValue();
+                            diffThresholdType_lt = type;
 
-                                String sd = node.getAttributes().getNamedItem("standard_deviation").getNodeValue();
-                                standardDev_lt = Double.parseDouble(sd);
+                            String sd = node.getAttributes().getNamedItem("standard_deviation").getNodeValue();
+                            standardDev_lt = Double.parseDouble(sd);
 
-                                String lt_oFile = node.getAttributes().getNamedItem("out_file").getNodeValue();
-                                setOutputFileOfLTModel(lt_oFile);
+                            String lt_oFile = node.getAttributes().getNamedItem("out_file").getNodeValue();
+                            setOutputFileOfLTModel(lt_oFile);
 
-                                // CLT model parameters
-                                String ps = node.getAttributes().getNamedItem("panicSeed").getNodeValue();
-                                panicSeed = Double.parseDouble(ps);
+                            // CLT model parameters
+                            String ps = node.getAttributes().getNamedItem("panicSeed").getNodeValue();
+                            panicSeed = Double.parseDouble(ps);
 
-                                String ws = node.getAttributes().getNamedItem("waitSeed").getNodeValue();
-                                waitSeed = Double.parseDouble(ws);
+                            String ws = node.getAttributes().getNamedItem("waitSeed").getNodeValue();
+                            waitSeed = Double.parseDouble(ws);
 
-                                String wt = node.getAttributes().getNamedItem("waitT").getNodeValue();
-                                waitThreshold = Double.parseDouble(wt);
+                            String wt = node.getAttributes().getNamedItem("waitT").getNodeValue();
+                            waitThreshold = Double.parseDouble(wt);
 
-                                String pt = node.getAttributes().getNamedItem("panicT").getNodeValue();
-                                panicThreshold = Double.parseDouble(pt);
+                            String pt = node.getAttributes().getNamedItem("panicT").getNodeValue();
+                            panicThreshold = Double.parseDouble(pt);
 
-                                String contents = node.getAttributes().getNamedItem("contents").getNodeValue();
-                                //if string is empty,  insntantiate empty list
-                                contentsToRegisterForLTModel = (contents.isEmpty()) ? new ArrayList<String>() : new ArrayList(Arrays.asList(contents.split(",")));
+                            String contents = node.getAttributes().getNamedItem("contents").getNodeValue();
+                            //if string is empty,  insntantiate empty list
+                            contentsToRegisterForLTModel = (contents.isEmpty()) ? new ArrayList<String>() : new ArrayList(Arrays.asList(contents.split(",")));
 
+                            String contentType = node.getAttributes().getNamedItem("content_type").getNodeValue();
+                            contentType_clt = contentType;
 
-                            }
-                            catch (Exception e) {
+                        } catch (Exception e) {
                             System.err.println("SNConfig: WARNING: could not read from the node lt " + e.getMessage());
                         }
 
@@ -659,6 +678,7 @@ public class SNConfig {
 
             if (model.equals(DataTypes.ltModel)) {
                 logger.info(" LT MODEL configs:");
+                logger.info("content type: {}", getContentType_lt());
                 logger.info("influences to diffuse: {}", getContentsToRegisterForLTModel().toString());
                 logger.info("diffusion seed = {}", getSeed_lt());
                 logger.info("diffusion turn = {}", getDiffTurn_lt());
@@ -671,10 +691,13 @@ public class SNConfig {
                 logger.info("output file(LT MOdel): {}", getOutputFilePathOFLTModel());
 
 
+
+
             }
             if (model.equals(DataTypes.CLTModel)) {
                 logger.info(" CLT MODEL configs:");
                 logger.info("diffusion turn = {}", getDiffTurn_lt());
+                logger.info("content type: {}", getContentType_clt());
                 logger.info("diffusion strategy_lt = {}", getStrategy_lt());
                 logger.info(" diffusion threshold generation type = {}", getDiffusionThresholdType_lt());
                 logger.info("standard deviation = {}", getStandardDeviation_lt());
@@ -688,6 +711,7 @@ public class SNConfig {
             if (model.equals(DataTypes.icModel)) {
                 logger.info(" IC MODEL configs:");
                 logger.info("influences to diffuse: {}", getContentsToRegisterForICModel().toString());
+                logger.info("content type: {}", getContentType_ic());
                 logger.info("diffusion seed = {}", getSeed_ic());
                 logger.info("diffusion turn = {}", getDiffTurn_ic());
                 logger.info("diffusion strategy = {}", getStrategy_ic());

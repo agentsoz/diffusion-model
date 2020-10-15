@@ -48,7 +48,8 @@ public class ICModel extends DiffModel{
             agent.initAdoptedContentList();
         }
 
-        //register contents
+        //register content type and contents
+        contentType = SNConfig.getContentType_ic();
         for(String newContent: SNConfig.getContentsToRegisterForICModel()){
             registerContentIfNotRegistered(newContent,DataTypes.LOCAL);
         }

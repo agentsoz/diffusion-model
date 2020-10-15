@@ -50,6 +50,7 @@ influence instance will adopted, but rest will be the same as the LT model.
        this.meanWaitThreshold = SNConfig.getWaitThreshold();
        this.meanPanicThreshold = SNConfig.getPanicThreshold();
        this.standardDev = SNConfig.getStandardDeviation_lt();
+       this.contentType = SNConfig.getContentType_clt();
 
         logger.trace("diffusion configs assigned to CLTModel..");
     }

@@ -48,6 +48,8 @@
 	mean_act_threshold="0.353"
 	out_file="./test/output/diffusion_clt.out"
 	contents="test_clt_content"
+	content_type="influence"
+
 
 	mean_high_threshold="0.751"
 	panicSeed="25.32"
