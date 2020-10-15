@@ -3,7 +3,7 @@ package io.github.agentsoz.sn;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.socialnetwork.ICModel;
 import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 import org.junit.Assert;
@@ -24,10 +24,10 @@ String testConfigFile="./case_studies/hawkesbury/test_ICModel.xml";
 
         Global.setRandomSeed(4711); // deterministic results for testing
         String testConfigFile="./case_studies/hawkesbury/test_ICModel.xml";
-        DataServer ds1 = DataServer.getServer("TestServer1");
+        DataServer ds1 = DataServer.getInstance("TestServer1");
 
 
-        SocialNetworkModel snModel = new SocialNetworkModel(testConfigFile,ds1);
+        SocialNetworkDiffusionModel snModel = new SocialNetworkDiffusionModel(testConfigFile,ds1);
 
         snModel.setupSNConfigsAndLogs();
         SNConfig.getContentsToRegisterForICModel().clear();
@@ -67,12 +67,12 @@ String testConfigFile="./case_studies/hawkesbury/test_ICModel.xml";
     @Test
     public void testInitSocialAgentMap() {
 
-        DataServer ds1 = DataServer.getServer("TestServer1");
+        DataServer ds1 = DataServer.getInstance("TestServer1");
         List<String> ids = Arrays.asList("1", "2", "3");
 
 
-        SocialNetworkModel snModel = new SocialNetworkModel(testConfigFile, ds1,ids);
-        snModel.initSNModel();
+        SocialNetworkDiffusionModel snModel = new SocialNetworkDiffusionModel(testConfigFile, ds1,ids);
+        snModel.init();
         System.out.println(snModel.getAgentMap().keySet().toString());
         Assert.assertEquals(ids.size(), snModel.getAgentMap().size());
 
@@ -82,11 +82,11 @@ String testConfigFile="./case_studies/hawkesbury/test_ICModel.xml";
     @Test
     public void testgenSNModel() {
 
-        DataServer ds2 = DataServer.getServer("TestServer2");
+        DataServer ds2 = DataServer.getInstance("TestServer2");
         List<String> ids = Arrays.asList("1", "2", "3");
 
-        SocialNetworkModel snModel = new SocialNetworkModel(testConfigFile, ds2,ids);
-        snModel.initSNModel();
+        SocialNetworkDiffusionModel snModel = new SocialNetworkDiffusionModel(testConfigFile, ds2,ids);
+        snModel.init();
 
         SNUtils.setEndSimTime(7200L);
         while (snModel.getDataServer().getTime() <= SNUtils.getEndSimTime()) {

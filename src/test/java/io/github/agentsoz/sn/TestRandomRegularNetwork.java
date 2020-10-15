@@ -3,7 +3,7 @@ package io.github.agentsoz.sn;
 import java.util.HashMap;
 
 import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Log;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import io.github.agentsoz.socialnetwork.util.SNUtils;
 public class TestRandomRegularNetwork {
 
 	String testConfigFile="./case_studies/hawkesbury/hawkesbury.xml";
-	SocialNetworkModel snManager = new SocialNetworkModel(testConfigFile);
+	SocialNetworkDiffusionModel snManager = new SocialNetworkDiffusionModel(testConfigFile);
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	int testNodes = 10;
 	int testDegree = 2;

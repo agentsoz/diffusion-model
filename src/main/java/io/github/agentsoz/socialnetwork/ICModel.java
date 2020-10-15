@@ -21,7 +21,7 @@ public class ICModel extends DiffModel{
     private ICModelDataCollector dc;
     private HashMap<String, ArrayList<String>> currentStepActiveAgents =  new HashMap<String, ArrayList<String>>();
 
-    public ICModel(SocialNetworkModel sn, int step, double prob) {
+    public ICModel(SocialNetworkDiffusionModel sn, int step, double prob) {
 
         this.snManager = sn;
         this.diffStep = step;
@@ -262,7 +262,7 @@ public class ICModel extends DiffModel{
         }
 
         String directedLinkID = String.valueOf(nodeID).concat(String.valueOf(neighbourID));
-      //  logger.info("linkID: {}",directedLinkID);
+      //  socialNetworkDiffusionLogger.info("linkID: {}",directedLinkID);
 
         ArrayList<String> attemptList =  this.attemptedLinksMap.get(content);
         if(attemptList.contains(directedLinkID)) {
@@ -279,7 +279,7 @@ public class ICModel extends DiffModel{
     public boolean neighbourAlreadyExposed(int nodeID, int neighbourID, String content) {
 
         String directedLinkID = String.valueOf(nodeID).concat(String.valueOf(neighbourID));
-      //  logger.info("linkID: {}",directedLinkID);
+      //  socialNetworkDiffusionLogger.info("linkID: {}",directedLinkID);
 
         if(this.attemptedLinksMap.get(content) == null) {
             logger.error("no attempted links map found");

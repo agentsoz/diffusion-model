@@ -253,7 +253,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 		// This ordering is needed for printing the agent map and distinguishing
 		// links that is already considered
 		Map<Integer,SocialAgent> treeAgentMap = new TreeMap<Integer,SocialAgent>(agentList);
-// 	   logger.debug("treemap size: {}", treeAgentMap.size());
+// 	   socialNetworkDiffusionLogger.debug("treemap size: {}", treeAgentMap.size());
  	   
            System.out.println(" agent map:: ");
 
@@ -295,7 +295,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 		public void verifyUpdatedAgentList(HashMap<Integer,SocialAgent> agentList)  {
 			int alreadyLinkedCount = 0 ; // given two agents are they both exist in each other's link maps
 			logger.info("verifying the updated agentmap.....");
-//			logger.debug("verification - #links in the  linkList: {} ", this.links.size());  neighbourLinksCount
+//			socialNetworkDiffusionLogger.debug("verification - #links in the  linkList: {} ", this.links.size());  neighbourLinksCount
 			logger.info("verification - #links added to the agentList: {} ",neighbourLinksCount);  
 			
 	           for (int id: agentList.keySet()) 
@@ -337,7 +337,7 @@ public void genNetworkAndUpdateAgentMap(HashMap<Integer,SocialAgent> agentList){
 					double neiX = agentList.get(neiId).getX();
 					double neiY = agentList.get(neiId).getY();
 					double actualDist = euclideanDistance(agent.getX(),agent.getY(),neiX,neiY) ;
-				//	logger.trace("neihours: {} {} distance: {}", agent.getID(),neiId,actualDist);
+				//	socialNetworkDiffusionLogger.trace("neihours: {} {} distance: {}", agent.getID(),neiId,actualDist);
 					if(actualDist > maxDist) {
 						logger.error("found neighbours {} {} with distance higher ({}) than the max distance ({})", agent.getID(), neiId,actualDist, maxDist);
 					}

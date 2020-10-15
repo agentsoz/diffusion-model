@@ -55,7 +55,7 @@ public class LTModel extends DiffModel{
 	//protected int highPanicCount = 0;
 
 
-	public LTModel(double seed, int turn, SocialNetworkModel snMan) {
+	public LTModel(double seed, int turn, SocialNetworkDiffusionModel snMan) {
 		this.diffSeed = (int) (seed * 0.01 * snMan.getAgentMap().size()); // divide by 100 for the percentage multiply by the #agents
 		this.diffStep = turn; // already converted to seconds at SNConfig
 		this.snManager = snMan;
@@ -198,7 +198,7 @@ public class LTModel extends DiffModel{
 //	public boolean isDiffTurn(long simTime) {
 //		boolean result;
 //        result = simTime % this.diffTurn == 0;
-//		logger.trace("isDiffTurn? {}",result);
+//		socialNetworkDiffusionLogger.trace("isDiffTurn? {}",result);
 //		return result;
 //	}
 	public void setupDiffConfigs() { 
@@ -326,7 +326,7 @@ public class LTModel extends DiffModel{
 		// counting social states
 //		dc.countLowMedHighAgents(this.snManager);  // counting should be done outside seedng methods.
 //
-//		logger.info("initialise random seed complete-expected active agents: {}", selected);
+//		socialNetworkDiffusionLogger.info("initialise random seed complete-expected active agents: {}", selected);
 		logger.info("random seeeding: selected  {} agents for content {}",selected, content);
 	}
 	
@@ -393,7 +393,7 @@ public class LTModel extends DiffModel{
 		logger.info("initialise near fire seed complete- selected agents ({}): {}", this.diffSeed, selected);
 
 //		dc.countLowMedHighAgents(this.snManager); // counting should be done outside seedng methods.
-//		logger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt() );
+//		socialNetworkDiffusionLogger.info("INACTIVE agents: {}  | ACTIVE agents: {}",dc.getLowCt(), dc.getMedCt() );
 
 
 	}
@@ -412,14 +412,14 @@ public class LTModel extends DiffModel{
 		
 		List<Integer> replicateIdList = new ArrayList<Integer>();
 		
-		//logger.trace("before shuffle: {}",getAgentMap().keySet().toString());
+		//socialNetworkDiffusionLogger.trace("before shuffle: {}",getAgentMap().keySet().toString());
 		for (int id: getAgentMap().keySet()) { // add all ids
 			replicateIdList.add(id);
 		}
 		
 		//shuffle the id list -  TESTED with small size
 		Collections.shuffle(replicateIdList,Global.getRandom());
-		//logger.trace("after shuffle: {}",replicateIdList.toString());
+		//socialNetworkDiffusionLogger.trace("after shuffle: {}",replicateIdList.toString());
 		
 				for(int id: replicateIdList) { 
 						
@@ -442,7 +442,7 @@ public class LTModel extends DiffModel{
 					logger.trace("probabilistic seed strategy - actT: {} id: {}",min,id);
 					double max = 1.0;
 					double randomPanicVal =  min + ((max - min) * Global.getRandom().nextDouble()); // random panic value
-		//			logger.trace("seed selected agent: {} plevel: {}",agent.getID(),randomPanicVal );
+		//			socialNetworkDiffusionLogger.trace("seed selected agent: {} plevel: {}",agent.getID(),randomPanicVal );
 					//2steps
 					seedMap.get(content).put(agent.getID(), randomPanicVal);
 					agent.setAsPartOfTheSeed(content,true); // agent is part of the seed
@@ -504,7 +504,7 @@ public class LTModel extends DiffModel{
 				panicValsToBeUpadated.get(content).put(agent.getId(), pValue);
 
 			}
-			//	logger.debug("panic values: {}", panicValsToBeUpadated.toString());
+			//	socialNetworkDiffusionLogger.debug("panic values: {}", panicValsToBeUpadated.toString());
 			for (Map.Entry entry : panicValsToBeUpadated.get(content).entrySet()) {
 
 				int id = (int) entry.getKey();

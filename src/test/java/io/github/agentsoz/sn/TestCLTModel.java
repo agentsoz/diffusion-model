@@ -2,7 +2,7 @@ package io.github.agentsoz.sn;
 
 import io.github.agentsoz.socialnetwork.CLTModel;
 import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
@@ -20,7 +20,7 @@ public class TestCLTModel {
     public static String testConfigFile = "case_studies/hawkesbury/testOverallConfig_hawkesbury.xml";
     String cltDiffNetFile = "test_data/clt-diffusion-network.txt";
     final Logger logger = LoggerFactory.getLogger("");
-    SocialNetworkModel testSN = new SocialNetworkModel(testConfigFile);
+    SocialNetworkDiffusionModel testSN = new SocialNetworkDiffusionModel(testConfigFile);
     CLTModel cltModel;
 
     @Before
@@ -143,7 +143,7 @@ public class TestCLTModel {
     public void testcompetivitveDiffusion() {
 
 
-        SocialNetworkModel cltSNmanager = new SocialNetworkModel(testConfigFile);
+        SocialNetworkDiffusionModel cltSNmanager = new SocialNetworkDiffusionModel(testConfigFile);
         cltSNmanager.setupSNConfigsAndLogs(); // set sn configs
         SNUtils.randomAgentMap(cltSNmanager, 9, 1000); // cant use the actual cords as they do not match with the
         SNUtils.createTestNetwork(cltDiffNetFile, cltSNmanager); // create the test network

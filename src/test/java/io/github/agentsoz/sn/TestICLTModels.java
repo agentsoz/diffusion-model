@@ -3,7 +3,7 @@ package io.github.agentsoz.sn;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.socialnetwork.DiffModel;
 import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import io.github.agentsoz.socialnetwork.datacollection.ICModelDataCollector;
 import io.github.agentsoz.socialnetwork.datacollection.LTModelDataCollector;
 import io.github.agentsoz.socialnetwork.util.Global;
@@ -18,7 +18,7 @@ public class TestICLTModels {
 
     @Test
     public void testConfigs(){
-        SocialNetworkModel testSN = new SocialNetworkModel(testConfigFile);
+        SocialNetworkDiffusionModel testSN = new SocialNetworkDiffusionModel(testConfigFile);
         testSN.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(testSN,100,1000);
         testSN.genNetworkAndDiffModels();
@@ -47,9 +47,9 @@ public class TestICLTModels {
 
         Global.setRandomSeed(4711); // deterministic results for testing
 
-        DataServer ds = DataServer.getServer("multiple"); //use a different dataserver for each test case, o.w mvn tests fail
+        DataServer ds = DataServer.getInstance("multiple"); //use a different dataserver for each test case, o.w mvn tests fail
 
-        SocialNetworkModel testSN = new SocialNetworkModel(testConfigFile,ds);
+        SocialNetworkDiffusionModel testSN = new SocialNetworkDiffusionModel(testConfigFile,ds);
         testSN.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(testSN,100,1000);
         testSN.genNetworkAndDiffModels();
@@ -59,7 +59,7 @@ public class TestICLTModels {
 
         SNUtils.setEndSimTime(3600*8);
         testSN.getDataServer().setTime(0.0);
-        double shortestStep = testSN.getShortestTimeOfAllDiffusionModels();
+        double shortestStep = testSN.getShortestTimeStepOfAllDiffusionModels();
         testSN.getDataServer().setTimeStep(shortestStep);
 
 
@@ -115,9 +115,9 @@ public class TestICLTModels {
 
         Global.setRandomSeed(4711); // deterministic results for testing
 
-        DataServer ds = DataServer.getServer("multiple2"); //use a different dataserver for each test case, o.w mvn tests fail
+        DataServer ds = DataServer.getInstance("multiple2"); //use a different dataserver for each test case, o.w mvn tests fail
 
-        SocialNetworkModel testSN = new SocialNetworkModel(testConfigFile,ds);
+        SocialNetworkDiffusionModel testSN = new SocialNetworkDiffusionModel(testConfigFile,ds);
         testSN.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(testSN,100,1000);
         testSN.genNetworkAndDiffModels();
@@ -135,7 +135,7 @@ public class TestICLTModels {
 
         SNUtils.setEndSimTime(3600*8);
         testSN.getDataServer().setTime(0.0);
-        double shortestStep = testSN.getShortestTimeOfAllDiffusionModels();
+        double shortestStep = testSN.getShortestTimeStepOfAllDiffusionModels();
         testSN.getDataServer().setTimeStep(shortestStep);
 
 

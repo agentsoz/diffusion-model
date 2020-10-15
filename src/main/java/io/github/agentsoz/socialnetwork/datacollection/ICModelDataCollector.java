@@ -2,7 +2,7 @@ package io.github.agentsoz.socialnetwork.datacollection;
 
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ public class ICModelDataCollector extends DataCollector{
     }
 
 
-    public void collectCurrentStepSpreadData(SocialNetworkModel sn, Collection<String> currentContentList, double time) {
+    public void collectCurrentStepSpreadData(SocialNetworkDiffusionModel sn, Collection<String> currentContentList, double time) {
 
         HashMap<String, Integer> currentSpreadCountMap = new HashMap<String, Integer>();
         for(String content: currentContentList) {
@@ -33,7 +33,7 @@ public class ICModelDataCollector extends DataCollector{
 
     }
 
-    public  int getTotalInactiveAgents(SocialNetworkModel sn) {
+    public  int getTotalInactiveAgents(SocialNetworkDiffusionModel sn) {
 
         // total inactive agents, both inactive-exposed and inactive-unexposed
         int counter = 0;
@@ -57,7 +57,7 @@ public class ICModelDataCollector extends DataCollector{
         }
     }
 
-    public  int getAdoptedAgentCountForContent(SocialNetworkModel sn, String content) {
+    public  int getAdoptedAgentCountForContent(SocialNetworkDiffusionModel sn, String content) {
 
         // non-adopted agents = totAgents - adoptedAgents
         int counter = 0;
@@ -71,7 +71,7 @@ public class ICModelDataCollector extends DataCollector{
         return counter;
     }
 
-    public  Integer[] getAdoptedAgentIdArrayForContent(SocialNetworkModel sn, String content) {
+    public  Integer[] getAdoptedAgentIdArrayForContent(SocialNetworkDiffusionModel sn, String content) {
 
         ArrayList<Integer> adoptedAgentIDList =  new ArrayList<Integer>();
         for(SocialAgent agent: sn.getAgentMap().values()) {

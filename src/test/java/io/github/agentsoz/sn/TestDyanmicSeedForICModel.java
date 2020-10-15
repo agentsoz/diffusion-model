@@ -3,7 +3,7 @@ package io.github.agentsoz.sn;
 import io.github.agentsoz.dataInterface.DataServer;
 import io.github.agentsoz.socialnetwork.ICModel;
 import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 
@@ -25,8 +25,8 @@ percepts input file, set seeding strategy to dynamic.
 // #FIXME this test fails in maven command line.
  //   @Test
     public void testDyanmicSeed() {
-        DataServer ds = DataServer.getServer("test100"); // use a different dataserver for each test case, o.w mvn tests fail
-        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
+        DataServer ds = DataServer.getInstance("test100"); // use a different dataserver for each test case, o.w mvn tests fail
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
         sn.setupSNConfigsAndLogs();
         sn.printSNModelconfigs();
         SNUtils.randomAgentMap(sn,50000,1000);

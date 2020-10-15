@@ -22,7 +22,7 @@ public class TestICModel {
     @Test
  //   @Ignore
     public void testConfigs(){
-        SocialNetworkModel testSN = new SocialNetworkModel(testConfigFile);
+        SocialNetworkDiffusionModel testSN = new SocialNetworkDiffusionModel(testConfigFile);
         testSN.setupSNConfigsAndLogs();
         testSN.printSNModelconfigs();
 
@@ -39,7 +39,7 @@ public class TestICModel {
     @Test
     public void testRandomSeed() {
 
-        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn,80,1000);
 
@@ -73,7 +73,7 @@ public class TestICModel {
     @Test
     public void testExposureAttmept(){
 
-        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
         ICModel icModel = new ICModel(sn, 30, 0.0);
 
         icModel.registerContentIfNotRegistered("contentX",DataTypes.LOCAL);
@@ -86,7 +86,7 @@ public class TestICModel {
     public void testRandomDiffProbabilityRange() {
         // SD = 0.05, p = 0.16
         Global.setRandomSeed(4711);
-        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
 
@@ -106,7 +106,7 @@ public class TestICModel {
 
         // SD = 0.05, p = 0.16
         Global.setRandomSeed(4711);
-        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
         sn.genNetworkAndDiffModels();
@@ -128,8 +128,8 @@ public class TestICModel {
         Global.setRandomSeed(4711); // deterministic results for testing
       //  String outFile = "./test/output/diffusion.out";
 
-        DataServer ds = DataServer.getServer("test"); //use a different dataserver for each test case, o.w mvn tests fail
-        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile,ds);
+        DataServer ds = DataServer.getInstance("test"); //use a different dataserver for each test case, o.w mvn tests fail
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile,ds);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
 
@@ -177,8 +177,8 @@ public class TestICModel {
         Global.setRandomSeed(4711); // deterministic results for testing
      //   String outFile = "./test/output/diffusion.out";
 
-        DataServer ds = DataServer.getServer("test1"); // use a different dataserver for each test case, o.w mvn tests fail
-        SocialNetworkModel sn = new SocialNetworkModel(testConfigFile,ds);
+        DataServer ds = DataServer.getInstance("test1"); // use a different dataserver for each test case, o.w mvn tests fail
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile,ds);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
 

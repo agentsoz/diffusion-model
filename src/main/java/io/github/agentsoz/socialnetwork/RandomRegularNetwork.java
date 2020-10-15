@@ -137,7 +137,7 @@ public class RandomRegularNetwork extends Network{
     }
     
     
-    // if you use the logger : hard to get the adj matrix display in a nice way
+    // if you use the socialNetworkDiffusionLogger : hard to get the adj matrix display in a nice way
     public void displayArraylists() { 
     	for (int i = 0; i < this.nodes; i++) { 
     		System.out.print("node: "+ i);
@@ -152,7 +152,7 @@ public class RandomRegularNetwork extends Network{
     }
     
     
-	// // if you use the logger : hard to get the adj matrix display in a nice way
+	// // if you use the socialNetworkDiffusionLogger : hard to get the adj matrix display in a nice way
 	   public void displayMatrix()
 	   {
         System.out.println(" adjacency matrix representation:: ");

@@ -2,7 +2,7 @@ package io.github.agentsoz.socialnetwork.datacollection;
 
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class LTModelDataCollector extends DataCollector{
         return this.ltDiffSpread.lastEntry().getValue().get(content)[0];
     }
 
-    public  void countLowMedHighAgents(SocialNetworkModel sn, List<String> contentList, double time) {
+    public  void countLowMedHighAgents(SocialNetworkDiffusionModel sn, List<String> contentList, double time) {
 
         HashMap<String,Integer[]> countMapForAllContents = new HashMap<String, Integer[]>() ;
 

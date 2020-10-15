@@ -2,6 +2,7 @@ package io.github.agentsoz.sn;
 
 import java.util.HashMap;
 
+import io.github.agentsoz.socialnetwork.*;
 import io.github.agentsoz.socialnetwork.util.DataTypes;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -9,12 +10,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.agentsoz.socialnetwork.Network;
-import io.github.agentsoz.socialnetwork.RandomRegularNetwork;
-import io.github.agentsoz.socialnetwork.SNConfig;
-import io.github.agentsoz.socialnetwork.SWNetwork;
-import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 public class TestNormaliseWeights {
@@ -22,7 +18,7 @@ public class TestNormaliseWeights {
 	final Logger logger = LoggerFactory.getLogger("");
 
 	String testConfigFile="./case_studies/hawkesbury/hawkesbury.xml";
-	SocialNetworkModel snManager = new SocialNetworkModel(testConfigFile);
+	SocialNetworkDiffusionModel snManager = new SocialNetworkDiffusionModel(testConfigFile);
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 	Network net = new Network();
 	int nodes = 5;

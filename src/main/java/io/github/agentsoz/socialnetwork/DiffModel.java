@@ -1,7 +1,6 @@
 package io.github.agentsoz.socialnetwork;
 
 import io.github.agentsoz.socialnetwork.datacollection.DataCollector;
-import io.github.agentsoz.socialnetwork.datacollection.ICModelDataCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +11,7 @@ public abstract class DiffModel {
     protected  int diffStep;
 
     protected double timeForNextStep = diffStep;
-    protected SocialNetworkModel snManager;
+    protected SocialNetworkDiffusionModel snManager;
 
     final Logger logger = LoggerFactory.getLogger("");
 	

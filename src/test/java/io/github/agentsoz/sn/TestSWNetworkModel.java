@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -35,7 +35,7 @@ public class TestSWNetworkModel {
 	String testConfigFile="./case_studies/hawkesbury/hawkesbury.xml";
 
 	
-	SocialNetworkModel snManager = new SocialNetworkModel(testConfigFile);
+	SocialNetworkDiffusionModel snManager = new SocialNetworkDiffusionModel(testConfigFile);
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 
 	double neiDistance = 0.8;
@@ -101,7 +101,7 @@ public class TestSWNetworkModel {
 	public void testUpdatedAgentMap()  
 	{
 
-		SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
+		SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
 		sn.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 
@@ -126,7 +126,7 @@ public class TestSWNetworkModel {
 	//@Ignore
 	@Test
 	public void testNormalisedNetwork() {
-		SocialNetworkModel sn = new SocialNetworkModel(testConfigFile);
+		SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
 		sn.setupSNConfigsAndLogs();
 		SNUtils.createAgentMapUsingActualCoords(sn, 100);
 

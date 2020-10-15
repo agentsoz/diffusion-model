@@ -5,7 +5,7 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 public class DiffModelFactory {
 
 	
-	   public static DiffModel getDiffusionModel(String diffType, SocialNetworkModel snMan){
+	   public static DiffModel getDiffusionModel(String diffType, SocialNetworkDiffusionModel snMan){
 		      if(diffType == null){
 		         return null;
 		      }		

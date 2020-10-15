@@ -4,7 +4,6 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.Utils;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -39,7 +38,7 @@ influence instance will adopted, but rest will be the same as the LT model.
   //  protected int waitCount=0;
   //  protected int panicCount=0;
 
-    public CLTModel(double sw,double sp, int turn, SocialNetworkModel snm){
+    public CLTModel(double sw,double sp, int turn, SocialNetworkDiffusionModel snm){
         super(0,turn,snm); // init turn and snmanger
         this.seedW =  (int)( sw * 0.01 * snm.getAgentMap().size());
         this.seedP =  (int) (sp * 0.01 * snm.getAgentMap().size());
@@ -216,7 +215,7 @@ influence instance will adopted, but rest will be the same as the LT model.
             logger.debug("Null Pointer Exception caught: {}", e.getMessage());
         }
         double prob = getProbabilityForDistanceFromFormula(dist);
-     //   logger.trace("geenrated probability: {}",prob);
+     //   socialNetworkDiffusionLogger.trace("geenrated probability: {}",prob);
         return prob;
 
     }
@@ -277,11 +276,11 @@ influence instance will adopted, but rest will be the same as the LT model.
             if (getSeedMap(DataTypes.WAIT).containsKey(id)) { // included in WAIT seed
                 totWaitLevel = neiWaitLevels.get(id) + getSeedMap(DataTypes.WAIT).get(id); // nei + seed
                 totPanicLevel = neiPanicLevels.get(id); // only nei
-//                    logger.trace("agent {} totweight-WAIT: {}", id, totWaitLevel);
+//                    socialNetworkDiffusionLogger.trace("agent {} totweight-WAIT: {}", id, totWaitLevel);
             } else if (getSeedMap(DataTypes.PANIC).containsKey(id)) { // included in PANIC seed
                 totPanicLevel = neiPanicLevels.get(id) + getSeedMap(DataTypes.PANIC).get(id); // nei+ seed
                 totWaitLevel = neiWaitLevels.get(id); // only nei
-//                    logger.trace("agent {} totweight-PANIC: {}", id, totPanicLevel);
+//                    socialNetworkDiffusionLogger.trace("agent {} totweight-PANIC: {}", id, totPanicLevel);
             } else { // only nei
                 totWaitLevel = neiWaitLevels.get(id);
                 totPanicLevel = neiPanicLevels.get(id);
@@ -352,7 +351,7 @@ influence instance will adopted, but rest will be the same as the LT model.
         //update content level if greater than previous step - regarldess of activation state
         // If a wait agent becomes panic, then the wait influence can be less than the previuos wait value.
 //        if(newVal > agent.getContentlevel(type))  { // can the same
-//            logger.trace(" agent {} value to update: {}",id, newVal);
+//            socialNetworkDiffusionLogger.trace(" agent {} value to update: {}",id, newVal);
             agent.setContentlevel(type,newVal);
 //        }
        /* else*/ if(newVal < agent.getContentlevel(type)) {
@@ -364,7 +363,7 @@ influence instance will adopted, but rest will be the same as the LT model.
             if(newVal > agent.getContentlevel(otherType) && newVal >= getAgentContentTreshold(id,type)) {
 
                 if(type.equals(DataTypes.WAIT)){ // wait activation
-//                    logger.debug("wait activation: agent: {} newVal: {}", id, newVal);
+//                    socialNetworkDiffusionLogger.debug("wait activation: agent: {} newVal: {}", id, newVal);
                     agent.setState(DataTypes.WAIT,DataTypes.LOW);
 //                    optCount--;
 //                    waitCount++;
@@ -427,7 +426,7 @@ influence instance will adopted, but rest will be the same as the LT model.
 //
 //    }
 //    catch(NullPointerException e) {
-//        logger.error("null pointer expection: {}", e.getMessage());
+//        socialNetworkDiffusionLogger.error("null pointer expection: {}", e.getMessage());
 //    }
 
 //            return t;

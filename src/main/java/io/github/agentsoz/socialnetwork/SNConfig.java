@@ -664,7 +664,7 @@ public class SNConfig {
                 logger.info("diffusion turn = {}", getDiffTurn_lt());
                 logger.info("diffusion strategy = {}", getStrategy_lt());
                 logger.info("mean Low Panic Threshold = {}", getMeanLowPanicThreshold_lt());
-//				logger.info("mean High Panic Threshold = {}", getMeanHighPanicThreshold());
+//				socialNetworkDiffusionLogger.info("mean High Panic Threshold = {}", getMeanHighPanicThreshold());
                 logger.info(" diffusion threshold generation type = {}", getDiffusionThresholdType_lt());
                 logger.info("standard deviation = {}", getStandardDeviation_lt());
                 logger.info("percept seed  = {}", getPerceptSeed());

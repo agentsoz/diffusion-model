@@ -300,12 +300,12 @@ private static DecimalFormat df = new DecimalFormat(".##");
 
 //	public void printLinks()
 //	{
-//		logger.debug("agentID : "+this.id);
+//		socialNetworkDiffusionLogger.debug("agentID : "+this.id);
 //		int i=1;
 //		for (Map.Entry entry :this.links.entrySet())
 //		{
 //			SocialLink  link = (SocialLink) entry.getValue();
-//			logger.debug("   linkNo:"+i+" connectedTo:"+entry.getKey()+" linkweight:"+link.getLinkWeight()+" neighbour:"+link.getNeighbourWeight()+" family:"+link.getFamilyWeight()+" friend:"+link.getFriendshipWeight());
+//			socialNetworkDiffusionLogger.debug("   linkNo:"+i+" connectedTo:"+entry.getKey()+" linkweight:"+link.getLinkWeight()+" neighbour:"+link.getNeighbourWeight()+" family:"+link.getFamilyWeight()+" friend:"+link.getFriendshipWeight());
 //			i++;
 //		}
 //	}

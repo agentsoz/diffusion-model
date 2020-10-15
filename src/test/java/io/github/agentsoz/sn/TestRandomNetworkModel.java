@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
+import io.github.agentsoz.socialnetwork.SocialNetworkDiffusionModel;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +16,6 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.RandomNetwork;
 import io.github.agentsoz.socialnetwork.SNConfig;
 import io.github.agentsoz.socialnetwork.SocialAgent;
-import io.github.agentsoz.socialnetwork.SocialNetworkModel;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 
 
@@ -23,7 +23,7 @@ public class TestRandomNetworkModel {
 
 	final Logger logger = LoggerFactory.getLogger("");
 	String testConfigFile="./case_studies/hawkesbury/hawkesbury.xml";
-	SocialNetworkModel snManager = new SocialNetworkModel(testConfigFile);
+	SocialNetworkDiffusionModel snManager = new SocialNetworkDiffusionModel(testConfigFile);
 	HashMap<Integer,SocialAgent> agentmap = snManager.agentList;
 
 	@Ignore

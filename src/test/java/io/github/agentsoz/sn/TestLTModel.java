@@ -20,7 +20,7 @@ public class TestLTModel {
 
 
 	public static String testConfigFile = "case_studies/hawkesbury/test_LTModel.xml";
-	SocialNetworkModel sn_manager = new SocialNetworkModel(testConfigFile); // init SNMan;
+	SocialNetworkDiffusionModel sn_manager = new SocialNetworkDiffusionModel(testConfigFile); // init SNMan;
 	HashMap<Integer,SocialAgent> agentmap = sn_manager.agentList;
 	final Logger logger = LoggerFactory.getLogger("");
 	LTModel ltModel;
@@ -32,7 +32,7 @@ public class TestLTModel {
 	@Test
 	//   @Ignore
 	public void testConfigs(){
-		SocialNetworkModel testSN = new SocialNetworkModel(testConfigFile);
+		SocialNetworkDiffusionModel testSN = new SocialNetworkDiffusionModel(testConfigFile);
 		testSN.setupSNConfigsAndLogs();
 		testSN.printSNModelconfigs();
 
@@ -65,7 +65,7 @@ public class TestLTModel {
 	public void testInitialise() { 
 		
 	//	SNUtils.setMainConfigFile();
-		SocialNetworkModel snModel = new SocialNetworkModel(testConfigFile);
+		SocialNetworkDiffusionModel snModel = new SocialNetworkDiffusionModel(testConfigFile);
 		snModel.setupSNConfigsAndLogs();
 		snModel.generateDiffusionModels(); // initialise is already run here
 
@@ -163,8 +163,8 @@ public class TestLTModel {
 		Global.setRandomSeed(4711); // deterministic results for testing
 		//  String outFile = "./test/output/diffusion.out";
 
-		DataServer ds = DataServer.getServer("test4"); //use a different dataserver for each test case, o.w mvn tests fail
-		SocialNetworkModel sn = new SocialNetworkModel(testConfigFile,ds);
+		DataServer ds = DataServer.getInstance("test4"); //use a different dataserver for each test case, o.w mvn tests fail
+		SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile,ds);
 		sn.setupSNConfigsAndLogs();
 		SNUtils.randomAgentMap(sn, 100, 1000);
 

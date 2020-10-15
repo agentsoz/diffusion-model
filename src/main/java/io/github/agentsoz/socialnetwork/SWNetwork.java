@@ -157,12 +157,12 @@ public class SWNetwork extends Network {
 
 //			// neighbour lists exceeds degree
 //			if(id1List.size() > this.expAvgDgree || id2List.size() > this.expAvgDgree) { 
-//				logger.debug("neighbour lists exceeds the avg degree");;
+//				socialNetworkDiffusionLogger.debug("neighbour lists exceeds the avg degree");;
 //				linked = false;
 //			}
 //			// already contains in the arraylists
 //			else if (id1List.contains(id2) && id2List.contains(id1)) {
-//					logger.debug("id {} and {} already exists in the neighbour lists", id1, id2);
+//					socialNetworkDiffusionLogger.debug("id {} and {} already exists in the neighbour lists", id1, id2);
 //					linked = false;
 //			}
 //			// al conditions checked, link the ids
@@ -354,7 +354,7 @@ public class SWNetwork extends Network {
 		// don' use the network - because in add the network gets modified
 		// and the same agent is conidered twice
 	  for(int id: agentmap.keySet()) {
-//		  logger.debug("AGENT {}", id);
+//		  socialNetworkDiffusionLogger.debug("AGENT {}", id);
 		 // int id = (int) entry.getKey();
 		  ArrayList<Integer> neighbours = this.network.get(id);
 		  //a copy of the original neighbours to loop over as add/remove changes the neighbours arraylist
@@ -560,7 +560,7 @@ public class SWNetwork extends Network {
 		   
 		 logger.info("SW network size: {} | link probability: {}", this.network.size(), this.prob);    
 //		 int expTotLinks= (int) (( this.nodes * (this.nodes -1) * this.prob ) /2) ;
-//	     logger.debug("verfication1 - expected  #links: {} | generated #links: {} ", expTotLinks, linkCount)
+//	     socialNetworkDiffusionLogger.debug("verfication1 - expected  #links: {} | generated #links: {} ", expTotLinks, linkCount)
 		 logger.info("verfication1 - total #links: {} | rewired #links {}", this.linkCount, this.rewiredLinksCount);     
 	     logger.info("verfication2 - expected avg degree: {} | generated avg degree: {} ", this.expAvgDgree, getGenAvgDegree() /* (double)(linkCount * 2)/  this.network.size() */ );
 	     logger.info("verfication3 - degree distribution:"); 
