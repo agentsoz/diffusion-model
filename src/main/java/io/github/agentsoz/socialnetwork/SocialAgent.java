@@ -28,8 +28,8 @@ private boolean evacStatus = false;
 
 //private double panicLevel=0.0;
 private HashMap<Integer,Double> linkMap;
-private HashMap<String,Double> contentValuesMap =  new HashMap<String, Double>(); // used for the CLT Model, so created a new one
-	private HashMap<String,Double> contentLevelsMap =  new HashMap<String, Double>(); //generic one for LT model, multiple contents
+private HashMap<String,Double> contentValuesMapForCLTModel =  new HashMap<String, Double>(); // used for the CLT Model, so created a new one
+	private HashMap<String,Double> contentLevelsMapForLTModel =  new HashMap<String, Double>(); //generic one for LT model, multiple contents
 private HashMap<String,Boolean> isSeedMap = new HashMap<String, Boolean>();
 
 //LT/probabilistic models
@@ -63,17 +63,17 @@ private static DecimalFormat df = new DecimalFormat(".##");
 		this.diffStates.put(content,initState);
 		this.linkMap= new HashMap<Integer,Double>();
 
-		this.contentValuesMap.put(DataTypes.WAIT, 0.0);
-		this.contentValuesMap.put(DataTypes.PANIC, 0.0);
+		this.contentValuesMapForCLTModel.put(DataTypes.WAIT, 0.0);
+		this.contentValuesMapForCLTModel.put(DataTypes.PANIC, 0.0);
 
 	}
 
 	public void setContentlevel(String type, double level){
 		if(type.equals(DataTypes.WAIT)) {
-			this.contentValuesMap.put(DataTypes.WAIT,level);
+			this.contentValuesMapForCLTModel.put(DataTypes.WAIT,level);
 		}
 		else if(type.equals(DataTypes.PANIC)){
-			this.contentValuesMap.put(DataTypes.PANIC,level);
+			this.contentValuesMapForCLTModel.put(DataTypes.PANIC,level);
 		}
 
 	}
@@ -104,12 +104,13 @@ private static DecimalFormat df = new DecimalFormat(".##");
 		}
 
 	}
-//	public double getContentlevel(String type) {
-//		return this.contentValuesMap.get(type);
-//	}
 
-	public HashMap<String, Double> getContentValuesMap() {
-		return contentValuesMap;
+	public HashMap<String, Double> getContentLevelsMapForLTModel() {
+		return this.contentLevelsMapForLTModel;
+	}
+
+	public HashMap<String, Double> getContentValuesMapForCLTModel() {
+		return contentValuesMapForCLTModel;
 	}
 
 	public double getX()
@@ -166,7 +167,7 @@ private static DecimalFormat df = new DecimalFormat(".##");
 	}
 	public double getContentLevel(String content)
 	{
-		return this.contentLevelsMap.get(content);
+		return this.contentLevelsMapForLTModel.get(content);
 		
 	}
 
@@ -195,7 +196,7 @@ private static DecimalFormat df = new DecimalFormat(".##");
 //		double roundedPanic = Double.valueOf(df.format(newPanicLevel));
 //		this.panicLevel=roundedPanic;
 		
-		this.contentLevelsMap.put(content,newPanicLevel);
+		this.contentLevelsMapForLTModel.put(content,newPanicLevel);
 		logger.trace(" agent {} updated panic value: {} for content {}", this.getId(), newPanicLevel,content);
 	}
 	

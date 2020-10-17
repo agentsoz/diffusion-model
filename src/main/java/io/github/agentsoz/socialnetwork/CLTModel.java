@@ -300,7 +300,7 @@ influence instance will adopted, but rest will be the same as the LT model.
             // activation conditions are checked in updateAgent function, therefore if values are less than act thresholds
             // only the values get updated, sequentially.
             if (totPanicLevel == totWaitLevel) {
-                List<String> types = new ArrayList<String>(getAgentMap().get(id).getContentValuesMap().keySet());
+                List<String> types = new ArrayList<String>(getAgentMap().get(id).getContentValuesMapForCLTModel().keySet());
                 //   String randomType = types.get(rand.nextInt(types.size())) ; //0 or 1
                 String randomType = types.get(1); // SELECT PANIC - PRIORITY FOR  PERCEPTS
 

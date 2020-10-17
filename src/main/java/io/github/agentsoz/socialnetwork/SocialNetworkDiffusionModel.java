@@ -57,9 +57,15 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
     public SocialNetworkDiffusionModel(String config, DataServer dataServer) {
         this.mainConfigFile = config;
         this.dataServer = dataServer;
+        this.localContentsFromBDIAgents = new HashMap<String,Object>();
+        this.globalContentsFromBDIAgents = new HashMap<String, String[]>();
+        this.allStepsDiffusionData = new TreeMap<>();
     }
 
     public SocialNetworkDiffusionModel(String config, DataServer dataServer, List<String> ids) {
+        this.localContentsFromBDIAgents = new HashMap<String,Object>();
+        this.globalContentsFromBDIAgents = new HashMap<String, String[]>();
+        this.allStepsDiffusionData = new TreeMap<>();
         this.mainConfigFile = config;
         this.dataServer = dataServer;
         this.agentsIds = ids;
@@ -68,7 +74,7 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
     public SocialNetworkDiffusionModel(Map<String, String> opts, DataServer dataServer, List<String> agentsIds) {
         parse(opts);
 //        this.snManager = (configFile==null) ? null : new SocialNetworkDiffusionModel(configFile);
-        this.localContentsFromBDIAgents = new HashMap<>();
+        this.localContentsFromBDIAgents = new HashMap<String,Object>();
         this.globalContentsFromBDIAgents = new HashMap<String, String[]>();
         this.allStepsDiffusionData = new TreeMap<>();
         this.dataServer = dataServer;
@@ -82,9 +88,9 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
         for (String id : agentsIds) {
             createSocialAgent(id); //populate agentmap
         }
-
-        genNetworkAndDiffModels(); // gen network and diffusion models
         printSNModelconfigs();
+        genNetworkAndDiffModels(); // gen network and diffusion models
+
 
 //        //subscribe to diffusion data container from BDI side
         this.dataServer.subscribe(this, DataTypes.DIFFUSION_DATA_CONTAINDER_FROM_BDI);
@@ -182,11 +188,15 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
     }
 
     //used when logfile needs to shifted to different directories when executing lhs batch runs
-    public void getSocialNetworlDiffusionLogger(String file) {
+    public void createSocialNetworlDiffusionLogger(String file) {
 
         SNConfig.setLogFile(file);
         socialNetworkDiffusionLogger = Log.getOrCreateLogger("", file);
 
+    }
+
+    public Logger getSocialNetworkDiffusionLogger(){
+        return socialNetworkDiffusionLogger;
     }
 
     public void printSNModelconfigs() {
@@ -231,8 +241,9 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
             } else {
                 // now initialise the model
                 // model.registerContentIfNotRegistered("default", DataTypes.LOCAL);
-                model.initialise();
-//                model.recordCurrentStepSpread(dataServer.getTime());
+                model.initialise(); //#FIXME seed contents are not passed to the BDI side.
+                model.recordCurrentStepSpread(dataServer.getTime());
+                model.setTimeForNextStep(); // after seeding increase timestep
                 diffModels[i] = model;
                 i++;
                 socialNetworkDiffusionLogger.info(" {} diffusion model generation complete ", modelName);
@@ -247,6 +258,12 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
     public void stepDiffusionModels(double time) {
         for (DiffModel model : diffModels) {
             if (model.getTimeForNextStep() == time) {
+                if(model instanceof ICModel){
+                    logger.info("IC model is stepping at {}", time);
+                }
+                if(model instanceof LTModel){
+                    logger.info("LT model is stepping at {}", time);
+                }
                 model.step();
                 model.recordCurrentStepSpread(time);
                 model.setTimeForNextStep(); // this is initially set at start(), after seeding
@@ -254,14 +271,14 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
         }
     }
 
-    public double getShortestTimeStepOfAllDiffusionModels() {
-        List<Integer> timeSteps = new ArrayList<Integer>();
+    public double getEarliestTimeForNextStep() {
+        List<Double> timesForNextStep = new ArrayList<Double>();
         for (DiffModel model : diffModels) {
-            timeSteps.add(model.getDiffStep());
+            timesForNextStep.add(model.getTimeForNextStep());
         }
 
 
-        return (double) Collections.min(timeSteps);
+        return  Collections.min(timesForNextStep);
     }
 
     public List<DiffModel> getDiffusionModelsToStepForCurrentTime(double time) {
@@ -304,6 +321,26 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
 
     public DiffModel[] getDiffModels() {
         return this.diffModels;
+    }
+
+    public LTModel getLTModel() {
+        DiffModel model = null;
+        for(DiffModel m: diffModels){
+            if(m instanceof LTModel){
+                model = m;
+            }
+        }
+        return (LTModel) model;
+    }
+
+    public ICModel getICModel() {
+        DiffModel model = null;
+        for(DiffModel m: diffModels){
+            if(m instanceof ICModel){
+                model = m;
+            }
+        }
+        return (ICModel) model;
     }
 
     public Network getNetworkModel() {
@@ -399,18 +436,23 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
     @Override
     public SortedMap<Double, DiffusionDataContainer> sendData(double timestep, String dataType) {
 
-        double currentTimeInMinutes = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.MINUTES); // current time in minutes
-        Double nextTime = timestep + getShortestTimeStepOfAllDiffusionModels();
-
+//        double currentTimeInMinutes = Time.convertTime(timestep, timestepUnit, Time.TimestepUnit.SECONDS);
+        //#FIXME  reducing 1 as dataserver checks this: (Double)this.timedUpdates.firstKey() < this.time.
+        // As in our model eligible diffusion models here are selected by getNExtTimeForStep == time
+        double time = timestep -1;
         // create data structure to store current step contents and params
         DiffusionDataContainer currentStepDataContainer = new DiffusionDataContainer();
+//
+//        Double nextTime = (timestep -1 )+ getShortestTimeStepOfAllDiffusionModels();
+//        if (nextTime != null) {
+//            dataServer.registerTimedUpdate(DataTypes.DIFFUSION_DATA_CONTAINER_FROM_DIFFUSION_MODEL, this, nextTime);
 
+        List<DiffModel> diffModels = getDiffusionModelsToStepForCurrentTime(time);
+        List<String> localContentTypesProcessed = new ArrayList<String>(); // used to clear local data structures at the end.
+        List<String> globalContentTypesProcessed = new ArrayList<String>(); // used to clear global data structures at the end.
 
-        if (nextTime != null) {
-            dataServer.registerTimedUpdate(DataTypes.DIFFUSION_DATA_CONTAINER_FROM_DIFFUSION_MODEL, this, nextTime);
-
-            List<DiffModel> diffModels = getDiffusionModelsToStepForCurrentTime(timestep);
-            for (DiffModel model : diffModels) {
+        logger.info("{} diffusion models are stepping at time {}: ", diffModels.size(),time);
+        for (DiffModel model : diffModels) {
 
                 // update the model with any new contents/ social states from BDI agents
                 if (!localContentsFromBDIAgents.isEmpty()) {
@@ -418,6 +460,7 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
                     for (String contentType : localContentsFromBDIAgents.keySet()) {
 
                         if (contentType.equals(DataTypes.INFORMATION) && (model instanceof ICModel)) {
+                            localContentTypesProcessed.add(DataTypes.INFORMATION);
                             ICModel icModel = (ICModel) model;
                             HashMap<String, Set<String>> adoptedAgentSet = (HashMap<String, Set<String>>) localContentsFromBDIAgents.get(contentType);
 
@@ -438,6 +481,7 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
                         }
 
                         if (contentType.equals(DataTypes.INFLUENCE) && (model instanceof LTModel)) {
+                            localContentTypesProcessed.add(DataTypes.INFLUENCE);
                             LTModel ltModel = (LTModel) model;
 
                             HashMap<String, HashMap<String, Double>> agentValueMapForContents = (HashMap<String, HashMap<String, Double>>) localContentsFromBDIAgents.get(contentType);
@@ -462,6 +506,7 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
 
                         for (String contentType : globalContentsFromBDIAgents.keySet()) {
                             if (contentType.equals(DataTypes.INFORMATION) && (model instanceof ICModel)) {
+                                globalContentTypesProcessed.add(DataTypes.INFORMATION);
                                 String[] globalContents = globalContentsFromBDIAgents.get(contentType);
                                 ICModel icModel = (ICModel) model;
                                 icModel.updateSocialStatesFromGlobalContent(globalContents);
@@ -469,6 +514,7 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
                             }
 
                             if (contentType.equals(DataTypes.INFLUENCE) && (model instanceof LTModel)) {
+                                globalContentTypesProcessed.add(DataTypes.INFLUENCE);
                                 String[] globalContents = globalContentsFromBDIAgents.get(contentType);
                                 LTModel icModel = (LTModel) model;
                                 icModel.updateSocialStatesFromGlobalContent(globalContents);
@@ -481,25 +527,41 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
                 }
             }
 
-            // step the models
-            stepDiffusionModelsAndUpdateDataContainer(currentStepDataContainer, currentTimeInMinutes);
-
-            //now put the current step data container to all steps data map
-            if (!currentStepDataContainer.getDiffusionDataMap().isEmpty()) {
-                this.allStepsDiffusionData.put(currentTimeInMinutes, currentStepDataContainer);
-            }
+           if(!diffModels.isEmpty()) {
 
 
-            // clear the contents
-            globalContentsFromBDIAgents.clear();
-            localContentsFromBDIAgents.clear();
+               // step the models
+               stepDiffusionModelsAndUpdateDataContainer(currentStepDataContainer, time);
 
-        }
+               //now put the current step data container to all steps data map
+               if (!currentStepDataContainer.getDiffusionDataMap().isEmpty()) {
+                   this.allStepsDiffusionData.put(time, currentStepDataContainer);
+               }
+
+
+               // clear the contents of only content types that are processed, another model may have received
+               //updates from the BDI model, waiting to step in future
+               for(String type: localContentTypesProcessed){
+                   localContentsFromBDIAgents.remove(type);
+               }
+               for(String type: globalContentTypesProcessed){
+                   globalContentsFromBDIAgents.remove(type);
+               }
+
+
+
+//        }
+
+
+           }
+
+        // register time for next update
+        double nextTime = getEarliestTimeForNextStep();
+        dataServer.registerTimedUpdate(DataTypes.DIFFUSION_DATA_CONTAINER_FROM_DIFFUSION_MODEL, this, nextTime);
 
         //+1 to avoid returning empty map for diffusion data for first step (toKey = fromKey)
-        SortedMap<Double, DiffusionDataContainer> periodicDiffusionData = allStepsDiffusionData.subMap(lastUpdateTimeInMinutes, currentTimeInMinutes + 1);
-        lastUpdateTimeInMinutes = currentTimeInMinutes;
-
+        SortedMap<Double, DiffusionDataContainer> periodicDiffusionData = allStepsDiffusionData.subMap(lastUpdateTimeInMinutes, time + 1);
+        lastUpdateTimeInMinutes = time;
         return (currentStepDataContainer.getDiffusionDataMap().isEmpty()) ? null : periodicDiffusionData;
 
     }
@@ -550,7 +612,7 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
                                 Map<String, Double> MapForContent = (MapForContentType.containsKey(content)) ?
                                         (Map<String, Double>) MapForContentType.get(content) : new HashMap<String, Double>();
                                 MapForContent.put(agentId, value);
-                                MapForContentType.put(localContentType, MapForContent);
+                                MapForContentType.put(content, MapForContent);
                                 localContentsFromBDIAgents.put(localContentType, MapForContentType);
                             }
 
@@ -592,18 +654,19 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
      *
      * @param unit the time step unit to use
      */
-    void setTimestepUnit(Time.TimestepUnit unit) {
+    public void setTimestepUnit(Time.TimestepUnit unit) {
         timestepUnit = unit;
     }
 
     public void start() {
         if (this != null) {
             init();
-            setTimestepUnit(Time.TimestepUnit.MINUTES);
+            setTimestepUnit(Time.TimestepUnit.SECONDS);
             for (DiffModel model : diffModels) {
                 model.setTimeForNextStep();
             }
             dataServer.registerTimedUpdate(DataTypes.DIFFUSION_DATA_CONTAINER_FROM_DIFFUSION_MODEL, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
+            logger.trace("registered time update ");
         } else {
             logger.warn("started but will be idle forever!!");
         }

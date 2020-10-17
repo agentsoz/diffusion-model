@@ -9,6 +9,7 @@ import io.github.agentsoz.socialnetwork.util.SNUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -39,7 +40,8 @@ public class TestICModel {
     @Test
     public void testRandomSeed() {
 
-        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
+        DataServer dataServer = DataServer.getInstance("test_ic");
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile,dataServer);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn,80,1000);
 
@@ -86,7 +88,9 @@ public class TestICModel {
     public void testRandomDiffProbabilityRange() {
         // SD = 0.05, p = 0.16
         Global.setRandomSeed(4711);
-        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
+
+        DataServer dataServer = DataServer.getInstance("test_ic2");
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile,dataServer);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
 
@@ -106,7 +110,8 @@ public class TestICModel {
 
         // SD = 0.05, p = 0.16
         Global.setRandomSeed(4711);
-        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile);
+        DataServer dataServer = DataServer.getInstance("test_ic3");
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile,dataServer);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);
         sn.genNetworkAndDiffModels();
@@ -128,7 +133,7 @@ public class TestICModel {
         Global.setRandomSeed(4711); // deterministic results for testing
       //  String outFile = "./test/output/diffusion.out";
 
-        DataServer ds = DataServer.getInstance("test"); //use a different dataserver for each test case, o.w mvn tests fail
+        DataServer ds = DataServer.getInstance("test4"); //use a different dataserver for each test case, o.w mvn tests fail
         SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(testConfigFile,ds);
         sn.setupSNConfigsAndLogs();
         SNUtils.randomAgentMap(sn, 100, 1000);

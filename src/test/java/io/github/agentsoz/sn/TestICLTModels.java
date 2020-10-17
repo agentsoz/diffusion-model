@@ -20,8 +20,8 @@ public class TestICLTModels {
     public void testConfigs(){
         SocialNetworkDiffusionModel testSN = new SocialNetworkDiffusionModel(testConfigFile);
         testSN.setupSNConfigsAndLogs();
-        SNUtils.randomAgentMap(testSN,100,1000);
-        testSN.genNetworkAndDiffModels();
+//        SNUtils.randomAgentMap(testSN,100,1000);
+//        testSN.genNetworkAndDiffModels();
         testSN.printSNModelconfigs();
 
         //IC model
@@ -51,22 +51,22 @@ public class TestICLTModels {
 
         SocialNetworkDiffusionModel testSN = new SocialNetworkDiffusionModel(testConfigFile,ds);
         testSN.setupSNConfigsAndLogs();
+        testSN.printSNModelconfigs();
         SNUtils.randomAgentMap(testSN,100,1000);
         testSN.genNetworkAndDiffModels();
-        testSN.printSNModelconfigs();
 
 
 
         SNUtils.setEndSimTime(3600*8);
         testSN.getDataServer().setTime(0.0);
-        double shortestStep = testSN.getShortestTimeStepOfAllDiffusionModels();
-        testSN.getDataServer().setTimeStep(shortestStep);
+  //      double shortestStep = testSN.getShortestTimeStepOfAllDiffusionModels();
+        testSN.getDataServer().setTimeStep(30);
 
 
-        for(DiffModel model:testSN.getDiffModels()){
-            model.recordCurrentStepSpread(testSN.getDataServer().getTime());
-            model.setTimeForNextStep();
-        }
+//        for(DiffModel model:testSN.getDiffModels()){
+//            model.recordCurrentStepSpread(testSN.getDataServer().getTime());
+//            model.setTimeForNextStep();
+//        }
         testSN.getDataServer().stepTime();
 
         while(testSN.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
@@ -135,14 +135,14 @@ public class TestICLTModels {
 
         SNUtils.setEndSimTime(3600*8);
         testSN.getDataServer().setTime(0.0);
-        double shortestStep = testSN.getShortestTimeStepOfAllDiffusionModels();
-        testSN.getDataServer().setTimeStep(shortestStep);
+//        double shortestStep = testSN.getShortestTimeStepOfAllDiffusionModels();
+        testSN.getDataServer().setTimeStep(30);
 
 
-        for(DiffModel model:testSN.getDiffModels()){
-            model.recordCurrentStepSpread(testSN.getDataServer().getTime());
-            model.setTimeForNextStep();
-        }
+//        for(DiffModel model:testSN.getDiffModels()){
+//            model.recordCurrentStepSpread(testSN.getDataServer().getTime());
+//            model.setTimeForNextStep();
+//        }
         testSN.getDataServer().stepTime();
 
         while(testSN.getDataServer().getTime() <= SNUtils.getEndSimTime()) {

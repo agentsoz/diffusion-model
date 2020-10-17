@@ -115,20 +115,23 @@ public class LTModel extends DiffModel{
 
 	}
 
+
+
     public void recordCurrentStepSpread(double timestep) {
 
         dc.countLowMedHighAgents(this.snManager,this.contentList,timestep);
     }
 
     public Map<String,HashMap<String,Double>> getLatestDiffusionUpdates(){
-		//#FIXME all agent contet values are sent to the BDI side and not the ones that
+		//#FIXME content values of all agents are sent to the BDI side
+
 		// are updated in the current step
 		Map<String,HashMap<String,Double>> dataUpdates =  new HashMap<String,HashMap<String,Double>>();
 
 		for (String content: this.contentList){
 			HashMap<String,Double> levelsForContent = new HashMap<String,Double>();
 			for(SocialAgent agent: getAgentMap().values()) { //iterate through all agents
-				if(agent.getContentValuesMap().containsKey(content)) { //agent is aware about the content
+				if(agent.getContentLevelsMapForLTModel().containsKey(content)) { //agent is aware about the content
 					double conentLevel = agent.getContentLevel(content);
 					levelsForContent.put(String.valueOf(agent.getID()),conentLevel);
 				}
@@ -239,7 +242,7 @@ public class LTModel extends DiffModel{
     @Override
 	public void step() {
     	logger.trace("diffusion process: turn {}", diffTurnCount);
-    	
+
     	ltDiffuse();
     	
     	diffTurnCount++;
@@ -255,7 +258,7 @@ public class LTModel extends DiffModel{
 public void updateSocialStatesFromLocalContent(Map<String,HashMap<String,Double>> contentMap) {
 		logger.info("not implemented yet");
 		for(String content: contentMap.keySet()){
-
+		logger.info(" updates from BDI model: {} agents for content {}",contentMap.get(content).size(),content);
 			HashMap<String,Double> valueMap = contentMap.get(content);
 			for(String id: valueMap.keySet()){
 				updateContentValue(content,Integer.parseInt(id),valueMap.get(id));
@@ -636,9 +639,13 @@ public void updateSocialStatesFromLocalContent(Map<String,HashMap<String,Double>
 				return ;
 			}
 
+			// progressive check in the LT model. otherwise, higher content values can get overriden by pVal
+		if(agent.getContentLevelsMapForLTModel().containsKey(content) && pVal < agent.getContentLevel(content)){
+			return;
+		}
 
-		// update the panic level regardless of state
-		agent.setContentLevel(content,pVal);
+		agent.setContentLevel(content,pVal); 		// update the panic level regardless of state
+
 
 		//2. update state
 //		if ((pVal >= getHighPanicThreshold(id)) && !agent.getState().equals(DataTypes.HIGH)) {
