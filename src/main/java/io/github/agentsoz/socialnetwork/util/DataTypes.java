@@ -33,7 +33,10 @@ public class DataTypes {
    //contentTypes
    public static final String WAIT  = "wait" ;
    public static final String PANIC  = "panic" ;
-   
+   public static String CONTENT_A = "contentA";
+   public static String CONTENT_B = "contentB";
+   public static String CONTENT_C = "contentC";
+
    //execTypes
    public static String SN_BDI = "SNBDI";
 
@@ -53,4 +56,11 @@ public class DataTypes {
    public static final String DIFFUSION_CONTENT = "diffusion_content";
    public static final String EVACUATION_INFLUENCE = "evacuation_influence";
    public static final String BLOCKAGE_INFLUENCE = "blockage_influence";
+
+   //probability function types used in IC model Interactive version
+   public static String COMPETITIVE = "competitiveExisting"; // A, B ,C spread competitively
+   public static String COMBINE = "combineExisting"; // A, B and then combine when received both.
+   public static String SPLIT = "split"; // A, B and then combine when received both.
+
+
 }

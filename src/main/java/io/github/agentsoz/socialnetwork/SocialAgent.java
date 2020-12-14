@@ -34,10 +34,12 @@ private HashMap<String,Boolean> isSeedMap = new HashMap<String, Boolean>();
 
 //LT/probabilistic models
 private ArrayList<String> adoptedContentList;
+	private ArrayList<String> exposedContentList;
 
 public HashMap<Integer,SocialLink> links ;
 final Logger logger = LoggerFactory.getLogger("");
 private static DecimalFormat df = new DecimalFormat(".##");
+
 
 	public SocialAgent(int id, double x_cord, double y_cord)
 	{
@@ -80,6 +82,16 @@ private static DecimalFormat df = new DecimalFormat(".##");
 
 	public ArrayList<String> getAdoptedContentList() {
 		return adoptedContentList;
+	}
+
+	public ArrayList<String> getExposedContentList() { // used in
+		return exposedContentList;
+	}
+
+	public void initExposedContentList() {
+		if(this.exposedContentList == null) {
+			this.exposedContentList = new ArrayList<String>();
+		}
 	}
 
 	public void initAdoptedContentList() {

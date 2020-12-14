@@ -126,7 +126,7 @@ public class ICModelDataCollector extends DataCollector{
                             count = stepSpreadCountMap.get(con);
                         }
 
-                        dataFile.print("\t\t" + count);
+                        dataFile.print("\t" + count);
 
                     }
 
@@ -194,7 +194,7 @@ public class ICModelDataCollector extends DataCollector{
                             count = stepSpreadCountMap.get(con);
                         }
 
-                        dataFile.print("\t\t" + count);
+                        dataFile.print("\t" + count);
 
                     }
 

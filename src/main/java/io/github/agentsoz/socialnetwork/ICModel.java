@@ -14,12 +14,12 @@ import java.util.*;
  */
 public class ICModel extends DiffModel{
 
-    private double meanDiffProbability;
-    private HashMap<String,String> contentList; // content, type (local/ global)
-    private ArrayList<String> diffusedGlobalContent; // to ensure global content are diffused just one time.
-    private HashMap<String,ArrayList<String>> attemptedLinksMap;
-    private ICModelDataCollector dc;
-    private HashMap<String, ArrayList<String>> currentStepActiveAgents =  new HashMap<String, ArrayList<String>>();
+    protected double meanDiffProbability;
+    protected HashMap<String,String> contentList; // content, type (local/ global)
+    protected ArrayList<String> diffusedGlobalContent; // to ensure global content are diffused just one time.
+    protected HashMap<String,ArrayList<String>> attemptedLinksMap;
+    protected ICModelDataCollector dc;
+    protected HashMap<String, ArrayList<String>> currentStepActiveAgents =  new HashMap<String, ArrayList<String>>();
 
     public ICModel(SocialNetworkDiffusionModel sn, int step, double prob) {
 
@@ -100,15 +100,19 @@ public class ICModel extends DiffModel{
         int numOfSeedAgents = getNumAgentsForSeed(seedPercentage);
 
         int selected = 0 ;
+        int next = 0;
         List<Integer> idList = new ArrayList<Integer>(getAgentMap().keySet());
         Collections.shuffle(idList,Global.getRandom()); // provide the random object for deterministic behaviour for testing
 
         while( selected < numOfSeedAgents) {
 
-            int id = idList.get(selected);
-            updateSocialState(id,content);
-            selected++;
+            int id = idList.get(next);
+            if(getAgentMap().get(id).getAdoptedContentList().isEmpty()) { // not already selected for any other seed set
 
+                updateSocialState(id, content);
+                selected++;
+            }
+            next++;
         }
 
         logger.info("ICModel - random seed: set {} agents for content {}", selected,content);
@@ -236,7 +240,7 @@ public class ICModel extends DiffModel{
         logger.trace(" ic diffusion procecss ended...");
     }
 
-    private void addActiveAgentToCurrenStepActiveAgentsList(int agentid, String content) {
+    protected void addActiveAgentToCurrenStepActiveAgentsList(int agentid, String content) {
 
             ArrayList<String> idList = this.currentStepActiveAgents.get(content);
             if(idList == null) {
