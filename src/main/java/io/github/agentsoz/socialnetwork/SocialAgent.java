@@ -91,7 +91,7 @@ private static DecimalFormat df = new DecimalFormat(".##");
 	public void initExposedContentList() {
 		if(this.exposedContentList == null) {
 			this.exposedContentList = new ArrayList<String>();
-		}
+	}
 	}
 
 	public void initAdoptedContentList() {

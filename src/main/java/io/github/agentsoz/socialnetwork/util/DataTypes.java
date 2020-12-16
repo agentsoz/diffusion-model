@@ -61,6 +61,11 @@ public class DataTypes {
    public static String COMPETITIVE = "competitiveExisting"; // A, B ,C spread competitively
    public static String COMBINE = "combineExisting"; // A, B and then combine when received both.
    public static String SPLIT = "split"; // A, B and then combine when received both.
+   public static String CONTENTSAB = "AB";
+   public static String CONTENTSAC = "AC";
+   public static String CONTENTSBC = "BC";
+   public static String NOSPREAD = "no spread";
+
 
 
 }
