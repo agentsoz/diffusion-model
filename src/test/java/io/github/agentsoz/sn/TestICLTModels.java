@@ -156,8 +156,8 @@ public class TestICLTModels {
         testSN.finish(); // stop models properly, write data outputs
 
         ICModelDataCollector ic_dc = (ICModelDataCollector) testSN.getDiffModels()[0].getDataCollector();
-        assertEquals(80, ic_dc.getAdoptedAgentCountForContent(testSN,"content_mult_x_ic"));
-        assertEquals(96,  ic_dc.getAdoptedAgentCountForContent(testSN,"content_mult_y_ic"));
+        assertEquals(90, ic_dc.getAdoptedAgentCountForContent(testSN,"content_mult_x_ic"));
+        assertEquals(76,  ic_dc.getAdoptedAgentCountForContent(testSN,"content_mult_y_ic"));
 
         LTModelDataCollector lt_dc = (LTModelDataCollector) testSN.getDiffModels()[1].getDataCollector();
         assertEquals(100,  lt_dc.getFinalActiveAgents("content_mult_x_lt"));

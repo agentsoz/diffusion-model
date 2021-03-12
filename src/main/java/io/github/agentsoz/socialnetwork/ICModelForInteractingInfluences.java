@@ -11,14 +11,14 @@ import static io.github.agentsoz.socialnetwork.util.DataTypes.*;
 public class ICModelForInteractingInfluences extends ICModel {
 
 
-   // HashMap<String, Double> probMap;
+    // HashMap<String, Double> probMap;
     List<String> supportContent;
     List<String> competeContent;
 
 
     public ICModelForInteractingInfluences(SocialNetworkDiffusionModel sn, int step, double prob) {
         super(sn, step, prob);
-    //    probMap = new HashMap<String, Double>();
+        //    probMap = new HashMap<String, Double>();
         supportContent = new ArrayList<>();
         competeContent = new ArrayList<>();
     }
@@ -60,54 +60,55 @@ public class ICModelForInteractingInfluences extends ICModel {
     }
 
 
-   // @Override
+    // @Override
     public void step() {
 
 
         this.currentStepActiveAgents.clear(); //clear previous step active agents.
-   //     icDiffusion(DataTypes.COMBINE);
+        //     icDiffusion(DataTypes.COMBINE);
 
     }
 
-    public void icDiffusion(HashMap<String,HashMap<String,Double>> allProbMap) {
+    public void icDiffusion(HashMap<String, HashMap<String, Double>> allProbMap, boolean enableMemory, boolean singleAdoption) {
 
-        HashMap<Integer,List<String>> currentStepExposures = new  HashMap<Integer, List<String>>();
+        HashMap<Integer, List<String>> currentStepExposures = new HashMap<Integer, List<String>>();
 
         if (!this.contentList.isEmpty()) { // if there are contents registered iterate over agents to receive msgs
 
             for (SocialAgent agent : getAgentMap().values()) { // for each agent
 
-                //single adoption assumption:
-                if(!getAgentMap().get(agent.getID()).getAdoptedContentList().isEmpty()){
+                //single adoption check
+                if (singleAdoption && getAgentMap().get(agent.getID()).getAdoptedContentList().size() ==1) {
                     continue;
                 }
 
 //            ArrayList<String> contentList = agent.getAdoptedContentList();
-            List<String> curStepExposedList =  new ArrayList<String>();
-            currentStepExposures.put(agent.getID(),curStepExposedList); // init new exposed list for current step
+                List<String> curStepExposedList = new ArrayList<String>();
+                currentStepExposures.put(agent.getID(), curStepExposedList); // init new exposed list for current step
 
-                    List<Integer> neiIDs = new ArrayList<Integer>(agent.getLinkMap().keySet());
+                List<Integer> neiIDs = new ArrayList<Integer>(agent.getLinkMap().keySet());
 
-                    for (int nid : neiIDs) {
+                for (int nid : neiIDs) {
 
-                        for (String content : getAgentMap().get(nid).getAdoptedContentList()) {
+                    for (String content : getAgentMap().get(nid).getAdoptedContentList()) {
 
-                               //if the agent has already adopted, nothing to do with this content, try next one
-//                            if(getAgentMap().get(agent.getID()).getAdoptedContentList().contains(content)){
-//                            continue;
-//                        }
+                        //if the agent has already adopted, nothing to do with this content, try next one
+                        if (getAgentMap().get(agent.getID()).getAdoptedContentList().contains(content)) {
+                            continue;
+                        }
 
 
-                            // if not already received before - remove this condition consider multiple exposure to same content
-                            // and nid->agent exposure not done yet - posting from  a receive end now to accumilate all contents
-                            if(!currentStepExposures.get(agent.getID()).contains(content) && !neighbourAlreadyExposed(nid, agent.getID(), content)) {
+                        // and nid->agent (onetime) exposure not done yet - posting from  a receive end now to accumilate all contents
+                        if (!neighbourAlreadyExposed(nid, agent.getID(), content)) {
+                            addExposureAttempt(nid, agent.getID(), content);
+
+                            //if not already received before,add it. I do not consider multiple receivings of the same msg
+                            if(!currentStepExposures.get(agent.getID()).contains(content)){
                                 currentStepExposures.get(agent.getID()).add(content);
-                                addExposureAttempt(nid,agent.getID(), content);
-
-                                //update exposeCountMap
-                                int count = this.dc.getExposedCountMap().get(content);
-                                this.dc.getExposedCountMap().put(content, count+1);
-
+                            }
+                            //update exposeCountMap
+                            int count = this.dc.getExposedCountMap().get(content);
+                            this.dc.getExposedCountMap().put(content, count + 1);
 
 
                         }
@@ -123,54 +124,71 @@ public class ICModelForInteractingInfluences extends ICModel {
         // now iteratve over agent map, and process activation  for all contents received/exposed,
         for (SocialAgent agent : getAgentMap().values()) { // for each agent
 
-        ArrayList<String> curStepExposedContents = (ArrayList<String>) currentStepExposures.get(agent.getID());
-        if(curStepExposedContents == null){
-            continue;
-        }
-        if(!curStepExposedContents.isEmpty()){
-            processActivationForExposedContents( agent,curStepExposedContents, allProbMap);
-
-        }
-
-        }
-
-
-            logger.trace(" ic diffusion procecss ended...");
-    }
-
-    private void processActivationForExposedContents( SocialAgent agent, ArrayList<String> curStepExposedContents, HashMap<String,HashMap<String,Double>> allProbMap) {
-
-        HashMap<String,Double> probabilitiesForSituation = null;
-
-        //check if any competitive ones are already adopted
-        for(String content:curStepExposedContents) {
-            if (hasAdoptedAnyCompetitiveContent(content, agent.getID())) {
+            ArrayList<String> curStepExposedContents = (ArrayList<String>) currentStepExposures.get(agent.getID());
+            if (curStepExposedContents == null ||  (singleAdoption && agent.getAdoptedContentList().size()==1)) {
+                // no processing required for this agent
                 continue;
             }
+            else if (!curStepExposedContents.isEmpty()) {
+                if (!enableMemory) { // if no memory, use only current messages, one may get multiple attemepts for the same content.
+                    processActivationForExposedContents(agent, curStepExposedContents, allProbMap,singleAdoption);
+                } else { //now agents have memory
+
+                    Set<String> exposedSet = new LinkedHashSet<>(agent.getExposedContentList()); //to avoid duplicates
+                    exposedSet.addAll(curStepExposedContents);
+                    ArrayList<String> combinedList = new ArrayList<>(exposedSet);
+                    processActivationForExposedContents(agent, combinedList, allProbMap,singleAdoption);
+                }
+
+            }
+
         }
-            if(curStepExposedContents.size() == 1){ // A,B or C
-                    probabilitiesForSituation  = allProbMap.get(curStepExposedContents.get(0));
 
+
+        logger.trace(" ic diffusion procecss ended...");
+    }
+
+    private void processActivationForExposedContents(SocialAgent agent, ArrayList<String> exposedContents, HashMap<String, HashMap<String, Double>> allProbMap,boolean singleAdoption) {
+
+        HashMap<String, Double> probabilitiesForSituation = null;
+
+        //check if any competitive ones are already adopted
+
+        for (String content : exposedContents) {
+                // check for any previous contradictory adoptions
+            if (hasAdoptedAnyCompetitiveContent(content, agent.getID())) {
+                return;
             }
-            else if(curStepExposedContents.size() == 2){ // A,B or A,C or B,C
-                if(curStepExposedContents.contains(CONTENT_A) && curStepExposedContents.contains(CONTENT_B)){
+        }
+        //identify the probabilities based on the situation
+            if (exposedContents.size() == 1) { // A or B
+                probabilitiesForSituation = allProbMap.get(exposedContents.get(0));
+
+//            } else if (exposedContents.size() == 1 && exposedContents.get(0).equals(CONTENT_C)) { // C
+//                probabilitiesForSituation = allProbMap.get(CONTENT_C);
+
+            } else if (exposedContents.size() == 2) { // A,B or A,C or B,C
+                if (exposedContents.contains(CONTENT_A) && exposedContents.contains(CONTENT_B)) {
                     //A,B
-                    probabilitiesForSituation  = allProbMap.get(CONTENTSAB);
-                }
-                else if(curStepExposedContents.contains(CONTENT_B) && curStepExposedContents.contains(CONTENT_C)){
+                    probabilitiesForSituation = allProbMap.get(CONTENTSAB);
+                } else if (exposedContents.contains(CONTENT_B) && exposedContents.contains(CONTENT_C)) {
                     //B,C
-                    probabilitiesForSituation  = allProbMap.get(CONTENTSBC);
+                    probabilitiesForSituation = allProbMap.get(CONTENTSBC);
 
-                }
-                else if(curStepExposedContents.contains(CONTENT_A) && curStepExposedContents.contains(CONTENT_C)){
+                } else if (exposedContents.contains(CONTENT_A) && exposedContents.contains(CONTENT_C)) {
                     //A,C
-                    probabilitiesForSituation  = allProbMap.get(CONTENTSAC);
+                    probabilitiesForSituation = allProbMap.get(CONTENTSAC);
 
                 }
 
             }
+            else if (exposedContents.size() == 3){
+                probabilitiesForSituation = allProbMap.get(CONTENTSABC);
 
-            processProbabilityChoiceForContents(probabilitiesForSituation,curStepExposedContents,agent.getID());
+            }
+            // probability map set, now evaluate the probabilities
+            processProbabilityChoiceForContents(probabilitiesForSituation, exposedContents, agent.getID(),singleAdoption);
+//        }
 
 //            //competitive A,B influence diffusion with different probabilities
 //            if (func.equals(COMPETITIVE)) {
@@ -182,7 +200,6 @@ public class ICModelForInteractingInfluences extends ICModel {
 //            } else if (func.equals(SPLIT)) {
 //                spreadSplittedABWithProbability(content,agent.getID());
 //            }
-
 
 
     }
@@ -222,40 +239,53 @@ public class ICModelForInteractingInfluences extends ICModel {
 //
 //    }
 
+ //probability choice model
+    private void processProbabilityChoiceForContents(HashMap<String, Double> probMap, List<String> contentList, int id, boolean singleAdoption) {
 
-    private void processProbabilityChoiceForContents(HashMap<String,Double> probMap, List<String> contentList, int id){
-
-        if(probMap == null) {
-            logger.error("empty probability map found for agent {} to process {}",id, contentList.toString());
+        if (probMap == null) {
+            logger.error("empty probability map found for agent {} to process {}", id, contentList.toString());
             return;
         }
-        //#tested separately, but only chosen one
-        // not spreading is directly evaluated, but when contents are tested, indirectly it will consider not
-        //spreading probability.
-        for(String content: contentList){
+
+        double randomProb = Global.getRandom().nextDouble();
+        double lower=0.0,upper=0.0;
+
+        for (String content : probMap.keySet()) {
             double spreadProbability = probMap.get(content);
-            if(decideToSpreadOrNotBasedOnProbability(content,id,spreadProbability)){
-                    break;
+            upper = upper + spreadProbability;
+            if(lower < randomProb && randomProb <= upper) {
+                if(!content.equals(NOSPREAD)){
+                    updateSocialState(id, content);
+                    addActiveAgentToCurrenStepActiveAgentsList(id, content);
+                }
+
+            break; // no more evaluation
             }
+
+            lower = upper;
+
         }
 
     }
 
-    private boolean decideToSpreadOrNotBasedOnProbability(String content, int id, double prob) {
 
-        boolean spread=false;
-        if (Global.getRandom().nextDouble() <= prob) { //activation
-
-            //probabilistic diffusion successful
-            spread=true;
-            updateSocialState(id, content);
-            addActiveAgentToCurrenStepActiveAgentsList(id, content);
-
-        }
-        // spreading or not, add current exposure to the exposure list of all steps
-        getAgentMap().get(id).getExposedContentList().add(content);
-        return spread;
-    }
+//    private boolean decideToSpreadOrNotBasedOnProbability(String content, int id, double prob) {
+//
+//        boolean spread = false;
+//        if (Global.getRandom().nextDouble() <= prob) { //activation
+//
+//            //probabilistic diffusion successful
+//            spread = true;
+//            updateSocialState(id, content);
+//            addActiveAgentToCurrenStepActiveAgentsList(id, content);
+//
+//        } else {
+//            // if not spreading, add current exposure to the exposure list of all steps
+//            getAgentMap().get(id).getExposedContentList().add(content);
+//        }
+//
+//        return spread;
+//    }
 
     private boolean hasAdoptedAnyCompetitiveContent(String content, int neiID) {
         boolean result = false;

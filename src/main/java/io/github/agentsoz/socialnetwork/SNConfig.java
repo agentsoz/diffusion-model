@@ -22,7 +22,7 @@ public class SNConfig {
 
     private static final Logger logger = LoggerFactory.getLogger("");
     //	static Random rand =  Global.getRandom();
-    static String networkLinksDir = "../sn_model_data/network_visuals/";
+    static String networkLinksDir = "./sn_model_data/network_visuals/";
     private static String configFile = null;
     //    private static String defaultConfig = "./case_studies/hawkesbury/hawkesbury.xml";
     //logs

@@ -64,7 +64,13 @@ public class ICModelDataCollector extends DataCollector{
         for(SocialAgent agent: sn.getAgentMap().values()) {
             if(agent.alreadyAdoptedContent(content)) {
                 counter++;
+
+                if(agent.getAdoptedContentList().size() ==2){
+                    logger.info("TWO CONTENTS agent: {} contents: {} ", agent.getID(),agent.getAdoptedContentList().toString());
+                }
             }
+
+
 
         }
 

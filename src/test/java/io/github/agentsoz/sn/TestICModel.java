@@ -169,9 +169,9 @@ public class TestICModel {
         ic.getDataCollector().writeSpreadDataToFile();
 
         //verify total agent count, then specific active agent count for each content
-        assertEquals(106, dc.getTotalInactiveAgents(sn) + dc.getAdoptedAgentCountForContent(sn,"contentX") + dc.getAdoptedAgentCountForContent(sn,"contentY"));
-        assertEquals(24,  dc.getAdoptedAgentCountForContent(sn,"contentX"));
-        assertEquals(27, dc.getAdoptedAgentCountForContent(sn,"contentY"));
+        assertEquals(103, dc.getTotalInactiveAgents(sn) + dc.getAdoptedAgentCountForContent(sn,"contentX") + dc.getAdoptedAgentCountForContent(sn,"contentY"));
+        assertEquals(26,  dc.getAdoptedAgentCountForContent(sn,"contentX"));
+        assertEquals(25, dc.getAdoptedAgentCountForContent(sn,"contentY"));
 
     }
 
@@ -228,8 +228,8 @@ public class TestICModel {
         ICModelDataCollector dc = new ICModelDataCollector();
         ic.getDataCollector().writeSpreadDataToFile();
 
-        assertEquals(24, dc.getAdoptedAgentCountForContent(sn,"contentX"));
-        assertEquals(27, dc.getAdoptedAgentCountForContent(sn,"contentY"));
+        assertEquals(26, dc.getAdoptedAgentCountForContent(sn,"contentX"));
+        assertEquals(25, dc.getAdoptedAgentCountForContent(sn,"contentY"));
         assertEquals(ic.getAgentMap().size(), dc.getAdoptedAgentCountForContent(sn,"evac-now"));
     }
 

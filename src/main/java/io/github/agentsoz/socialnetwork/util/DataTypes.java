@@ -33,7 +33,7 @@ public class DataTypes {
    //contentTypes
    public static final String WAIT  = "wait" ;
    public static final String PANIC  = "panic" ;
-   public static String CONTENT_A = "contentA";
+    public static String CONTENT_A = "contentA";
    public static String CONTENT_B = "contentB";
    public static String CONTENT_C = "contentC";
 
@@ -64,6 +64,7 @@ public class DataTypes {
    public static String CONTENTSAB = "AB";
    public static String CONTENTSAC = "AC";
    public static String CONTENTSBC = "BC";
+   public static final String CONTENTSABC = "ABC";
    public static String NOSPREAD = "no spread";
 
 

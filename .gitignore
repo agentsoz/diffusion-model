@@ -1,4 +1,5 @@
 /src/test/output/
+test/output/
 /target/
 *.log
 /output/
