@@ -9,7 +9,7 @@ public class TestRunIterations {
     @Test
     public void testCombinedInfo() {
 
-        String dirPath = "../sn_model_data/seedAB_spreadABC/";
+        String dirPath = "./test/output/seedAB_spreadABC/";
         File theDir = new File(dirPath);
         if (!theDir.exists()) {
             theDir.mkdirs();

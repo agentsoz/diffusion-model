@@ -61,19 +61,18 @@ public class ICModelDataCollector extends DataCollector{
 
         // non-adopted agents = totAgents - adoptedAgents
         int counter = 0;
+        int counter2 = 0;
         for(SocialAgent agent: sn.getAgentMap().values()) {
             if(agent.alreadyAdoptedContent(content)) {
                 counter++;
 
-                if(agent.getAdoptedContentList().size() ==2){
-                    logger.info("TWO CONTENTS agent: {} contents: {} ", agent.getID(),agent.getAdoptedContentList().toString());
+                if (agent.getAdoptedContentList().size() == 2) {
+                    counter2++;
                 }
             }
 
-
-
         }
-
+//        logger.info("{} agents have adopted two contents ",counter2 );
         return counter;
     }
 

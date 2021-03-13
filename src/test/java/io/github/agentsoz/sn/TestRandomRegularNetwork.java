@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import io.github.agentsoz.socialnetwork.RandomRegularNetwork;
 import io.github.agentsoz.socialnetwork.SocialAgent;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
+import org.slf4j.LoggerFactory;
 
 public class TestRandomRegularNetwork {
 
@@ -23,8 +24,8 @@ public class TestRandomRegularNetwork {
 	int testNodes = 10;
 	int testDegree = 2;
 
-	String logFile =  SNConfig.getNetworkLinksDir() + "/" + "network-vis.log";
-	final Logger logger = Log.createLogger("", logFile);
+//	String logFile =  SNConfig.getNetworkLinksDir() + "/" + "network-vis.log";
+	final Logger logger = LoggerFactory.getLogger("");
 	
 //	@Ignore
 	@Before

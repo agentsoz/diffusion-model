@@ -17,6 +17,7 @@ import io.github.agentsoz.socialnetwork.SWNetwork;
 import io.github.agentsoz.socialnetwork.SocialAgent;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 import io.github.agentsoz.socialnetwork.util.Log;
+import org.slf4j.LoggerFactory;
 
 public class TestSWNetworkModel {
 
@@ -29,9 +30,8 @@ public class TestSWNetworkModel {
 	 *    	why? because degree is also dependant on the x,y coords and distance range
 	 * 
 	 */
-	
-	String logFile =  SNConfig.getNetworkLinksDir() + "/" + "network-vis.log";
-	final Logger logger = Log.createLogger("", logFile);
+
+	final Logger logger = LoggerFactory.getLogger("");
 	String testConfigFile="./case_studies/hawkesbury/hawkesbury.xml";
 
 	
