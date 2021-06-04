@@ -242,8 +242,10 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
                 // now initialise the model
                 // model.registerContentIfNotRegistered("default", DataTypes.LOCAL);
                 model.initialise(); //#FIXME seed contents are not passed to the BDI side.
-                model.recordCurrentStepSpread(dataServer.getTime());
-                model.setTimeForNextStep(); // after seeding increase timestep
+                double timeInMins = Time.convertTime(dataServer.getTime(), timestepUnit, Time.TimestepUnit.MINUTES);
+                model.recordCurrentStepSpread(timeInMins);
+               // model.recordCurrentStepSpread(dataServer.getTime()); // time in secs
+                model.setTimeForNextStep(dataServer.getTime()); // after seeding increase timestep
                 diffModels[i] = model;
                 i++;
                 socialNetworkDiffusionLogger.info(" {} diffusion model generation complete ", modelName);
@@ -257,7 +259,7 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
 
     public void stepDiffusionModels(double time) {
         for (DiffModel model : diffModels) {
-            if (model.getTimeForNextStep() == time) {
+            if (model.getTimeForNextStep() == (int)time) {
                 if(model instanceof ICModel){
                     logger.info("IC model is stepping at {}", time);
                 }
@@ -265,8 +267,10 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
                     logger.info("LT model is stepping at {}", time);
                 }
                 model.step();
-                model.recordCurrentStepSpread(time);
-                model.setTimeForNextStep(); // this is initially set at start(), after seeding
+                double timeInMins = Time.convertTime(time, timestepUnit, Time.TimestepUnit.MINUTES);
+                model.recordCurrentStepSpread(timeInMins);
+//                model.recordCurrentStepSpread(time); //time in secs
+                model.setTimeForNextStep(time); // this is initially set at start(), after seeding
             }
         }
     }
@@ -660,11 +664,11 @@ public class SocialNetworkDiffusionModel implements DataSource<SortedMap<Double,
 
     public void start() {
         if (this != null) {
-            init();
             setTimestepUnit(Time.TimestepUnit.SECONDS);
-            for (DiffModel model : diffModels) {
-                model.setTimeForNextStep();
-            }
+            init();
+//            for (DiffModel model : diffModels) { // this is already done inside init() ?
+//                model.setTimeForNextStep(dataServer.getTime());
+//            }
             dataServer.registerTimedUpdate(DataTypes.DIFFUSION_DATA_CONTAINER_FROM_DIFFUSION_MODEL, this, Time.convertTime(startTimeInSeconds, Time.TimestepUnit.SECONDS, timestepUnit));
             logger.trace("registered time update ");
         } else {

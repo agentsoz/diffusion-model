@@ -63,8 +63,10 @@ public abstract class DiffModel {
         return timeForNextStep;
     }
 
-    public void setTimeForNextStep() {
-        this.timeForNextStep = timeForNextStep + this.diffStep;
+    // time should be controlled externally, but at diffstep intervals this model must be called.
+    public void setTimeForNextStep(double curtime) {
+        this.timeForNextStep = this.timeForNextStep + this.diffStep;
+//        this.timeForNextStep = (int)curtime + this.diffStep;
     }
 
 
