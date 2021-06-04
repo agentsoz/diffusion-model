@@ -18,7 +18,49 @@ import static org.junit.Assert.assertTrue;
 public class TestICModel {
 
     public static String testConfigFile = "case_studies/hawkesbury/test_ICModel.xml";
+    public static String configFile = "case_studies/hawkesbury/test_ICModel_remove.xml";
 
+
+    @Test
+    public void exploreDiffusion(){
+
+//        Global.setRandomSeed(4711); // deterministic results for testing
+        //  String outFile = "./test/output/diffusion.out";
+
+        DataServer ds = DataServer.getInstance("test9"); //use a different dataserver for each test case, o.w mvn tests fail
+        SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(configFile,ds);
+        sn.setupSNConfigsAndLogs();
+        SNUtils.randomAgentMap(sn, 3000, 1000);
+
+
+        sn.initWithoutSocialAgentsMap();
+//        SNConfig.setDiffturn_ic(15*60);
+//        SNConfig.setSeed_ic(5);
+
+        ICModel ic = (ICModel) sn.getDiffModels()[0];
+        ic.registerContentIfNotRegistered("contentX",DataTypes.LOCAL);
+        ic.initRandomSeed("contentX"); // initialise a random seed for a specific content
+
+        ic.recordCurrentStepSpread(0.0); //record seed spread
+
+        //setup sim configs
+        SNUtils.setEndSimTime(3600*3);
+        sn.getDataServer().setTime(0.0);
+        sn.getDataServer().setTimeStep(SNConfig.getDiffTurn_ic());
+
+        while(sn.getDataServer().getTime() <= SNUtils.getEndSimTime()) {
+            // sn.stepDiffusionProcess();
+            sn.getDiffModels()[0].step(); //diffuseContent();
+            sn.getDataServer().stepTime();
+            ic.recordCurrentStepSpread(sn.getDataServer().getTime());
+        }
+
+        //end of simulation, now print to file
+        ic.finish();
+        ICModelDataCollector dc = new ICModelDataCollector();
+        ic.getDataCollector().writeSpreadDataToFile();
+
+    }
 
     @Test
  //   @Ignore

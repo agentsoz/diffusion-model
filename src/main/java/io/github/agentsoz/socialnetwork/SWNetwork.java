@@ -555,7 +555,8 @@ public class SWNetwork extends Network {
   // cant remove deg dist part because for the genneghbourhood network it is usefull
 	   public void verifyNetwork()
 	   {
-		   int ct0=0;int ct1=0;int ct2=0;int ct3=0;int ct4=0;int ct5=0;int ct6=0;int ct7=0;
+		   int ct0=0;int ct1=0;int ct2=0;int ct3=0;int ct4=0;int ct5=0;int ct6=0;int ct7=0;int ct8=0;int ct9=0;int ct10=0;
+		   int ct11=0;int ct12 = 0; int ct13 = 0; int ct14=0;int ct15=0;
 		   int nullCount = 0;
 		   
 		 logger.info("SW network size: {} | link probability: {}", this.network.size(), this.prob);    
@@ -580,7 +581,15 @@ public class SWNetwork extends Network {
        		 if (size == 4) { ct4++; }
        		 if (size == 5) { ct5++; }
        		 if (size == 6) { ct6++; }
-       		 if (size > 6) { ct7++; }
+				if (size == 7) { ct7++; }
+				if (size == 8) { ct8++; }
+				if (size == 9) { ct9++; }
+				if (size == 10) { ct10++; }
+				if (size ==11) { ct11++; }
+				if (size ==12) { ct12++; }
+				if (size ==13) { ct13++; }
+				if (size == 14) { ct14++; }
+				if (size > 15) { ct15++; }
        		 
        		 
     		}
@@ -593,7 +602,15 @@ public class SWNetwork extends Network {
     	logger.info("4 \t {}",ct4);
     	logger.info("5 \t {}",ct5);
     	logger.info("6 \t {}",ct6);
-    	logger.info("6> \t {}",ct7);
+    	logger.info("7 \t {}",ct7);
+		   logger.info("8 \t {}",ct8);
+		   logger.info("9 \t {}", ct9);
+		   logger.info("10 \t {}",ct10);
+		   logger.info("11 \t {}",ct11);
+		   logger.info("12 \t {}",ct12);
+		   logger.info("13 \t {}",ct13);
+		   logger.info("14 \t {}",ct14);
+		   logger.info("15> \t {}",ct15);
 
     	logger.warn(" {} agents has a null neighbour list", nullCount);
 
