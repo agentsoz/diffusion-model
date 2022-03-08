@@ -16,22 +16,22 @@
 <!-- network configurations-->
 <randomNetwork
 	normalise="true"
-	avg_links="4"
+	avg_links="6"
 />
 
 <randRegNetwork
 
         normalise="true"
-        avg_links="4"
+        avg_links="5"
 
 />
 
 <!--specify distance in km-->
 <swNetwork
 	normalise="true"
-	distance="0.8"
-	avg_links="4"
-	rewire_probability="0.0"
+	distance="1.0"
+	avg_links="6"
+	rewire_probability="1.0"
 
 />
 
@@ -43,8 +43,8 @@
     <!--diffusion_probaility: mean diffusion probability that is varied using a standard deviation (sigma) to randomly draw probabilities from a gaussian distribution-->
 	<ic>
 		<step_size>15</step_size>
-		<seeding_strategy seed="20">random</seeding_strategy>
-		<diffusion_probability sigma="0.05">0.3</diffusion_probability>
+		<seeding_strategy seed="5">random</seeding_strategy>
+		<diffusion_probability sigma="0.01">0.5</diffusion_probability>
 		<out_file>./test/output/diffusion_testing_ic_remove.out</out_file>
 		<contents type="information"></contents>
 	</ic>

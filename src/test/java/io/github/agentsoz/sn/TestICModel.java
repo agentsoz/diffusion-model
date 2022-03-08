@@ -7,6 +7,7 @@ import io.github.agentsoz.socialnetwork.util.DataTypes;
 import io.github.agentsoz.socialnetwork.util.Global;
 import io.github.agentsoz.socialnetwork.util.SNUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.xml.crypto.Data;
@@ -22,6 +23,7 @@ public class TestICModel {
 
 
     @Test
+    @Ignore
     public void exploreDiffusion(){
 
 //        Global.setRandomSeed(4711); // deterministic results for testing
@@ -30,7 +32,7 @@ public class TestICModel {
         DataServer ds = DataServer.getInstance("test9"); //use a different dataserver for each test case, o.w mvn tests fail
         SocialNetworkDiffusionModel sn = new SocialNetworkDiffusionModel(configFile,ds);
         sn.setupSNConfigsAndLogs();
-        SNUtils.randomAgentMap(sn, 3000, 1000);
+        SNUtils.randomAgentMap(sn, 3000, 20000);
 
 
         sn.initWithoutSocialAgentsMap();
