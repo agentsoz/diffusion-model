@@ -63,17 +63,17 @@
 
 	 <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.1</version>
+          <version>3.13.0</version>
           <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
+            <source>1.8</source>
+            <target>1.8</target>
           </configuration>
        	 </plugin>
 
      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifest>
@@ -98,9 +98,11 @@
 
         <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.5.3</version>
+            <version>3.7.0</version>
             <configuration>
-                <descriptor>src/assembly/dep.xml</descriptor>
+                <descriptors>
+                    <descriptor>src/assembly/dep.xml</descriptor>
+                </descriptors>
             </configuration>
             <executions>
                 <execution>
